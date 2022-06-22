@@ -1,0 +1,9 @@
+{
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "modifications",
+    "cmake.buildDirectory": "${workspaceFolder}/build/${buildKit}/${buildType}",
+    "cmake.debugConfig": {
+        "cwd": "${workspaceFolder}"
+    },
+    "editor.formatOnType": true
+}
