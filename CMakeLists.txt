@@ -26,6 +26,10 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE include)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} glfw glad)
 
+install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION .)
+
+install(DIRECTORY resource DESTINATION .)
+
 # add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
 # #COMMAND ${CMAKE_COMMAND} -E
 # COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/resource" $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>
