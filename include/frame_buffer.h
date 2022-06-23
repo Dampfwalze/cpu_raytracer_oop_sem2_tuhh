@@ -1,7 +1,7 @@
 #ifndef FRAME_BUFFER_HPP
 #define FRAME_BUFFER_HPP
 
-#include <stdint.h>
+#include <stdio.h>
 
 namespace rt
 {
