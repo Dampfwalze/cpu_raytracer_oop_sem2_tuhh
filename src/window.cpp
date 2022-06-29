@@ -73,17 +73,18 @@ namespace rt
     Window::Window()
     {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-        m_window = glfwCreateWindow(640, 480, "Ray Tracer", NULL, NULL);
+        m_window = glfwCreateWindow(1200, 750, "Ray Tracer", NULL, NULL);
         GLFW_CHECK_ERROR("Window creation failed!");
 
-        beginDraw();
+        glfwMakeContextCurrent(m_window);
+        GLFW_CHECK_ERROR("Failed to make context current");
         gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
+        m_imgui_context = ImGui::CreateContext();
 
         ImGuiIO &io = ImGui::GetIO();
         (void)io;
@@ -104,6 +105,9 @@ namespace rt
 
     Window::~Window()
     {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
         glfwDestroyWindow(m_window);
     }
 
@@ -111,6 +115,7 @@ namespace rt
     {
         glfwMakeContextCurrent(m_window);
         GLFW_CHECK_ERROR("Failed to make context current");
+        ImGui::SetCurrentContext(m_imgui_context);
     }
 
     void Window::beginGUI()
@@ -119,6 +124,9 @@ namespace rt
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+
+        ImGuiIO &io = ImGui::GetIO();
+        io.DisplaySize = ImVec2(getWidth(), getHeight());
     }
 
     void Window::endGUI()
@@ -150,5 +158,27 @@ namespace rt
         int v;
         glfwGetWindowSize(m_window, NULL, &v);
         return v;
+    }
+
+    void Window::renderDockSpace() const
+    {
+        const ImGuiViewport *viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+        ImGui::PopStyleVar(3);
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
+        ImGui::End();
     }
 }

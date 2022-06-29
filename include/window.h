@@ -1,6 +1,7 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
+#include <imgui.h>
 #include <GLFW/glfw3.h>
 
 #ifdef _DEBUG
@@ -27,6 +28,7 @@ namespace rt
     {
     private:
         GLFWwindow *m_window;
+        ImGuiContext *m_imgui_context;
 
     public:
         Window();
@@ -41,6 +43,8 @@ namespace rt
 
         int getWidth() const;
         int getHeight() const;
+
+        void renderDockSpace() const;
     };
 
 } // namespace rt

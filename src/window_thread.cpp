@@ -54,10 +54,11 @@ namespace rt
 
         // glDebugMessageCallback(errorCallback, nullptr);
 
-        GLuint vao;
-        GLCALL(glGenVertexArrays(1, &vao));
-        GLCALL(glBindVertexArray(vao));
+        // GLuint vao;
+        // GLCALL(glGenVertexArrays(1, &vao));
+        // GLCALL(glBindVertexArray(vao));
 
+        // Create OpenGL texture buffer
         GLuint texture;
         GLCALL(glGenTextures(1, &texture));
         GLCALL(glBindTexture(GL_TEXTURE_2D, texture));
@@ -67,7 +68,8 @@ namespace rt
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER));
 
-        FrameBuffer frameBuffer(window.getWidth(), window.getHeight());
+        // Create and populate framebuffer
+        FrameBuffer frameBuffer(640, 480);
         for (size_t y = 0; y < frameBuffer.getHeight(); y++)
         {
             for (size_t x = 0; x < frameBuffer.getWidth(); x++)
@@ -81,27 +83,28 @@ namespace rt
             }
         }
 
+        // Copy data from framebuffer to OpenGL texture on the GPU
         copyBuffer(frameBuffer);
 
-        std::array<float, 3> vertecies[] = {
-            {1.0, 1.0, 0.0},
-            {1.0, -1.0, 0.0},
-            {-1.0, -1.0, 0.0},
-            {1.0, 1.0, 0.0},
-            {-1.0, -1.0, 0.0},
-            {-1.0, 1.0, 0.0},
-        };
+        // std::array<float, 3> vertecies[] = {
+        //     {1.0, 1.0, 0.0},
+        //     {1.0, -1.0, 0.0},
+        //     {-1.0, -1.0, 0.0},
+        //     {1.0, 1.0, 0.0},
+        //     {-1.0, -1.0, 0.0},
+        //     {-1.0, 1.0, 0.0},
+        // };
 
-        GLuint quadBuffer;
-        GLCALL(glGenBuffers(1, &quadBuffer));
+        // GLuint quadBuffer;
+        // GLCALL(glGenBuffers(1, &quadBuffer));
 
-        GLCALL(glBindBuffer(GL_ARRAY_BUFFER, quadBuffer));
-        GLCALL(glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), vertecies, GL_STATIC_DRAW));
+        // GLCALL(glBindBuffer(GL_ARRAY_BUFFER, quadBuffer));
+        // GLCALL(glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), vertecies, GL_STATIC_DRAW));
 
-        GLCALL(glEnableVertexAttribArray(0));
-        GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
+        // GLCALL(glEnableVertexAttribArray(0));
+        // GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));
 
-        Shader shader = Shader::fromFile("resource/shader/shader.vert", "resource/shader/shader.frag");
+        // Shader shader = Shader::fromFile("resource/shader/shader.vert", "resource/shader/shader.frag");
 
         while (true)
         {
@@ -115,22 +118,27 @@ namespace rt
             if (m_terminate)
                 break;
 
-            GLCALL(glClear(GL_COLOR_BUFFER_BIT));
+            // GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
-            GLCALL(glActiveTexture(GL_TEXTURE0));
-            GLCALL(glBindTexture(GL_TEXTURE_2D, texture));
-            GLCALL(glBindBuffer(GL_ARRAY_BUFFER, quadBuffer));
+            // GLCALL(glActiveTexture(GL_TEXTURE0));
+            // GLCALL(glBindTexture(GL_TEXTURE_2D, texture));
+            // GLCALL(glBindBuffer(GL_ARRAY_BUFFER, quadBuffer));
 
-            shader.bind();
-            shader.setUniform(0, 0);
-
-            GLCALL(glDrawArrays(GL_TRIANGLES, 0, 6));
+            // shader.bind();
+            // shader.setUniform(0, 0);
+            //
+            // GLCALL(glDrawArrays(GL_TRIANGLES, 0, 6));
 
             window.beginGUI();
+
+            window.renderDockSpace();
+
             ImGui::ShowDemoWindow(nullptr);
 
-            ImGui::Begin("Test");
-            ImGui::Button("Testi");
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+            ImGui::Begin("Viewport");
+            ImGui::PopStyleVar();
+            ImGui::Image(reinterpret_cast<ImTextureID>(texture), ImVec2{(float)frameBuffer.getWidth(), (float)frameBuffer.getHeight()});
             ImGui::End();
 
             window.endGUI();
