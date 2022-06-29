@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 
 project(Ray_Tracer LANGUAGES CXX C)
 
+set(CMAKE_CXX_STANDARD 17)
+
 set(IMGUI_IMPLEMENTATIONS glfw opengl3)
 
 include(getGLFW.cmake)
@@ -17,6 +19,7 @@ set(SOURCES
     src/frame_buffer.cpp
     src/shader.cpp
     src/gl_error.cpp
+    src/renderer.cpp
 )
 
 FILE(GLOB HEADERS include/*.h)

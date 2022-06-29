@@ -5,6 +5,9 @@ namespace rt
     FrameBuffer::FrameBuffer(size_t width, size_t height)
         : m_buffer(new Pixel[width * height]), m_width(width), m_height(height) {}
 
+    FrameBuffer::FrameBuffer()
+        : m_buffer(nullptr), m_width(0), m_height(0) {}
+
     FrameBuffer::~FrameBuffer()
     {
         delete[] m_buffer;

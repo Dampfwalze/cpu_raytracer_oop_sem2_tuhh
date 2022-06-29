@@ -2,13 +2,15 @@
 #define APPLICATION_HPP
 
 #include <window_thread.h>
+#include <renderer.h>
 
 namespace rt
 {
     class Application
     {
     private:
-        WindowThread window;
+        WindowThread m_window;
+        Renderer m_renderer;
 
     public:
         Application();

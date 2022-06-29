@@ -18,6 +18,7 @@ namespace rt
 
     public:
         FrameBuffer(size_t width, size_t height);
+        FrameBuffer();
         ~FrameBuffer();
 
         size_t getWidth() const;

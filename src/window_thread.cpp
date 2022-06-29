@@ -112,11 +112,13 @@ namespace rt
                 exit(0);
 
             // handle termination
-            std::unique_lock<std::mutex> lk(m_termination_mutex);
-            m_termination_cv.wait_for(lk, std::chrono::milliseconds(16), [this]
-                                      { return m_terminate; });
-            if (m_terminate)
-                break;
+            {
+                std::unique_lock<std::mutex> lk(m_termination_mutex);
+                m_termination_cv.wait_for(lk, std::chrono::milliseconds(16), [this]
+                                          { return m_terminate; });
+                if (m_terminate)
+                    break;
+            }
 
             // GLCALL(glClear(GL_COLOR_BUFFER_BIT));
 
