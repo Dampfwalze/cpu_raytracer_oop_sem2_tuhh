@@ -1,6 +1,10 @@
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 #include <glad/glad.h>
 #include <window.h>
 
+#include <iostream>
 #include <stdexcept>
 #include <sstream>
 #include <algorithm>
@@ -53,6 +57,7 @@ namespace rt
     {
         glfwInit();
         GLFW_CHECK_ERROR("GLFW initialization failed!");
+        std::cout << "GLFW successfully initialized!" << std::endl;
     }
 
     Windowing::~Windowing()
@@ -67,14 +72,34 @@ namespace rt
 
     Window::Window()
     {
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
         m_window = glfwCreateWindow(640, 480, "Ray Tracer", NULL, NULL);
         GLFW_CHECK_ERROR("Window creation failed!");
 
         beginDraw();
         gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+        // Setup Dear ImGui context
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+
+        ImGuiIO &io = ImGui::GetIO();
+        (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+        // io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // Enable Docking
+        // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
+
+        // Setup Dear ImGui style
+        ImGui::StyleColorsDark();
+        // ImGui::StyleColorsClassic();
+
+        ImGui_ImplGlfw_InitForOpenGL(m_window, true);
+        ImGui_ImplOpenGL3_Init("#version 330");
+
+        std::cout << "OpenGL version: " << (char *)glGetString(GL_VERSION) << std::endl;
     }
 
     Window::~Window()
@@ -86,6 +111,20 @@ namespace rt
     {
         glfwMakeContextCurrent(m_window);
         GLFW_CHECK_ERROR("Failed to make context current");
+    }
+
+    void Window::beginGUI()
+    {
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+    }
+
+    void Window::endGUI()
+    {
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
     bool Window::shouldClose() const

@@ -3,10 +3,12 @@
 
 #include <application.h>
 #include <window.h>
+#include <stdlib.h>
 
 int main(int argc, char const *argv[])
 {
     std::cout << "Hello Ray Tracing!" << std::endl;
+
     try
     {
         rt::Application application;

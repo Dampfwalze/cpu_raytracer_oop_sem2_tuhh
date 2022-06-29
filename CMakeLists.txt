@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.12)
 
 project(Ray_Tracer LANGUAGES CXX C)
 
+set(IMGUI_IMPLEMENTATIONS glfw opengl3)
+
 include(getGLFW.cmake)
+include(getImGui.cmake)
 add_subdirectory(deps/glad)
 
 set(SOURCES
@@ -24,7 +27,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:_DEBU
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE include)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} glfw glad)
+target_link_libraries(${CMAKE_PROJECT_NAME} glfw glad imgui)
 
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION .)
 

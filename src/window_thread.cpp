@@ -6,6 +6,8 @@
 #include <shader.h>
 #include <gl_error.h>
 
+#include <imgui.h>
+
 #include <iostream>
 #include <array>
 
@@ -50,7 +52,7 @@ namespace rt
 
         window.beginDraw();
 
-        glDebugMessageCallback(errorCallback, nullptr);
+        // glDebugMessageCallback(errorCallback, nullptr);
 
         GLuint vao;
         GLCALL(glGenVertexArrays(1, &vao));
@@ -113,6 +115,8 @@ namespace rt
             if (m_terminate)
                 break;
 
+            GLCALL(glClear(GL_COLOR_BUFFER_BIT));
+
             GLCALL(glActiveTexture(GL_TEXTURE0));
             GLCALL(glBindTexture(GL_TEXTURE_2D, texture));
             GLCALL(glBindBuffer(GL_ARRAY_BUFFER, quadBuffer));
@@ -121,6 +125,15 @@ namespace rt
             shader.setUniform(0, 0);
 
             GLCALL(glDrawArrays(GL_TRIANGLES, 0, 6));
+
+            window.beginGUI();
+            ImGui::ShowDemoWindow(nullptr);
+
+            ImGui::Begin("Test");
+            ImGui::Button("Testi");
+            ImGui::End();
+
+            window.endGUI();
 
             window.swapBuffers();
 

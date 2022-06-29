@@ -33,6 +33,8 @@ namespace rt
         ~Window();
 
         void beginDraw();
+        void beginGUI();
+        void endGUI();
 
         bool shouldClose() const;
         void swapBuffers();
