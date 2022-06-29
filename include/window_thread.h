@@ -2,6 +2,7 @@
 #define WINDOW_THREAD_HPP
 
 #include <window.h>
+#include <renderer.h>
 
 #include <thread>
 #include <mutex>
@@ -16,8 +17,10 @@ namespace rt
         std::condition_variable m_termination_cv;
         bool m_terminate = false;
 
+        Renderer &m_renderer;
+
     public:
-        WindowThread();
+        WindowThread(Renderer &renderer);
         ~WindowThread();
 
         void terminate();

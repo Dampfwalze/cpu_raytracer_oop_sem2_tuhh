@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#include <rtmath.h>
+
 namespace rt
 {
     struct Pixel
@@ -14,7 +16,7 @@ namespace rt
     {
     private:
         Pixel *m_buffer;
-        size_t m_width, m_height;
+        math::Vec2<size_t> m_size;
 
     public:
         FrameBuffer(size_t width, size_t height);
@@ -23,6 +25,12 @@ namespace rt
 
         size_t getWidth() const;
         size_t getHeight() const;
+        math::Vec2<size_t> getSize() const;
+
+        inline void resize(size_t width, size_t height) { resize(math::Vec2(width, height)); }
+        void resize(math::Vec2<size_t> size);
+
+        void clear(const Pixel &color = {0, 0, 0});
 
         Pixel &operator[](size_t index) const;
         Pixel &at(size_t x, size_t y) const;

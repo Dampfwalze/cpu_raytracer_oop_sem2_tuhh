@@ -3,6 +3,8 @@
 
 #include <frame_buffer.h>
 #include <thread_pool.h>
+#include <rtmath.h>
+#include <render_params.h>
 
 namespace rt
 {
@@ -13,8 +15,11 @@ namespace rt
         class RenderTask
         {
         private:
+            math::Rect<size_t> m_rect;
+            FrameBuffer &m_frameBuffer;
+
         public:
-            RenderTask();
+            RenderTask(math::Rect<size_t> rect, FrameBuffer &frameBuffer);
             ~RenderTask();
 
             void run();
@@ -26,8 +31,15 @@ namespace rt
         ThreadPool<RenderTask> m_threadPool;
 
     public:
-        Renderer();
+        RenderParams renderParams;
+
+    public:
+        Renderer(const RenderParams &renderParams);
         ~Renderer();
+
+        inline FrameBuffer &getFrameBuffer() { return m_frameBuffer; }
+
+        void render();
     };
 
 } // namespace rt

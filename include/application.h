@@ -9,8 +9,8 @@ namespace rt
     class Application
     {
     private:
-        WindowThread m_window;
         Renderer m_renderer;
+        WindowThread m_window;
 
     public:
         Application();

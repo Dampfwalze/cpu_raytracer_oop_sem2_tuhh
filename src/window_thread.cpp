@@ -13,8 +13,8 @@
 
 namespace rt
 {
-    WindowThread::WindowThread()
-        : std::thread(&WindowThread::run, this) {}
+    WindowThread::WindowThread(Renderer &renderer)
+        : m_renderer(renderer), std::thread(&WindowThread::run, this) {}
 
     WindowThread::~WindowThread()
     {
@@ -31,6 +31,8 @@ namespace rt
 
     static void copyBuffer(const FrameBuffer &buffer)
     {
+        if (buffer.getSize() == math::Vec2<size_t>(0))
+            return;
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, buffer.getWidth(), buffer.getHeight(), 0, GL_RGB, GL_FLOAT, &buffer[0]);
     }
 
@@ -50,6 +52,8 @@ namespace rt
         Windowing windowing;
         Window window;
 
+        static RenderParams renderParams = m_renderer.renderParams;
+
         window.beginDraw();
 
         // glDebugMessageCallback(errorCallback, nullptr);
@@ -67,24 +71,6 @@ namespace rt
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER));
-
-        // Create and populate framebuffer
-        FrameBuffer frameBuffer(640, 480);
-        for (size_t y = 0; y < frameBuffer.getHeight(); y++)
-        {
-            for (size_t x = 0; x < frameBuffer.getWidth(); x++)
-            {
-                if (((y + x) / 20) % 3 == 0)
-                    frameBuffer[x + y * frameBuffer.getWidth()] = {0, 1, 0};
-                else if (((y + x) / 20) % 3 == 1)
-                    frameBuffer[x + y * frameBuffer.getWidth()] = {1, 0, 0};
-                else
-                    frameBuffer[x + y * frameBuffer.getWidth()] = {0, 0, 1};
-            }
-        }
-
-        // Copy data from framebuffer to OpenGL texture on the GPU
-        copyBuffer(frameBuffer);
 
         // std::array<float, 3> vertecies[] = {
         //     {1.0, 1.0, 0.0},
@@ -131,6 +117,9 @@ namespace rt
             //
             // GLCALL(glDrawArrays(GL_TRIANGLES, 0, 6));
 
+            // Copy data from framebuffer to OpenGL texture on the GPU
+            copyBuffer(m_renderer.getFrameBuffer());
+
             window.beginGUI();
 
             window.renderDockSpace();
@@ -140,7 +129,20 @@ namespace rt
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
             ImGui::Begin("Viewport");
             ImGui::PopStyleVar();
-            ImGui::Image(reinterpret_cast<ImTextureID>(texture), ImVec2{(float)frameBuffer.getWidth(), (float)frameBuffer.getHeight()});
+            ImGui::Image(reinterpret_cast<ImTextureID>(texture), ImVec2{(float)m_renderer.getFrameBuffer().getWidth(), (float)m_renderer.getFrameBuffer().getHeight()});
+            ImGui::End();
+
+            ImGui::Begin("Control");
+            if (ImGui::Button("Render"))
+            {
+                m_renderer.renderParams = renderParams;
+                m_renderer.render();
+            }
+
+            static int tileSize = renderParams.tileSize.x;
+            ImGui::SliderInt("Tile size", &tileSize, 0, 128);
+            renderParams.tileSize = {(size_t)tileSize, (size_t)tileSize};
+
             ImGui::End();
 
             window.endGUI();

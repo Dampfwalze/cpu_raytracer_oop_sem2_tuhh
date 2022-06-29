@@ -3,6 +3,11 @@
 namespace rt
 {
     Application::Application()
+        : m_renderer(RenderParams{
+              .outputSize = {640, 480},
+              .tileSize = {64, 64},
+          }),
+          m_window(m_renderer)
     {
     }
 
