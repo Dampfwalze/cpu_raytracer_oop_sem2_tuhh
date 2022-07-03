@@ -8,6 +8,7 @@ set(IMGUI_IMPLEMENTATIONS glfw opengl3)
 
 include(getGLFW.cmake)
 include(getImGui.cmake)
+include(getGLM.cmake)
 add_subdirectory(deps/glad)
 
 set(SOURCES
@@ -32,7 +33,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:_DEBU
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE include)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} glfw glad imgui)
+target_link_libraries(${CMAKE_PROJECT_NAME} glfw glad imgui glm)
 
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION .)
 

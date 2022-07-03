@@ -32,7 +32,7 @@ namespace rt
 
     static void copyBuffer(const FrameBuffer &buffer)
     {
-        if (buffer.getSize() == math::Vec2<size_t>(0))
+        if (buffer.getSize() == math::u64vec2(0))
             return;
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, buffer.getWidth(), buffer.getHeight(), 0, GL_RGB, GL_FLOAT, &buffer[0]);
     }

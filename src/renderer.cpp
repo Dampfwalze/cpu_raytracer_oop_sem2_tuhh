@@ -42,16 +42,16 @@ namespace rt
     {
         std::cout << "Start render" << std::endl;
 
-        if (m_frameBuffer.getWidth() != renderParams.outputSize.width || m_frameBuffer.getHeight() != renderParams.outputSize.height)
-            m_frameBuffer.resize(renderParams.outputSize.width, renderParams.outputSize.height);
+        if (m_frameBuffer.getWidth() != renderParams.outputSize.x || m_frameBuffer.getHeight() != renderParams.outputSize.y)
+            m_frameBuffer.resize(renderParams.outputSize.x, renderParams.outputSize.y);
 
         m_frameBuffer.clear();
-        for (size_t x = 0; x < m_frameBuffer.getWidth(); x += renderParams.tileSize.width)
+        for (size_t x = 0; x < m_frameBuffer.getWidth(); x += renderParams.tileSize.x)
         {
-            for (size_t y = 0; y < m_frameBuffer.getHeight(); y += renderParams.tileSize.height)
+            for (size_t y = 0; y < m_frameBuffer.getHeight(); y += renderParams.tileSize.y)
             {
                 m_threadPool.submit(RenderTask(
-                    m::Rect(m::Vec2(x, y), renderParams.tileSize).min(renderParams.outputSize),
+                    m::Rect(m::u64vec2(x, y), renderParams.tileSize).min(renderParams.outputSize),
                     m_frameBuffer,
                     scene));
             }

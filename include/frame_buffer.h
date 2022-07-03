@@ -7,6 +7,8 @@
 
 namespace rt
 {
+    namespace m = math;
+
     struct Pixel
     {
         float r, g, b;
@@ -16,7 +18,7 @@ namespace rt
     {
     private:
         Pixel *m_buffer;
-        math::Vec2<size_t> m_size;
+        m::u64vec2 m_size;
 
     public:
         FrameBuffer(size_t width, size_t height);
@@ -25,10 +27,10 @@ namespace rt
 
         size_t getWidth() const;
         size_t getHeight() const;
-        math::Vec2<size_t> getSize() const;
+        m::u64vec2 getSize() const;
 
-        inline void resize(size_t width, size_t height) { resize(math::Vec2(width, height)); }
-        void resize(math::Vec2<size_t> size);
+        inline void resize(size_t width, size_t height) { resize(m::u64vec2(width, height)); }
+        void resize(m::u64vec2 size);
 
         void clear(const Pixel &color = {0, 0, 0});
 

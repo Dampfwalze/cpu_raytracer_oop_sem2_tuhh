@@ -5,10 +5,12 @@
 
 namespace rt
 {
+    namespace m = math;
+
     struct RenderParams
     {
-        math::Vec2<size_t> outputSize;
-        math::Vec2<size_t> tileSize;
+        m::u64vec2 outputSize;
+        m::u64vec2 tileSize;
     };
 
 } // namespace rt
