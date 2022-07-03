@@ -21,6 +21,7 @@ set(SOURCES
     src/gl_error.cpp
     src/renderer.cpp
     src/rtmath.cpp
+    src/scene.cpp
 )
 
 FILE(GLOB HEADERS include/*.h)

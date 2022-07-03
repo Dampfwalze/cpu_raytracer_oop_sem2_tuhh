@@ -7,13 +7,16 @@ namespace rt
               .outputSize = {640, 480},
               .tileSize = {64, 64},
           }),
-          m_window(m_renderer)
+          m_window(*this), m_scene()
     {
     }
 
     Application::~Application()
     {
     }
+
+    Renderer &Application::getRenderer() { return m_renderer; }
+    Scene &Application::getScene() { return m_scene; }
 
     void Application::run()
     {

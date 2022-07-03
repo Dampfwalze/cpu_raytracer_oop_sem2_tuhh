@@ -2,8 +2,13 @@
 
 namespace rt
 {
-    Renderer::RenderTask::RenderTask(math::Rect<size_t> rect, FrameBuffer &frameBuffer)
-        : m_rect(rect), m_frameBuffer(frameBuffer) {}
+    namespace m = math;
+
+    Renderer::RenderTask::RenderTask(m::Rect<size_t> rect, FrameBuffer &frameBuffer, Scene &scene)
+        : m_rect(rect),
+          m_frameBuffer(frameBuffer), m_scene(scene)
+    {
+    }
 
     Renderer::RenderTask::~RenderTask()
     {
@@ -11,7 +16,6 @@ namespace rt
 
     void Renderer::RenderTask::run()
     {
-        std::cout << "Render: " << m_rect << std::endl;
         for (size_t y = m_rect.start.y; y < m_rect.getEnd().y; y++)
         {
             for (size_t x = m_rect.start.x; x < m_rect.getEnd().x; x++)
@@ -34,7 +38,7 @@ namespace rt
     {
     }
 
-    void Renderer::render()
+    void Renderer::render(Scene &scene)
     {
         std::cout << "Start render" << std::endl;
 
@@ -46,7 +50,10 @@ namespace rt
         {
             for (size_t y = 0; y < m_frameBuffer.getHeight(); y += renderParams.tileSize.height)
             {
-                m_threadPool.submit(RenderTask(math::Rect(math::Vec2(x, y), renderParams.tileSize).min(renderParams.outputSize), m_frameBuffer));
+                m_threadPool.submit(RenderTask(
+                    m::Rect(m::Vec2(x, y), renderParams.tileSize).min(renderParams.outputSize),
+                    m_frameBuffer,
+                    scene));
             }
         }
     }

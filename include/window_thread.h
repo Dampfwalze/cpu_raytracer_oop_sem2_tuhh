@@ -10,6 +10,8 @@
 
 namespace rt
 {
+    class Application;
+
     class WindowThread : public std::thread
     {
     private:
@@ -17,10 +19,10 @@ namespace rt
         std::condition_variable m_termination_cv;
         bool m_terminate = false;
 
-        Renderer &m_renderer;
+        Application &m_application;
 
     public:
-        WindowThread(Renderer &renderer);
+        WindowThread(Application &application);
         ~WindowThread();
 
         void terminate();

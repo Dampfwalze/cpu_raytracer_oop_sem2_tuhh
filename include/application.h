@@ -3,6 +3,7 @@
 
 #include <window_thread.h>
 #include <renderer.h>
+#include <scene.h>
 
 namespace rt
 {
@@ -11,10 +12,14 @@ namespace rt
     private:
         Renderer m_renderer;
         WindowThread m_window;
+        Scene m_scene;
 
     public:
         Application();
         ~Application();
+
+        Renderer &getRenderer();
+        Scene &getScene();
 
         void run();
     };

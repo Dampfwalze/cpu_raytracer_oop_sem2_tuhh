@@ -5,6 +5,7 @@
 #include <thread_pool.h>
 #include <rtmath.h>
 #include <render_params.h>
+#include <scene.h>
 
 namespace rt
 {
@@ -17,9 +18,10 @@ namespace rt
         private:
             math::Rect<size_t> m_rect;
             FrameBuffer &m_frameBuffer;
+            Scene &m_scene;
 
         public:
-            RenderTask(math::Rect<size_t> rect, FrameBuffer &frameBuffer);
+            RenderTask(math::Rect<size_t> rect, FrameBuffer &frameBuffer, Scene &scene);
             ~RenderTask();
 
             void run();
@@ -39,7 +41,7 @@ namespace rt
 
         inline FrameBuffer &getFrameBuffer() { return m_frameBuffer; }
 
-        void render();
+        void render(Scene &scene);
     };
 
 } // namespace rt
