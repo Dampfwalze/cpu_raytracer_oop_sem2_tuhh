@@ -9,6 +9,7 @@ namespace rt
           }),
           m_window(*this), m_scene()
     {
+        m_scene.addShape(new Shapes::Sphere());
     }
 
     Application::~Application()

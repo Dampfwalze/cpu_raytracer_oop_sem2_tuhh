@@ -6,24 +6,37 @@
 
 namespace rt
 {
-    class SceneObject
+    class SceneShape
     {
     private:
     public:
-        SceneObject() {}
-        ~SceneObject() {}
+        SceneShape() {}
+        ~SceneShape() {}
     };
+
+    namespace Shapes
+    {
+        class Sphere : public SceneShape
+        {
+            double r;
+        };
+    }
 
     class Scene
     {
+    public:
+        using shape_collection_type = std::vector<std::unique_ptr<SceneShape>>;
+
     private:
-        std::vector<std::unique_ptr<SceneObject>> m_objects;
+        shape_collection_type m_objects;
 
     public:
-        Scene(std::vector<std::unique_ptr<SceneObject>> &objects);
-        Scene(std::vector<std::unique_ptr<SceneObject>> &&objects);
+        Scene(std::vector<std::unique_ptr<SceneShape>> &objects);
+        Scene(std::vector<std::unique_ptr<SceneShape>> &&objects);
         Scene();
         ~Scene();
+
+        void addShape(SceneShape *shape);
     };
 
 } // namespace rt

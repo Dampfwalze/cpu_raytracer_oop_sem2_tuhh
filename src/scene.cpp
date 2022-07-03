@@ -2,10 +2,10 @@
 
 namespace rt
 {
-    Scene::Scene(std::vector<std::unique_ptr<SceneObject>> &objects)
+    Scene::Scene(std::vector<std::unique_ptr<SceneShape>> &objects)
         : m_objects(std::move(objects)) {}
 
-    Scene::Scene(std::vector<std::unique_ptr<SceneObject>> &&objects)
+    Scene::Scene(std::vector<std::unique_ptr<SceneShape>> &&objects)
         : m_objects(std::move(objects)) {}
 
     Scene::Scene()
@@ -13,5 +13,10 @@ namespace rt
 
     Scene::~Scene()
     {
+    }
+
+    void Scene::addShape(SceneShape *shape)
+    {
+        m_objects.emplace_back(shape);
     }
 }
