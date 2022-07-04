@@ -1,7 +1,16 @@
 #include <scene.h>
 
+#include <stream_formatter.h>
+#include <iomanip>
+
 namespace rt
 {
+    std::ostream &operator<<(std::ostream &stream, const SceneShape &shape)
+    {
+        shape.toString(stream);
+        return stream;
+    }
+
     Scene::Scene(std::vector<std::unique_ptr<SceneShape>> &objects)
         : m_objects(std::move(objects)) {}
 
@@ -19,10 +28,36 @@ namespace rt
     {
         m_objects.emplace_back(shape);
     }
+
+    std::ostream &operator<<(std::ostream &stream, const Scene &shape)
+    {
+        stream << "Shapes {";
+        for (auto &&s : shape.m_objects)
+            stream
+                << rtstd::pushIndent() << "\n"
+                << *s
+                << rtstd::popIndent();
+        stream << "\n}";
+        return stream;
+    }
+
+    std::ostream &operator<<(std::ostream &stream, const SceneShape::Transform &transform)
+    {
+        stream << "Transform:\n    " << std::setw(10) << "position: " << transform.position << "\n    " << std::setw(10) << "rotation: " << transform.rotation;
+        return stream;
+    }
+
     namespace Shapes
     {
         Sphere::~Sphere()
         {
+        }
+
+        std::ostream &Sphere::toString(std::ostream &stream) const
+        {
+            stream << rtstd::pushIndent() << "Sphere:\n"
+                   << transform << "\nr: " << r << rtstd::popIndent();
+            return stream;
         }
     }
 

@@ -33,7 +33,11 @@ namespace rt
         SceneShape() {}
         virtual ~SceneShape() {}
 
+        virtual std::ostream &toString(std::ostream &stream) const = 0;
     };
+
+    std::ostream &operator<<(std::ostream &stream, const SceneShape &shape);
+    std::ostream &operator<<(std::ostream &stream, const SceneShape::Transform &transform);
 
     namespace Shapes
     {
@@ -42,6 +46,8 @@ namespace rt
             double r;
 
             virtual ~Sphere();
+
+            virtual std::ostream &toString(std::ostream &stream) const override;
         };
     }
 
@@ -60,8 +66,11 @@ namespace rt
         ~Scene();
 
         void addShape(SceneShape *shape);
+
+        friend std::ostream &operator<<(std::ostream &stream, const Scene &shape);
     };
 
+    std::ostream &operator<<(std::ostream &stream, const Scene &shape);
 } // namespace rt
 
 #endif // __SCENE_H__

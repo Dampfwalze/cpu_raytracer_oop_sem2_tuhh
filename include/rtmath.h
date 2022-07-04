@@ -123,4 +123,42 @@ namespace rt
 
 } // namespace rt
 
+namespace glm
+{
+    template <typename T, qualifier Q>
+    std::ostream &operator<<(std::ostream &stream, const vec<1, T, Q> &v)
+    {
+        stream << "vec1(" << v.x << ")";
+        return stream;
+    }
+
+    template <typename T, qualifier Q>
+    std::ostream &operator<<(std::ostream &stream, const vec<2, T, Q> &v)
+    {
+        stream << "vec2(" << v.x << ", " << v.y << ")";
+        return stream;
+    }
+
+    template <typename T, qualifier Q>
+    std::ostream &operator<<(std::ostream &stream, const vec<3, T, Q> &v)
+    {
+        stream << "vec3(" << v.x << ", " << v.y << ", " << v.z << ")";
+        return stream;
+    }
+
+    template <typename T, qualifier Q>
+    std::ostream &operator<<(std::ostream &stream, const vec<4, T, Q> &v)
+    {
+        stream << "vec4(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
+        return stream;
+    }
+
+    template <typename T, qualifier Q>
+    std::ostream &operator<<(std::ostream &stream, const qua<T, Q> &q)
+    {
+        stream << "quat(" << q.w << " + " << q.x << "i - " << q.y << "j + " << q.z << "k)";
+        return stream;
+    }
+} // namespace glm
+
 #endif // RTMATH_HPP
