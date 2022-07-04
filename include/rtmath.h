@@ -15,7 +15,7 @@ namespace rt
 
         using namespace glm;
 
-        template <typename T>
+        template <typename T = double>
         using vec1 = vec<1, T, defaultp>;
         template <typename T>
         using vec2 = vec<2, T, defaultp>;
@@ -23,6 +23,11 @@ namespace rt
         using vec3 = vec<3, T, defaultp>;
         template <typename T>
         using vec4 = vec<4, T, defaultp>;
+
+        template <typename T>
+        using Color = vec3<T>;
+        template <typename T>
+        using Pixel = Color<T>;
 
         template <typename T>
         vec2<T> min(const vec2<T> &v, T _x, T _y) { return vec2<T>(std::min(v.x, _x), std::min(v.y, _y)); }

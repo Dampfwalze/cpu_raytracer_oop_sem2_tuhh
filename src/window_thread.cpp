@@ -145,6 +145,17 @@ namespace rt
             ImGui::SliderInt("Tile size", &tileSize, 0, 128);
             renderParams.tileSize = {(size_t)tileSize, (size_t)tileSize};
 
+            if (ImGui::TreeNode("Renderers"))
+            {
+                for (auto &&i : m_application.getRenderers())
+                {
+                    if (ImGui::Selectable(i.first.c_str(), m_application.getRenderDispatcher().getRenderer() == i.second))
+                        m_application.getRenderDispatcher().setRenderer(i.second);
+                }
+
+                ImGui::TreePop();
+            }
+
             ImGui::End();
 
             window.endGUI();

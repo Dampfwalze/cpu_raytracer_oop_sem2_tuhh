@@ -6,6 +6,7 @@
 #include <rtmath.h>
 #include <render_params.h>
 #include <scene.h>
+#include <renderer.h>
 
 namespace rt
 {
@@ -19,9 +20,10 @@ namespace rt
             math::Rect<size_t> m_rect;
             FrameBuffer &m_frameBuffer;
             Scene &m_scene;
+            std::shared_ptr<Renderer> m_renderer;
 
         public:
-            RenderTask(math::Rect<size_t> rect, FrameBuffer &frameBuffer, Scene &scene);
+            RenderTask(math::Rect<size_t> rect, FrameBuffer &frameBuffer, Scene &scene, std::shared_ptr<Renderer> &renderer);
             ~RenderTask();
 
             void run();
@@ -32,14 +34,19 @@ namespace rt
 
         ThreadPool<RenderTask> m_threadPool;
 
+        std::shared_ptr<Renderer> m_renderer;
+
     public:
         RenderParams renderParams;
 
     public:
-        RenderDispatcher(const RenderParams &renderParams);
+        RenderDispatcher(const RenderParams &renderParams, const std::shared_ptr<Renderer> &renderer);
         ~RenderDispatcher();
 
         inline FrameBuffer &getFrameBuffer() { return m_frameBuffer; }
+
+        inline std::shared_ptr<Renderer> getRenderer() { return m_renderer; }
+        inline void setRenderer(std::shared_ptr<Renderer> &renderer) { m_renderer = renderer; }
 
         void render(Scene &scene);
     };

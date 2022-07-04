@@ -21,6 +21,8 @@ set(SOURCES
     src/shader.cpp
     src/gl_error.cpp
     src/render_dispatcher.cpp
+    src/renderer.cpp
+    src/rt_renderer.cpp
     src/rtmath.cpp
     src/scene.cpp
 )

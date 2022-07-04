@@ -4,7 +4,7 @@ namespace rt
 {
 
     FrameBuffer::FrameBuffer(size_t width, size_t height)
-        : m_buffer(new Pixel[width * height]), m_size(width, height) {}
+        : m_buffer(new m::Pixel<float>[width * height]), m_size(width, height) {}
 
     FrameBuffer::FrameBuffer()
         : m_buffer(nullptr), m_size(0) {}
@@ -25,17 +25,17 @@ namespace rt
     void FrameBuffer::resize(m::u64vec2 size)
     {
         delete[] m_buffer;
-        m_buffer = new Pixel[size.x * size.y];
+        m_buffer = new m::Pixel<float>[size.x * size.y];
         m_size = size;
     }
 
-    void FrameBuffer::clear(const Pixel &color)
+    void FrameBuffer::clear(const m::Pixel<float> &color)
     {
         for (size_t i = 0; i < m_size.x * m_size.y; i++)
             (*this)[i] = color;
     }
 
-    Pixel &FrameBuffer::operator[](size_t index) const { return m_buffer[index]; }
+    m::Pixel<float> &FrameBuffer::operator[](size_t index) const { return m_buffer[index]; }
 
-    Pixel &FrameBuffer::at(size_t x, size_t y) const { return m_buffer[y * m_size.x + x]; }
+    m::Pixel<float> &FrameBuffer::at(size_t x, size_t y) const { return m_buffer[y * m_size.x + x]; }
 }
