@@ -1,17 +1,38 @@
 #ifndef __SCENE_H__
 #define __SCENE_H__
 
+#include <rtmath.h>
+
 #include <vector>
 #include <memory>
+#include <optional>
 
 namespace rt
 {
+    namespace m = math;
+
     class SceneShape
     {
+    public:
+        struct Transform
+        {
+            m::dvec3 position;
+            m::dquat rotation;
+
+        private:
+            std::optional<m::dmat4> m_matrix;
+
+        public:
+            Transform();
+
+            m::dmat4 const &getMatrix();
+        } transform;
+
     private:
     public:
         SceneShape() {}
-        ~SceneShape() {}
+        virtual ~SceneShape() {}
+
     };
 
     namespace Shapes
@@ -19,6 +40,8 @@ namespace rt
         class Sphere : public SceneShape
         {
             double r;
+
+            virtual ~Sphere();
         };
     }
 
