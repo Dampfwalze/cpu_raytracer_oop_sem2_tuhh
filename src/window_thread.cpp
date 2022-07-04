@@ -3,6 +3,7 @@
 #include <window_thread.h>
 
 #include <application.h>
+#include <render_dispatcher.h>
 #include <frame_buffer.h>
 #include <shader.h>
 #include <gl_error.h>
@@ -53,7 +54,7 @@ namespace rt
         Windowing windowing;
         Window window;
 
-        static RenderParams renderParams = m_application.getRenderer().renderParams;
+        static RenderParams renderParams = m_application.getRenderDispatcher().renderParams;
 
         window.beginDraw();
 
@@ -119,7 +120,7 @@ namespace rt
             // GLCALL(glDrawArrays(GL_TRIANGLES, 0, 6));
 
             // Copy data from framebuffer to OpenGL texture on the GPU
-            copyBuffer(m_application.getRenderer().getFrameBuffer());
+            copyBuffer(m_application.getRenderDispatcher().getFrameBuffer());
 
             window.beginGUI();
 
@@ -130,14 +131,14 @@ namespace rt
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
             ImGui::Begin("Viewport");
             ImGui::PopStyleVar();
-            ImGui::Image(reinterpret_cast<ImTextureID>(texture), ImVec2{(float)m_application.getRenderer().getFrameBuffer().getWidth(), (float)m_application.getRenderer().getFrameBuffer().getHeight()});
+            ImGui::Image(reinterpret_cast<ImTextureID>(texture), ImVec2{(float)m_application.getRenderDispatcher().getFrameBuffer().getWidth(), (float)m_application.getRenderDispatcher().getFrameBuffer().getHeight()});
             ImGui::End();
 
             ImGui::Begin("Control");
             if (ImGui::Button("Render"))
             {
-                m_application.getRenderer().renderParams = renderParams;
-                m_application.getRenderer().render(m_application.getScene());
+                m_application.getRenderDispatcher().renderParams = renderParams;
+                m_application.getRenderDispatcher().render(m_application.getScene());
             }
 
             static int tileSize = renderParams.tileSize.x;

@@ -1,20 +1,20 @@
-#include <renderer.h>
+#include <render_dispatcher.h>
 
 namespace rt
 {
     namespace m = math;
 
-    Renderer::RenderTask::RenderTask(m::Rect<size_t> rect, FrameBuffer &frameBuffer, Scene &scene)
+    RenderDispatcher::RenderTask::RenderTask(m::Rect<size_t> rect, FrameBuffer &frameBuffer, Scene &scene)
         : m_rect(rect),
           m_frameBuffer(frameBuffer), m_scene(scene)
     {
     }
 
-    Renderer::RenderTask::~RenderTask()
+    RenderDispatcher::RenderTask::~RenderTask()
     {
     }
 
-    void Renderer::RenderTask::run()
+    void RenderDispatcher::RenderTask::run()
     {
         for (size_t y = m_rect.start.y; y < m_rect.getEnd().y; y++)
         {
@@ -31,14 +31,14 @@ namespace rt
         }
     }
 
-    Renderer::Renderer(const RenderParams &renderParams)
+    RenderDispatcher::RenderDispatcher(const RenderParams &renderParams)
         : m_threadPool(std::thread::hardware_concurrency() == 0 ? 1 : std::thread::hardware_concurrency()), renderParams(renderParams) {}
 
-    Renderer::~Renderer()
+    RenderDispatcher::~RenderDispatcher()
     {
     }
 
-    void Renderer::render(Scene &scene)
+    void RenderDispatcher::render(Scene &scene)
     {
         std::cout << "Start render" << std::endl;
 

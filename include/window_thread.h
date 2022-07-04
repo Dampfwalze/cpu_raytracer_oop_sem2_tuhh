@@ -2,7 +2,6 @@
 #define WINDOW_THREAD_HPP
 
 #include <window.h>
-#include <renderer.h>
 
 #include <thread>
 #include <mutex>

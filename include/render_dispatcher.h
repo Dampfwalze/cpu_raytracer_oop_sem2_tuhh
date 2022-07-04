@@ -1,5 +1,5 @@
-#ifndef RENDERER_HPP
-#define RENDERER_HPP
+#ifndef RENDER_DISPATCHER_HPP
+#define RENDER_DISPATCHER_HPP
 
 #include <frame_buffer.h>
 #include <thread_pool.h>
@@ -10,7 +10,7 @@
 namespace rt
 {
 
-    class Renderer
+    class RenderDispatcher
     {
     private:
         class RenderTask
@@ -36,8 +36,8 @@ namespace rt
         RenderParams renderParams;
 
     public:
-        Renderer(const RenderParams &renderParams);
-        ~Renderer();
+        RenderDispatcher(const RenderParams &renderParams);
+        ~RenderDispatcher();
 
         inline FrameBuffer &getFrameBuffer() { return m_frameBuffer; }
 
@@ -46,4 +46,4 @@ namespace rt
 
 } // namespace rt
 
-#endif // RENDERER_HPP
+#endif // RENDER_DISPATCHER_HPP

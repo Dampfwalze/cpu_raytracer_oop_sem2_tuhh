@@ -2,7 +2,7 @@
 #define APPLICATION_HPP
 
 #include <window_thread.h>
-#include <renderer.h>
+#include <render_dispatcher.h>
 #include <scene.h>
 
 namespace rt
@@ -10,7 +10,7 @@ namespace rt
     class Application
     {
     private:
-        Renderer m_renderer;
+        RenderDispatcher m_renderDispatcher;
         WindowThread m_window;
         Scene m_scene;
 
@@ -18,7 +18,7 @@ namespace rt
         Application();
         ~Application();
 
-        Renderer &getRenderer();
+        RenderDispatcher &getRenderDispatcher();
         Scene &getScene();
 
         void run();

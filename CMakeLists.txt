@@ -20,7 +20,7 @@ set(SOURCES
     src/frame_buffer.cpp
     src/shader.cpp
     src/gl_error.cpp
-    src/renderer.cpp
+    src/render_dispatcher.cpp
     src/rtmath.cpp
     src/scene.cpp
 )

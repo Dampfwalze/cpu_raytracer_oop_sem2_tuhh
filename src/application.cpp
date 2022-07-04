@@ -3,7 +3,7 @@
 namespace rt
 {
     Application::Application()
-        : m_renderer(RenderParams{
+        : m_renderDispatcher(RenderParams{
               .outputSize = {640, 480},
               .tileSize = {64, 64},
           }),
@@ -17,7 +17,7 @@ namespace rt
     {
     }
 
-    Renderer &Application::getRenderer() { return m_renderer; }
+    RenderDispatcher &Application::getRenderDispatcher() { return m_renderDispatcher; }
     Scene &Application::getScene() { return m_scene; }
 
     void Application::run()
