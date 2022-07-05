@@ -24,15 +24,59 @@ namespace rt
         template <typename T>
         using vec4 = vec<4, T, defaultp>;
 
+        template <typename T = double>
+        using mat2 = mat<2, 2, T, defaultp>;
+        template <typename T = double>
+        using mat2x2 = mat2<T>;
+        template <typename T = double>
+        using mat3 = mat<3, 3, T, defaultp>;
+        template <typename T = double>
+        using mat3x3 = mat3<T>;
+        template <typename T = double>
+        using mat4 = mat<4, 4, T, defaultp>;
+        template <typename T = double>
+        using mat4x4 = mat4<T>;
+
         template <typename T>
         using Color = vec3<T>;
         template <typename T>
         using Pixel = Color<T>;
 
         template <typename T>
-        vec2<T> min(const vec2<T> &v, T _x, T _y) { return vec2<T>(std::min(v.x, _x), std::min(v.y, _y)); }
+        vec<2, T, defaultp> min(const vec<2, T, defaultp> &v, T _x, T _y) { return vec<2, T, defaultp>(std::min(v.x, _x), std::min(v.y, _y)); }
         template <typename T>
-        vec2<T> max(const vec2<T> &v, T _x, T _y) { return vec2<T>(std::max(v.x, _x), std::max(v.y, _y)); }
+        vec<2, T, defaultp> max(const vec<2, T, defaultp> &v, T _x, T _y) { return vec<2, T, defaultp>(std::max(v.x, _x), std::max(v.y, _y)); }
+
+        template <typename T>
+        struct ray
+        {
+            vec3<T> origin;
+            vec3<T> direction;
+
+            ray() {}
+            ray(vec3<T> origin, vec3<T> direction) : origin(origin), direction(direction) {}
+
+            ray<T> &operator*=(const mat4<T> &matrix)
+            {
+                origin = vec4<T>(origin, 1) * matrix;
+                direction = vec4<T>(direction, 0) * matrix;
+
+                return *this;
+            }
+
+            ray<T> &operator*(const mat4<T> &matrix) const
+            {
+                return ray(vec4<T>(origin, 1) * matrix,
+                           vec4<T>(direction, 0) * matrix);
+            }
+        };
+
+        template <typename T>
+        std::ostream &operator<<(std::ostream &stream, ray<T> &ray)
+        {
+            stream << "Ray (origin: " << ray.origin << ", direction: " << ray.direction << ")";
+            return stream;
+        }
 
         // template <typename T>
         // struct Vec2
