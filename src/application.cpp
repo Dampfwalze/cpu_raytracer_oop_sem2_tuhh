@@ -1,4 +1,5 @@
 #include <application.h>
+#include <optional>
 
 namespace rt
 {
@@ -30,7 +31,29 @@ namespace rt
     {
         while (true)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::optional<Event> event;
+            {
+                std::unique_lock<std::mutex> lk(m_queMutex);
+                m_queCV.wait_for(lk, std::chrono::milliseconds(100), [this]
+                                 { return !m_eventQue.empty(); });
+                if (!m_eventQue.empty())
+                {
+                    event = m_eventQue[0];
+                    m_eventQue.pop_front();
+                }
+            }
+            if (event.has_value())
+            {
+                switch (event.value().type)
+                {
+                case EventType::Render:
+                    m_renderDispatcher.render(m_scene);
+                    break;
+                }
+            }
         }
     }
+
+    Application::Event::Event(const Events::Render &render)
+        : type(EventType::Render), render(render) {}
 }

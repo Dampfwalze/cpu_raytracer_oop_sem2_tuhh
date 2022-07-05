@@ -138,7 +138,7 @@ namespace rt
             if (ImGui::Button("Render"))
             {
                 m_application.getRenderDispatcher().renderParams = renderParams;
-                m_application.getRenderDispatcher().render(m_application.getScene());
+                m_application << Application::Events::Render();
             }
 
             static int tileSize = (int)renderParams.tileSize.x;
