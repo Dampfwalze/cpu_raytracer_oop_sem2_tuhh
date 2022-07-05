@@ -8,7 +8,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(glm)
 
 # glm uses volatile at one point, which is deprecated by c++ standard
-target_compile_options(glm INTERFACE -Wno-volatile)
-
-file(GLOB_RECURSE GLM_HEADERS "${glm_SOURCE_DIR}/glm/*.hpp")
-target_precompile_headers(glm INTERFACE ${GLM_HEADERS})
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(glm INTERFACE -Wno-volatile)
+endif()

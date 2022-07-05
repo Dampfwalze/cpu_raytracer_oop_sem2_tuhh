@@ -37,6 +37,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE include)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} glfw glad imgui glm)
 
+target_precompile_headers(${CMAKE_PROJECT_NAME} PUBLIC include/rtmath.h)
+
 install(TARGETS ${CMAKE_PROJECT_NAME} DESTINATION .)
 
 install(DIRECTORY resource DESTINATION .)

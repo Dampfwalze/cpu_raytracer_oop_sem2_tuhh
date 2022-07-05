@@ -35,7 +35,7 @@ namespace rt
     {
         if (buffer.getSize() == math::u64vec2(0))
             return;
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, buffer.getWidth(), buffer.getHeight(), 0, GL_RGB, GL_FLOAT, &buffer[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, (int)buffer.getWidth(), (int)buffer.getHeight(), 0, GL_RGB, GL_FLOAT, &buffer[0]);
     }
 
     void APIENTRY errorCallback(GLenum source,
@@ -131,7 +131,7 @@ namespace rt
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
             ImGui::Begin("Viewport");
             ImGui::PopStyleVar();
-            ImGui::Image(reinterpret_cast<ImTextureID>(texture), ImVec2{(float)m_application.getRenderDispatcher().getFrameBuffer().getWidth(), (float)m_application.getRenderDispatcher().getFrameBuffer().getHeight()});
+            ImGui::Image(reinterpret_cast<ImTextureID>((size_t)texture), ImVec2{(float)m_application.getRenderDispatcher().getFrameBuffer().getWidth(), (float)m_application.getRenderDispatcher().getFrameBuffer().getHeight()});
             ImGui::End();
 
             ImGui::Begin("Control");
@@ -141,7 +141,7 @@ namespace rt
                 m_application.getRenderDispatcher().render(m_application.getScene());
             }
 
-            static int tileSize = renderParams.tileSize.x;
+            static int tileSize = (int)renderParams.tileSize.x;
             ImGui::SliderInt("Tile size", &tileSize, 0, 128);
             renderParams.tileSize = {(size_t)tileSize, (size_t)tileSize};
 

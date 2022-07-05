@@ -53,3 +53,10 @@ When using MSVC, the binarys are in a subfolder according to the specified confi
 3. Select a generator in the bottom bar
 4. Press `F5` to run
 
+### With Visual Studio
+
+1. Open the source directory in Visual Studio
+2. Select the desired build configuration
+3. Make sure to select `Ray_Tracer.exe` as start element
+4. Press `F5` to run
+
