@@ -24,13 +24,12 @@ namespace rt
 
     std::ostream &operator<<(std::ostream &stream, const Scene &scene)
     {
-        auto ss = stream << "Scene:" << rtstd::pushIndent();
-        ss << "\nShapes:";
+        stream << "Scene { Shapes: ";
         for (auto &&s : scene.m_objects)
-            ss << rtstd::pushIndent() << "\n"
-               << *s
-               << rtstd::popIndent();
-        ss << rtstd::popIndent();
-        return stream;
+            if (s == scene.m_objects.back())
+                stream << *s;
+            else
+                stream << *s << ", ";
+        return stream << "}";
     }
 }

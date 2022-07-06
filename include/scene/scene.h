@@ -26,7 +26,7 @@ namespace rt
         friend std::ostream &operator<<(std::ostream &stream, const Scene &shape);
     };
 
-    std::ostream &operator<<(std::ostream &stream, const Scene &shape);
+    std::ostream &operator<<(std::ostream &stream, const Scene &scene);
 } // namespace rt
 
 #endif // SCENE_HPP

@@ -15,7 +15,7 @@ namespace rt
           m_window(*this), m_scene()
     {
         m_scene.addShape(new Shapes::Sphere());
-        std::cout << m_scene << std::endl;
+        rtstd::formatterstream(std::cout) << m_scene << std::endl;
     }
 
     Application::~Application()

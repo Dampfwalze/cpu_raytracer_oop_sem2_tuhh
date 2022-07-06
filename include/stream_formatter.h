@@ -7,80 +7,165 @@
 
 namespace rtstd
 {
-    template <typename _CharT>
-    struct _SetIndent
+    template <class _Elem>
+    struct basic_formatterargs
     {
-        unsigned int indentSize;
-        _CharT indentChar;
+        using char_type = _Elem;
+
+        int indentSize = 4;
+        char_type indent = (char_type)' ';
+        char_type openingBracket = (char_type)'{';
+        char_type closingBracket = (char_type)'}';
+        char_type seperator = (char_type)',';
+        char_type deactivator = (char_type)'(';
+        char_type activator = (char_type)')';
+        char_type lineBreak = (char_type)'\n';
     };
 
-    struct _PopIndent
+    template <class _Elem, class _Traits>
+    class basic_formatterbuf : public std::basic_streambuf<_Elem, _Traits>
     {
-    };
+    public:
+        using child_type = std::basic_ostream<_Elem, _Traits>;
+        using char_type = _Elem;
+        using int_type = typename _Traits::int_type;
 
-    template <typename _CharT>
-    class indent_streambuf : public std::basic_streambuf<_CharT>
-    {
     private:
-        typedef std::basic_streambuf<_CharT> base;
+        using base = std::basic_streambuf<_Elem, _Traits>;
 
-        using typename base::int_type;
+        basic_formatterargs<_Elem> m_args;
 
-        unsigned int m_indentSize;
-        _CharT m_indentChar;
-        std::ostream &m_oldStream;
+        int m_indentCount = 0;
+        bool m_drainWhitespace = false;
+        int m_deactivateCount = 0;
 
-        std::stringstream m_str;
+        child_type &m_outStream;
 
     public:
-        indent_streambuf(unsigned int indentSize, _CharT indentChar, std::ostream &oldStream)
-            : m_indentSize(indentSize), m_indentChar(indentChar), m_oldStream(oldStream) {}
-        virtual ~indent_streambuf() {}
-
-    protected:
-        int_type overflow(int_type ch) override
+        basic_formatterbuf(child_type &outStream, int indentSize = 4)
+            : m_outStream(outStream), m_args()
         {
-            static std::basic_string<_CharT> str = "\n" + std::basic_string<_CharT>(m_indentSize, m_indentChar);
-            if (ch == (_CharT)'\n')
-                m_str << str;
-            else
-                m_str << (_CharT)ch;
-            return ch;
+            m_args.indentSize = indentSize;
+        }
+        basic_formatterbuf(child_type &outStream, const basic_formatterargs<_Elem> &args)
+            : m_outStream(outStream), m_args(args) {}
+        ~basic_formatterbuf() {}
+
+    private:
+        void writeIndent()
+        {
+            for (size_t i = 0; i < m_indentCount * m_args.indentSize; i++)
+                m_outStream << m_args.indent;
         }
 
-        inline std::string str() { return m_str.str(); }
+        void pushIndent()
+        {
+            m_outStream << m_args.lineBreak;
+            m_indentCount++;
+            writeIndent();
+            if (m_deactivateCount <= 0)
+                m_drainWhitespace = true;
+        }
 
-        friend std::basic_ostream<_CharT> &operator<< <_CharT>(std::basic_ostream<_CharT> &__os, _PopIndent __p);
+        void popIndent()
+        {
+            m_outStream << m_args.lineBreak;
+            m_indentCount--;
+            writeIndent();
+        }
+
+        void breakLine()
+        {
+            m_outStream << m_args.lineBreak;
+            writeIndent();
+            if (m_deactivateCount <= 0)
+                m_drainWhitespace = true;
+        }
+
+    protected:
+        int_type overflow(int_type ch_i) override
+        {
+            char_type ch = (char_type)ch_i;
+
+            if (m_drainWhitespace && std::isspace(ch))
+                return ch;
+            else
+                m_drainWhitespace = false;
+
+            if (ch == m_args.deactivator)
+            {
+                m_deactivateCount++;
+                m_outStream << ch;
+                return ch;
+            }
+            else if (ch == m_args.activator)
+            {
+                m_deactivateCount--;
+                m_outStream << ch;
+                return ch;
+            }
+            else if (ch == m_args.lineBreak)
+            {
+                m_outStream << ch;
+                writeIndent();
+                return ch;
+            }
+            else if (m_deactivateCount > 0)
+            {
+                m_outStream << ch;
+                return ch;
+            }
+            else if (ch == m_args.openingBracket)
+            {
+                m_outStream << ch;
+                pushIndent();
+                return ch;
+            }
+            else if (ch == m_args.closingBracket)
+            {
+                popIndent();
+                m_outStream << ch;
+                return ch;
+            }
+            else if (ch == m_args.seperator)
+            {
+                m_outStream << ch;
+                breakLine();
+                return ch;
+            }
+            else
+            {
+                m_outStream << ch;
+                return ch;
+            }
+        }
     };
 
-    template <typename _CharT = char>
-    inline _SetIndent<_CharT> pushIndent(unsigned int indentSize = 4, _CharT indentChar = ' ')
+    template <class _Elem, class _Traits>
+    class basic_formatterstream : public std::basic_ostream<_Elem, _Traits>
     {
-        return _SetIndent{indentSize, indentChar};
-    }
+    public:
+        using child_type = std::basic_ostream<_Elem, _Traits>;
+        using char_type = _Elem;
+        using traits_type = _Traits;
 
-    inline _PopIndent popIndent()
-    {
-        return _PopIndent();
-    }
+        using _buffer_type = basic_formatterbuf<_Elem, _Traits>;
 
-    template <typename _CharT>
-    inline std::basic_ostream<_CharT> operator<<(std::basic_ostream<_CharT> &__os, _SetIndent<_CharT> __i)
-    {
-        return std::basic_ostream<_CharT>(new indent_streambuf(__i.indentSize, __i.indentChar, __os));
-    }
+    private:
+        using base = std::basic_ostream<_Elem, _Traits>;
 
-    template <typename _CharT>
-    inline std::basic_ostream<_CharT> &operator<<(std::basic_ostream<_CharT> &__os, _PopIndent __p)
-    {
-        indent_streambuf<_CharT> *ios = dynamic_cast<indent_streambuf<_CharT> *>(__os.rdbuf());
-        if (ios == nullptr)
-            throw std::bad_cast();
-        ios->m_oldStream << ios->str();
-        auto &old = ios->m_oldStream;
-        delete ios;
-        return old;
-    }
+        _buffer_type m_buffer;
+
+    public:
+        basic_formatterstream(child_type &outStream, int indentSize = 4)
+            : base(std::addressof(m_buffer)), m_buffer(outStream, indentSize) {}
+        basic_formatterstream(child_type &outStream, const basic_formatterargs<_Elem> &args)
+            : base(std::addressof(m_buffer)), m_buffer(outStream, args) {}
+        ~basic_formatterstream() {}
+    };
+
+    using formatterstream = basic_formatterstream<char, std::char_traits<char>>;
+    using formatterargs = basic_formatterargs<char>;
 
 } // namespace rtstd
 

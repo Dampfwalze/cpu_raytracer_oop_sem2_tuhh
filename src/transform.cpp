@@ -19,7 +19,7 @@ namespace rt
 
     std::ostream &operator<<(std::ostream &stream, const Transform &transform)
     {
-        stream << "Transform:\n    " << std::setw(10) << "position: " << transform.position << "\n    " << std::setw(10) << "rotation: " << transform.rotation;
+        stream << "Transform { " << std::setw(10) << "position: " << transform.position << ", " << std::setw(10) << "rotation: " << transform.rotation << "}";
         return stream;
     }
 } // namespace rt

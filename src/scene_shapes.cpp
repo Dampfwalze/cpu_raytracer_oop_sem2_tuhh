@@ -16,8 +16,7 @@ namespace rt
 
         std::ostream &Sphere::toString(std::ostream &stream) const
         {
-            stream << rtstd::pushIndent() << "Sphere:\n"
-                   << transform << "\nr: " << r << rtstd::popIndent();
+            stream << "Sphere { " << transform << ", r: " << r << "}";
             return stream;
         }
     }
