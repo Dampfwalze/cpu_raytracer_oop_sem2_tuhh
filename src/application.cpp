@@ -1,5 +1,6 @@
 #include <application.h>
 #include <optional>
+#include <stream_formatter.h>
 
 namespace rt
 {
@@ -12,7 +13,9 @@ namespace rt
                                  .tileSize = {64, 64},
                              },
                              static_pointer_cast<Renderer>(m_renderers["Raytracing"])),
-          m_window(*this), m_scene()
+          m_window(*this), m_scene{
+                               Camera(Transform(m::dvec3(0, 0, 0))),
+                           }
     {
         m_scene.addShape(new Shapes::Sphere());
         rtstd::formatterstream(std::cout) << m_scene << std::endl;

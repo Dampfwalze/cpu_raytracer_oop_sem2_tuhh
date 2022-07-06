@@ -27,6 +27,7 @@ set(SOURCES
     src/scene.cpp
     src/transform.cpp
     src/scene_shapes.cpp
+    src/camera.cpp
 )
 
 FILE(GLOB_RECURSE HEADERS include/*.h)

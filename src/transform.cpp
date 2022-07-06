@@ -3,8 +3,8 @@
 
 namespace rt
 {
-    Transform::Transform()
-        : rotation(1, 0, 0, 0) {}
+    Transform::Transform(const m::dvec3 &position, const m::dquat &rotation)
+        : position(position), rotation(rotation) {}
 
     m::dmat4 const &Transform::getMatrix()
     {

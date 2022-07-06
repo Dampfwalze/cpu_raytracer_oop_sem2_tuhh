@@ -17,7 +17,7 @@ namespace rt
         std::optional<m::dmat4> m_matrix;
 
     public:
-        Transform();
+        Transform(const m::dvec3 &position = m::dvec3(0), const m::dquat &rotation = m::dquat(1, 0, 0, 0));
 
         m::dmat4 const &getMatrix();
     };

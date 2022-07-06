@@ -17,7 +17,7 @@ namespace rt
     size_t FrameBuffer::getWidth() const { return m_size.x; }
     size_t FrameBuffer::getHeight() const { return m_size.y; }
 
-    m::vec2<size_t> FrameBuffer::getSize() const
+    m::u64vec2 FrameBuffer::getSize() const
     {
         return m_size;
     }

@@ -2,6 +2,7 @@
 #define SCENE_HPP
 
 #include <scene/scene_shapes.h>
+#include <scene/camera.h>
 
 #include <vector>
 
@@ -15,10 +16,12 @@ namespace rt
     private:
         shape_collection_type m_objects;
 
+        Camera m_camera;
+
     public:
-        Scene(shape_collection_type &objects);
-        Scene(shape_collection_type &&objects);
-        Scene();
+        Scene(shape_collection_type &objects, const Camera &camera = Camera());
+        Scene(shape_collection_type &&objects = shape_collection_type(), const Camera &camera = Camera());
+        Scene(const Camera &camera);
         ~Scene();
 
         void addShape(SceneShape *shape);

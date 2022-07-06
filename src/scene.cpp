@@ -6,14 +6,14 @@
 namespace rt
 {
 
-    Scene::Scene(std::vector<std::unique_ptr<SceneShape>> &objects)
-        : m_objects(std::move(objects)) {}
+    Scene::Scene(std::vector<std::unique_ptr<SceneShape>> &objects, const Camera &camera)
+        : m_objects(std::move(objects)), m_camera(camera) {}
 
-    Scene::Scene(std::vector<std::unique_ptr<SceneShape>> &&objects)
-        : m_objects(std::move(objects)) {}
+    Scene::Scene(std::vector<std::unique_ptr<SceneShape>> &&objects, const Camera &camera)
+        : m_objects(std::move(objects)), m_camera(camera) {}
 
-    Scene::Scene()
-        : m_objects() {}
+    Scene::Scene(const Camera &camera)
+        : m_camera(camera) {}
 
     Scene::~Scene() {}
 
@@ -26,10 +26,8 @@ namespace rt
     {
         stream << "Scene { Shapes: ";
         for (auto &&s : scene.m_objects)
-            if (s == scene.m_objects.back())
-                stream << *s;
-            else
-                stream << *s << ", ";
+            stream << *s << ", ";
+        stream << "Camera: " << scene.m_camera;
         return stream << "}";
     }
 }
