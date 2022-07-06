@@ -17,11 +17,15 @@ namespace rt
         {
             None,
             Render,
+            CloseApplication,
         };
 
         struct Events
         {
             struct Render
+            {
+            };
+            struct CloseApplication
             {
             };
         };
@@ -32,9 +36,11 @@ namespace rt
             union
             {
                 Events::Render render;
+                Events::CloseApplication closeApplication;
             };
 
-            Event(const Events::Render &render);
+            Event(const Events::Render &event);
+            Event(const Events::CloseApplication &event);
         };
 
     private:

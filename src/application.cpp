@@ -29,7 +29,8 @@ namespace rt
 
     void Application::run()
     {
-        while (true)
+        bool running = true;
+        while (running)
         {
             std::optional<Event> event;
             {
@@ -49,11 +50,16 @@ namespace rt
                 case EventType::Render:
                     m_renderDispatcher.render(m_scene);
                     break;
+                case EventType::CloseApplication:
+                    running = false;
+                    break;
                 }
             }
         }
     }
 
-    Application::Event::Event(const Events::Render &render)
-        : type(EventType::Render), render(render) {}
+    Application::Event::Event(const Events::Render &event)
+        : type(EventType::Render), render(event) {}
+    Application::Event::Event(const Events::CloseApplication &event)
+        : type(EventType::CloseApplication), closeApplication(event) {}
 }

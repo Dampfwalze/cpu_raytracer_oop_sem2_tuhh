@@ -97,7 +97,7 @@ namespace rt
         while (true)
         {
             if (window.shouldClose())
-                exit(0);
+                m_application << Application::Events::CloseApplication();
 
             // handle termination
             {
