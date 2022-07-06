@@ -3,7 +3,7 @@
 
 #include <window_thread.h>
 #include <render_dispatcher.h>
-#include <scene.h>
+#include <scene/scene.h>
 #include <rt_renderer.h>
 
 #include <map>

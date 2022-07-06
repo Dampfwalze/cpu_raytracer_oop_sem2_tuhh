@@ -25,9 +25,11 @@ set(SOURCES
     src/rt_renderer.cpp
     src/rtmath.cpp
     src/scene.cpp
+    src/transform.cpp
+    src/scene_shapes.cpp
 )
 
-FILE(GLOB HEADERS include/*.h)
+FILE(GLOB_RECURSE HEADERS include/*.h)
 
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCES} ${HEADERS})
 

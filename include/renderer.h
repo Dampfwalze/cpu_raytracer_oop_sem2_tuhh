@@ -2,7 +2,7 @@
 #define RENDERER_HPP
 
 #include <rtmath.h>
-#include <scene.h>
+#include <scene/scene.h>
 
 namespace rt
 {

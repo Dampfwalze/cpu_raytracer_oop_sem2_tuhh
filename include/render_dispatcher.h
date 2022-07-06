@@ -5,7 +5,7 @@
 #include <thread_pool.h>
 #include <rtmath.h>
 #include <render_params.h>
-#include <scene.h>
+#include <scene/scene.h>
 #include <renderer.h>
 
 namespace rt
