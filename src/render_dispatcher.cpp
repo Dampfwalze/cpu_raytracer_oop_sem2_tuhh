@@ -1,11 +1,10 @@
 #include <render_dispatcher.h>
+#include <stream_formatter.h>
 
 namespace rt
 {
-    namespace m = math;
-
-    RenderDispatcher::RenderTask::RenderTask(m::Rect<size_t> rect, FrameBuffer &frameBuffer, Scene &scene, std::shared_ptr<Renderer> &renderer)
-        : m_rect(rect), m_frameBuffer(frameBuffer), m_scene(scene), m_renderer(renderer) {}
+    RenderDispatcher::RenderTask::RenderTask(m::Rect<size_t> rect, Scene& scene, RenderDispatcher& owner)
+        : m_rect(rect), m_scene(scene), m_owner(owner) {}
 
     RenderDispatcher::RenderTask::~RenderTask()
     {
@@ -13,13 +12,25 @@ namespace rt
 
     void RenderDispatcher::RenderTask::run()
     {
-        auto renderer = std::unique_ptr<Renderer::PixelRenderer>(m_renderer->createPixelRenderer(m_scene));
+        auto renderer = std::unique_ptr<Renderer::PixelRenderer>(m_owner.m_renderer->createPixelRenderer(m_scene));
+        std::stringstream ss;
+        rtstd::formatterstream logger(ss);
+
         for (size_t y = m_rect.start.y; y < m_rect.getEnd().y; y++)
         {
             for (size_t x = m_rect.start.x; x < m_rect.getEnd().x; x++)
             {
+                if (m_owner.renderParams.logPixel.has_value() && m::uvec2(x, y) == m_owner.renderParams.logPixel.value())
+                    renderer->logger = &logger;
+                
                 renderer->pixelCoords = m::uvec2(x, y);
-                m_frameBuffer.at(x, y) = renderer->renderPixel();
+                m_owner.m_frameBuffer.at(x, y) = renderer->renderPixel();
+                
+                if (renderer->logger != nullptr) {
+                    renderer->logger = nullptr;
+                    std::lock_guard<std::mutex> lk(m_owner.logMutex);
+                    m_owner.renderLog = ss.str();
+                }
                 // if (((y + x) / 20) % 3 == 0)
                 //     m_frameBuffer.at(x, y) = {0, 1, 0};
                 // else if (((y + x) / 20) % 3 == 1)
@@ -53,9 +64,7 @@ namespace rt
             {
                 m_threadPool.submit(RenderTask(
                     m::Rect(m::u64vec2(x, y), renderParams.tileSize).min(renderParams.outputSize),
-                    m_frameBuffer,
-                    scene,
-                    m_renderer));
+                    scene, *this));
             }
         }
     }

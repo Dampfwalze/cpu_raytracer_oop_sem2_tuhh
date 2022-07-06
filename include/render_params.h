@@ -11,6 +11,7 @@ namespace rt
     {
         m::u64vec2 outputSize;
         m::u64vec2 tileSize;
+        std::optional<m::uvec2> logPixel;
     };
 
 } // namespace rt

@@ -16,6 +16,8 @@ namespace rt
         public:
             m::uvec2 pixelCoords;
 
+            mutable std::ostream* logger = nullptr;
+
             const Scene &scene;
 
         public:
@@ -23,6 +25,20 @@ namespace rt
             virtual ~PixelRenderer();
 
             virtual m::Pixel<float> renderPixel() const = 0;
+
+            template<typename T>
+            void log(T val) const
+            {
+                if (logger == nullptr) return;
+                *logger << val;
+            }
+            template<typename T, typename ... Args>
+            void log(T val, Args... vals) const
+            {
+                if (logger == nullptr) return;
+                *logger << val;
+                log(vals...);
+            }
         };
 
     public:

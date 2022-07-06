@@ -10,6 +10,7 @@
 
 namespace rt
 {
+    namespace m = math;
 
     class RenderDispatcher
     {
@@ -17,13 +18,13 @@ namespace rt
         class RenderTask
         {
         private:
-            math::Rect<size_t> m_rect;
-            FrameBuffer &m_frameBuffer;
+            m::Rect<size_t> m_rect;
             Scene &m_scene;
-            std::shared_ptr<Renderer> m_renderer;
+
+            RenderDispatcher& m_owner;
 
         public:
-            RenderTask(math::Rect<size_t> rect, FrameBuffer &frameBuffer, Scene &scene, std::shared_ptr<Renderer> &renderer);
+            RenderTask(m::Rect<size_t> rect, Scene &scene, RenderDispatcher& owner);
             ~RenderTask();
 
             void run();
@@ -35,6 +36,12 @@ namespace rt
         ThreadPool<RenderTask> m_threadPool;
 
         std::shared_ptr<Renderer> m_renderer;
+
+    public:
+        std::string renderLog;
+        std::mutex logMutex;
+
+        friend class RenderTask;
 
     public:
         RenderParams renderParams;

@@ -16,7 +16,7 @@ namespace rt
 
         std::ostream &Sphere::toString(std::ostream &stream) const
         {
-            stream << "Sphere { " << transform << ", r: " << r << "}";
+            stream << "Sphere { " << transform << ", radius: " << radius << "}";
             return stream;
         }
     }

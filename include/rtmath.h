@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <iomanip>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -74,7 +75,7 @@ namespace rt
         template <typename T>
         std::ostream &operator<<(std::ostream &stream, ray<T> &ray)
         {
-            stream << "Ray (origin: " << ray.origin << ", direction: " << ray.direction << ")";
+            stream << "Ray { origin: " << ray.origin << ", direction: " << ray.direction << " }";
             return stream;
         }
 
@@ -207,6 +208,21 @@ namespace glm
     {
         stream << "quat(" << q.w << " + " << q.x << "i - " << q.y << "j + " << q.z << "k)";
         return stream;
+    }
+
+    template <int x, int y, typename T, qualifier Q>
+    std::ostream& operator<<(std::ostream& stream, const mat<x, y, T, Q>& m)
+    {
+        stream << "mat(" << std::setprecision(1);
+        for (int i = 0; i < y; i++)
+        {
+            for (int j = 0; j < x; j++)
+            {
+                stream << std::setw(4) << m[j][i] << " ";
+            }
+            stream << ((i == y - 1)? ")" : "\n    ");
+        }
+        return stream << std::setprecision(4);
     }
 } // namespace glm
 

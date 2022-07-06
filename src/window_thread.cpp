@@ -120,7 +120,8 @@ namespace rt
             // GLCALL(glDrawArrays(GL_TRIANGLES, 0, 6));
 
             // Copy data from framebuffer to OpenGL texture on the GPU
-            copyBuffer(m_application.getRenderDispatcher().getFrameBuffer());
+            auto& frameBuffer = m_application.getRenderDispatcher().getFrameBuffer();
+            copyBuffer(frameBuffer);
 
             window.beginGUI();
 
@@ -131,6 +132,23 @@ namespace rt
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
             ImGui::Begin("Viewport");
             ImGui::PopStyleVar();
+            {
+                int mouseClickedCount = ImGui::GetMouseClickedCount(ImGuiMouseButton_Left);
+
+                auto cursorPos = ImGui::GetCursorScreenPos();
+                auto mousePos = ImGui::GetMousePos();
+                if (mousePos.x >= cursorPos.x && mousePos.y >= cursorPos.y &&
+                    mousePos.x < cursorPos.x + frameBuffer.getWidth() && mousePos.y < cursorPos.y + frameBuffer.getHeight() &&
+                    mouseClickedCount > 0)
+                {
+                    renderParams.logPixel = { mousePos.x - cursorPos.x, mousePos.y - cursorPos.y };
+                }
+                if (renderParams.logPixel.has_value()) {
+                    m::fvec2 pos = renderParams.logPixel.value() + m::uvec2(cursorPos.x, cursorPos.y);
+                    ImGui::GetForegroundDrawList()->AddLine({ pos.x - 10, pos.y }, { pos.x + 10, pos.y }, 0xffffffff);
+                    ImGui::GetForegroundDrawList()->AddLine({ pos.x, pos.y - 10 }, { pos.x, pos.y + 10 }, 0xffffffff);
+                }
+            }
             ImGui::Image(reinterpret_cast<ImTextureID>((size_t)texture), ImVec2{(float)m_application.getRenderDispatcher().getFrameBuffer().getWidth(), (float)m_application.getRenderDispatcher().getFrameBuffer().getHeight()});
             ImGui::End();
 
@@ -154,6 +172,16 @@ namespace rt
                 }
 
                 ImGui::TreePop();
+            }
+
+            if (m_application.getRenderDispatcher().renderLog != "") {
+                static bool open = true;
+                ImGui::SetNextItemOpen(open);
+                if (open = ImGui::TreeNode("Render log")) {
+                    std::lock_guard<std::mutex> lk(m_application.getRenderDispatcher().logMutex);
+                    ImGui::TextWrapped(m_application.getRenderDispatcher().renderLog.c_str());
+                    ImGui::TreePop();
+                }
             }
 
             ImGui::End();
