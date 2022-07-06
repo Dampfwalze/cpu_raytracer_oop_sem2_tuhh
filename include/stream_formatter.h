@@ -77,8 +77,9 @@ namespace rtstd
         if (ios == nullptr)
             throw std::bad_cast();
         ios->m_oldStream << ios->str();
+        auto &old = ios->m_oldStream;
         delete ios;
-        return ios->m_oldStream;
+        return old;
     }
 
 } // namespace rtstd

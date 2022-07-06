@@ -31,13 +31,13 @@ namespace rt
 
     std::ostream &operator<<(std::ostream &stream, const Scene &shape)
     {
-        stream << "Shapes {";
+        auto ss = stream << "Scene:" << rtstd::pushIndent();
+        ss << "\nShapes:";
         for (auto &&s : shape.m_objects)
-            stream
-                << rtstd::pushIndent() << "\n"
-                << *s
-                << rtstd::popIndent();
-        stream << "\n}";
+            ss << rtstd::pushIndent() << "\n"
+               << *s
+               << rtstd::popIndent();
+        ss << rtstd::popIndent();
         return stream;
     }
 
