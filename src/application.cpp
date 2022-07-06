@@ -14,10 +14,10 @@ namespace rt
                              },
                              static_pointer_cast<Renderer>(m_renderers["Raytracing"])),
           m_window(*this), m_scene{
-                               Camera(Transform(m::dvec3(0, 0, 0))),
+                               Camera(Transform(m::dvec3(0, 0, -2))),
                            }
     {
-        m_scene.addShape(new Shapes::Sphere());
+        m_scene.addShape(new Shapes::Sphere(0.1));
         rtstd::formatterstream(std::cout) << m_scene << std::endl;
     }
 

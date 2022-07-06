@@ -15,6 +15,9 @@ namespace rt
         {
         public:
             m::uvec2 pixelCoords;
+            m::uvec2 screenSize;
+
+            m::dmat4 cameraMatrix;
 
             mutable std::ostream* logger = nullptr;
 

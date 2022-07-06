@@ -22,10 +22,11 @@ namespace rt
 
     namespace Shapes
     {
-        class Sphere : public SceneShape
+        struct Sphere : public SceneShape
         {
-            double r;
+            double radius;
 
+            Sphere(double radius = 1);
             virtual ~Sphere();
 
             virtual std::ostream &toString(std::ostream &stream) const override;

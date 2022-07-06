@@ -6,15 +6,9 @@ namespace rt
     Transform::Transform(const m::dvec3 &position, const m::dquat &rotation)
         : position(position), rotation(rotation) {}
 
-    m::dmat4 const &Transform::getMatrix()
+    m::dmat4 Transform::getMatrix() const
     {
-        if (m_matrix.has_value())
-            return m_matrix.value();
-
-        m_matrix = glm::toMat4(rotation);
-        m_matrix = m::translate(m_matrix.value(), position);
-
-        return m_matrix.value();
+        return m::translate(glm::toMat4(rotation), position);
     }
 
     std::ostream &operator<<(std::ostream &stream, const Transform &transform)

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iomanip>
 
+#define GLM_FORCE_SWIZZLE
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
@@ -54,23 +55,32 @@ namespace rt
             vec3<T> origin;
             vec3<T> direction;
 
-            ray() {}
-            ray(vec3<T> origin, vec3<T> direction) : origin(origin), direction(direction) {}
+            ray(vec3<T> origin = vec3<T>(), vec3<T> direction = vec3<T>()) : origin(origin), direction(direction) {}
 
             ray<T> &operator*=(const mat4<T> &matrix)
             {
-                origin = vec4<T>(origin, 1) * matrix;
-                direction = vec4<T>(direction, 0) * matrix;
+                auto newOrigin = matrix * vec4<T>(origin, 1);
+                direction = (matrix * vec4<T>(direction + origin, 1)) - newOrigin;
+                origin = newOrigin;
 
                 return *this;
             }
 
-            ray<T> &operator*(const mat4<T> &matrix) const
+            ray<T> operator*(const mat4<T> &matrix) const
             {
-                return ray(vec4<T>(origin, 1) * matrix,
-                           vec4<T>(direction, 0) * matrix);
+                return ray(matrix * vec4<T>(origin, 1),
+                           matrix * vec4<T>(direction + origin, 1) - (matrix * vec4<T>(origin, 1)));
+            }
+
+            ray<T>& normalize()
+            {
+                direction = glm::normalize(direction);
+                return *this;
             }
         };
+
+        template<typename T>
+        ray<T> normalize(ray<T> r) { return r.normalize(); }
 
         template <typename T>
         std::ostream &operator<<(std::ostream &stream, ray<T> &ray)

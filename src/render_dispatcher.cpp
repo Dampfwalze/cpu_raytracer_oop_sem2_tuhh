@@ -13,6 +13,9 @@ namespace rt
     void RenderDispatcher::RenderTask::run()
     {
         auto renderer = std::unique_ptr<Renderer::PixelRenderer>(m_owner.m_renderer->createPixelRenderer(m_scene));
+
+        auto cameraMatrix = m_scene.camera.getMatrix(m_owner.m_frameBuffer.getWidth() / m_owner.m_frameBuffer.getHeight());
+
         std::stringstream ss;
         rtstd::formatterstream logger(ss);
 
@@ -24,6 +27,9 @@ namespace rt
                     renderer->logger = &logger;
                 
                 renderer->pixelCoords = m::uvec2(x, y);
+                renderer->screenSize = m_owner.m_frameBuffer.getSize();
+                renderer->cameraMatrix = cameraMatrix;
+               
                 m_owner.m_frameBuffer.at(x, y) = renderer->renderPixel();
                 
                 if (renderer->logger != nullptr) {
@@ -38,7 +44,7 @@ namespace rt
                 // else
                 //     m_frameBuffer.at(x, y) = {0, 0, 1};
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
 

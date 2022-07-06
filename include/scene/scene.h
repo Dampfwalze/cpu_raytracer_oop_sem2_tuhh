@@ -13,10 +13,10 @@ namespace rt
     public:
         using shape_collection_type = std::vector<std::unique_ptr<SceneShape>>;
 
-    private:
-        shape_collection_type m_objects;
+    public:
+        shape_collection_type objects;
 
-        Camera m_camera;
+        Camera camera;
 
     public:
         Scene(shape_collection_type &objects, const Camera &camera = Camera());

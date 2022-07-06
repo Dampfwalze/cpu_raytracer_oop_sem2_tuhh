@@ -12,6 +12,8 @@ namespace rt
 
     namespace Shapes
     {
+        Sphere::Sphere(double radius)
+            : radius(radius) {}
         Sphere::~Sphere() {}
 
         std::ostream &Sphere::toString(std::ostream &stream) const
