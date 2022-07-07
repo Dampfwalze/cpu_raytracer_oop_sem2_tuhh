@@ -5,6 +5,7 @@
 #include <scene/camera.h>
 
 #include <vector>
+#include <memory>
 
 namespace rt
 {
