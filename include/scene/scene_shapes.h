@@ -12,7 +12,8 @@ namespace rt
 
     private:
     public:
-        SceneShape() {}
+        SceneShape(const Transform &transform = Transform())
+            : transform(transform) {}
         virtual ~SceneShape() {}
 
         virtual std::ostream &toString(std::ostream &stream) const = 0;
@@ -26,7 +27,7 @@ namespace rt
         {
             double radius;
 
-            Sphere(double radius = 1);
+            Sphere(double radius = 1, const Transform &transform = Transform());
             virtual ~Sphere();
 
             virtual std::ostream &toString(std::ostream &stream) const override;

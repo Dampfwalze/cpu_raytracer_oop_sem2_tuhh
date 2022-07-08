@@ -17,7 +17,10 @@ namespace rt
                                Camera(Transform(m::dvec3(0, 0, -2))),
                            }
     {
-        m_scene.addShape(new Shapes::Sphere(0.1));
+        m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.5, 0.5, 0))));
+        m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(-0.5, 0.5, 0))));
+        m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0, 0, 0))));
+        m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.6, 1, 0.5))));
         rtstd::formatterstream(std::cout) << m_scene << std::endl;
     }
 
