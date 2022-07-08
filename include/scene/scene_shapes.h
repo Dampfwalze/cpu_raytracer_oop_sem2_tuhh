@@ -3,6 +3,9 @@
 
 #include <scene/transform.h>
 
+#define CLASS_NAME(name) \
+    constexpr const char *className() const override { return #name; }
+
 namespace rt
 {
     class SceneShape
@@ -17,6 +20,8 @@ namespace rt
         virtual ~SceneShape() {}
 
         virtual std::ostream &toString(std::ostream &stream) const = 0;
+
+        virtual constexpr const char *className() const = 0;
     };
 
     std::ostream &operator<<(std::ostream &stream, const SceneShape &shape);
@@ -31,9 +36,13 @@ namespace rt
             virtual ~Sphere();
 
             virtual std::ostream &toString(std::ostream &stream) const override;
+
+            CLASS_NAME(Sphere)
         };
     } // namespace Shapes
 
 } // namespace rt
+
+#undef GET_NAME
 
 #endif // SCENE_SHAPES_HPP

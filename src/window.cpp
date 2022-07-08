@@ -75,7 +75,7 @@ namespace rt
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-        m_window = glfwCreateWindow(1200, 750, "Ray Tracer", NULL, NULL);
+        m_window = glfwCreateWindow(1400, 750, "Ray Tracer", NULL, NULL);
         GLFW_CHECK_ERROR("Window creation failed!");
 
         glfwMakeContextCurrent(m_window);

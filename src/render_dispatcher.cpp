@@ -61,10 +61,13 @@ namespace rt
     {
         std::cout << "Start render" << std::endl;
 
+        if (!m_threadPool.empty())
+            m_threadPool.clear();
+
         if (m_frameBuffer.getWidth() != renderParams.outputSize.x || m_frameBuffer.getHeight() != renderParams.outputSize.y)
             m_frameBuffer.resize(renderParams.outputSize.x, renderParams.outputSize.y);
 
-        m_frameBuffer.clear();
+        // m_frameBuffer.clear();
         for (size_t x = 0; x < m_frameBuffer.getWidth(); x += renderParams.tileSize.x)
         {
             for (size_t y = 0; y < m_frameBuffer.getHeight(); y += renderParams.tileSize.y)

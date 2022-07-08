@@ -8,7 +8,7 @@
 #include <shader.h>
 #include <gl_error.h>
 
-#include <imgui.h>
+#include <rt_imgui.h>
 
 #include <iostream>
 #include <array>
@@ -181,6 +181,31 @@ namespace rt
                     std::lock_guard<std::mutex> lk(m_application.getRenderDispatcher().logMutex);
                     ImGui::TextWrapped(m_application.getRenderDispatcher().renderLog.c_str());
                     ImGui::TreePop();
+                }
+            }
+
+            ImGui::End();
+
+            ImGui::Begin("Scene Inspector");
+
+            if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                if (rtImGui::Drag<Transform, double>("Transform", m_application.getScene().camera.transform, 0.01, std::nullopt, std::nullopt, "%.3f"))
+                    m_application << Application::Events::Render();
+            }
+            if (ImGui::CollapsingHeader("Objects", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                auto &objects = m_application.getScene().objects;
+                for (size_t i = 0; i < objects.size(); i++)
+                {
+                    ImGui::PushID(i);
+                    if (ImGui::TreeNode(objects[i]->className()))
+                    {
+                        if (rtImGui::Drag<Transform, double>("Transform", objects[i]->transform, 0.01, std::nullopt, std::nullopt, "%.3f"))
+                            m_application << Application::Events::Render();
+                        ImGui::TreePop();
+                    }
+                    ImGui::PopID();
                 }
             }
 

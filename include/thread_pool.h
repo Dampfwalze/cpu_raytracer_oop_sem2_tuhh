@@ -31,6 +31,10 @@ namespace rt
             void submit(T task);
 
             void notifyAll();
+
+            bool empty() const;
+
+            void clear();
         };
 
         class WorkerThread
@@ -62,6 +66,10 @@ namespace rt
         ~ThreadPool();
 
         void submit(T task);
+
+        bool empty() const;
+
+        void clear();
     };
 
     // --- Implementation ---
@@ -101,6 +109,15 @@ namespace rt
     void ThreadPool<T>::TaskPool::notifyAll()
     {
         m_tasks_cv.notify_all();
+    }
+
+    template <typename T>
+    bool ThreadPool<T>::TaskPool::empty() const { return m_tasks.empty(); }
+    template <typename T>
+    void ThreadPool<T>::TaskPool::clear()
+    {
+        std::lock_guard<std::mutex> lk(m_tasks_mutex);
+        m_tasks.clear();
     }
 
     // WorkerThread
@@ -166,6 +183,11 @@ namespace rt
     {
         m_taskPool.submit(task);
     }
+
+    template <typename T>
+    bool ThreadPool<T>::empty() const { return m_taskPool.empty(); }
+    template <typename T>
+    void ThreadPool<T>::clear() { m_taskPool.clear(); }
 
 } // namespace rt
 
