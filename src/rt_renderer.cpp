@@ -30,18 +30,40 @@ namespace rt
 
         RENDER_LOG(ray, "\n");
 
+        Intersection nearestInter;
+        SceneShape *nearestObj;
+        double nearestDepth2 = std::numeric_limits<double>::max();
+
         for (auto &&i : scene.objects)
         {
-            m::dmat4 mat = m::inverse(i->transform.getMatrix());
-            m::ray localRay = ray * mat;
+            m::dmat4 mat = i->transform.getMatrix();
+            m::dmat4 invMat = m::inverse(i->transform.getMatrix());
+
+            m::ray localRay = ray * invMat;
 
             auto intersection = i->intersect(localRay);
 
-            if (intersection.has_value())
+            if (!intersection.has_value())
+                continue;
+
+            auto &inter = intersection.value();
+
+            inter.position = mat * m::dvec4(inter.position, 1.0);
+            inter.normal = mat * m::dvec4(inter.normal, 0.0);
+
+            double depth2 = m::distance2(ray.origin, inter.position);
+            if (depth2 < nearestDepth2)
             {
-                auto l = m::dot(glm::normalize(intersection.value().normal), m::dvec3(0, -1, 0));
-                return m::Color<double>{l};
+                nearestDepth2 = depth2;
+                nearestInter = inter;
+                nearestObj = i.get();
             }
+        }
+
+        if (nearestDepth2 != std::numeric_limits<double>::max())
+        {
+            auto l = m::dot(glm::normalize(nearestInter.normal), m::dvec3(0, -1, 0));
+            return m::Color<double>{l};
         }
 
         return m::dvec3(coords, 0.0);
