@@ -13,9 +13,10 @@ namespace rt
                                  .tileSize = {64, 64},
                              },
                              static_pointer_cast<Renderer>(m_renderers["Raytracing"])),
-          m_window(*this), m_scene{
-                               Camera(Transform(m::dvec3(0, 0, -2))),
-                           }
+          m_scene{
+              Camera(Transform(m::dvec3(0, 0, -2))),
+          },
+          m_window(*this)
     {
         m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.5, 0.5, 0))));
         m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(-0.5, 0.5, 0))));

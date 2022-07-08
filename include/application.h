@@ -48,8 +48,8 @@ namespace rt
 
         RenderDispatcher m_renderDispatcher;
 
-        WindowThread m_window;
         Scene m_scene;
+        WindowThread m_window;
 
         std::deque<Event> m_eventQue;
         std::mutex m_queMutex;
