@@ -8,6 +8,12 @@
 
 namespace rt
 {
+    struct Intersection
+    {
+        m::dvec3 position;
+        m::dvec3 normal;
+    };
+
     class SceneShape
     {
     public:
@@ -18,6 +24,8 @@ namespace rt
         SceneShape(const Transform &transform = Transform())
             : transform(transform) {}
         virtual ~SceneShape() {}
+
+        virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const = 0;
 
         virtual std::ostream &toString(std::ostream &stream) const = 0;
 
@@ -34,6 +42,8 @@ namespace rt
 
             Sphere(double radius = 1, const Transform &transform = Transform());
             virtual ~Sphere();
+
+            virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
 
             virtual std::ostream &toString(std::ostream &stream) const override;
 

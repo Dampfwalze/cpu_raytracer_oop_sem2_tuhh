@@ -77,6 +77,11 @@ namespace rt
                 direction = glm::normalize(direction);
                 return *this;
             }
+
+            inline vec3<T> operator()(T scalar) const
+            {
+                return origin + direction * scalar;
+            }
         };
 
         template<typename T>

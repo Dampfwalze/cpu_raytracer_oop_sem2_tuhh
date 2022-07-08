@@ -16,6 +16,31 @@ namespace rt
             : radius(radius), SceneShape(transform) {}
         Sphere::~Sphere() {}
 
+        std::optional<Intersection> Sphere::intersect(const m::ray<double> &ray) const
+        {
+            const m::dvec3 &o = ray.origin;
+            const m::dvec3 &d = ray.direction;
+
+            double a = m::dot(d, d);
+            double b = 2 * (m::dot(o, d));
+            double c = m::dot(o, o) - radius * radius;
+
+            double result = b * b - 4 * a * c;
+
+            if (result < 0)
+                return std::nullopt;
+
+            double t = (-b - std::sqrt(result)) / (2 * a);
+            if (t < 0)
+                return std::nullopt;
+
+            Intersection i;
+            i.position = ray(t);
+            i.normal = i.position;
+
+            return i;
+        }
+
         std::ostream &Sphere::toString(std::ostream &stream) const
         {
             stream << "Sphere { " << transform << ", radius: " << radius << "}";
