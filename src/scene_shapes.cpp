@@ -2,8 +2,15 @@
 
 #include <stream_formatter.h>
 
+#include <rt_imgui.h>
+
 namespace rt
 {
+    bool SceneShape::onInspectorGUI()
+    {
+        return rtImGui::Drag<Transform, double>("Transform", transform, 0.01, std::nullopt, std::nullopt, "%.3f");
+    }
+
     std::ostream &operator<<(std::ostream &stream, const SceneShape &shape)
     {
         shape.toString(stream);
@@ -41,6 +48,11 @@ namespace rt
             i.normal = i.position;
 
             return i;
+        }
+
+        bool Sphere::onInspectorGUI()
+        {
+            return SceneShape::onInspectorGUI() | rtImGui::Drag("Radius", radius, 0.01);
         }
 
         std::ostream &Sphere::toString(std::ostream &stream) const

@@ -27,6 +27,8 @@ namespace rt
 
         virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const = 0;
 
+        virtual bool onInspectorGUI();
+
         virtual std::ostream &toString(std::ostream &stream) const = 0;
 
         virtual constexpr const char *className() const = 0;
@@ -44,6 +46,8 @@ namespace rt
             virtual ~Sphere();
 
             virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
+
+            virtual bool onInspectorGUI() override;
 
             virtual std::ostream &toString(std::ostream &stream) const override;
 

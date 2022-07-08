@@ -201,7 +201,7 @@ namespace rt
                     ImGui::PushID(i);
                     if (ImGui::TreeNode(objects[i]->className()))
                     {
-                        if (rtImGui::Drag<Transform, double>("Transform", objects[i]->transform, 0.01, std::nullopt, std::nullopt, "%.3f"))
+                        if (objects[i]->onInspectorGUI())
                             m_application << Application::Events::Render();
                         ImGui::TreePop();
                     }
