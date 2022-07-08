@@ -10,8 +10,8 @@ namespace rt
 
     m::dmat4 Camera::getMatrix(double aspect) const
     {
-        // auto pers = m::perspective<double>(FOV, aspect, zNear, zFar);
-        return transform.getMatrix(); // * pers;
+        auto pers = m::perspective<double>(FOV, aspect, zNear, zFar);
+        return pers * transform.getMatrix();
     }
 
     std::ostream &operator<<(std::ostream &stream, const Camera &camera)

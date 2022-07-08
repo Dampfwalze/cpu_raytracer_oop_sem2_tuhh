@@ -3,7 +3,7 @@
 
 namespace rt
 {
-    RenderDispatcher::RenderTask::RenderTask(m::Rect<size_t> rect, Scene& scene, RenderDispatcher& owner)
+    RenderDispatcher::RenderTask::RenderTask(m::Rect<size_t> rect, Scene &scene, RenderDispatcher &owner)
         : m_rect(rect), m_scene(scene), m_owner(owner) {}
 
     RenderDispatcher::RenderTask::~RenderTask()
@@ -14,7 +14,7 @@ namespace rt
     {
         auto renderer = std::unique_ptr<Renderer::PixelRenderer>(m_owner.m_renderer->createPixelRenderer(m_scene));
 
-        auto cameraMatrix = m_scene.camera.getMatrix(m_owner.m_frameBuffer.getWidth() / m_owner.m_frameBuffer.getHeight());
+        auto cameraMatrix = m_scene.camera.getMatrix(m_owner.m_frameBuffer.getWidth() / (double)m_owner.m_frameBuffer.getHeight());
 
         std::stringstream ss;
         rtstd::formatterstream logger(ss);
@@ -25,14 +25,15 @@ namespace rt
             {
                 if (m_owner.renderParams.logPixel.has_value() && m::uvec2(x, y) == m_owner.renderParams.logPixel.value())
                     renderer->logger = &logger;
-                
+
                 renderer->pixelCoords = m::uvec2(x, y);
                 renderer->screenSize = m_owner.m_frameBuffer.getSize();
                 renderer->cameraMatrix = cameraMatrix;
-               
+
                 m_owner.m_frameBuffer.at(x, y) = renderer->renderPixel();
-                
-                if (renderer->logger != nullptr) {
+
+                if (renderer->logger != nullptr)
+                {
                     renderer->logger = nullptr;
                     std::lock_guard<std::mutex> lk(m_owner.logMutex);
                     m_owner.renderLog = ss.str();
@@ -44,7 +45,7 @@ namespace rt
                 // else
                 //     m_frameBuffer.at(x, y) = {0, 0, 1};
             }
-            //std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            // std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
 

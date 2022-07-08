@@ -223,12 +223,12 @@ namespace glm
     template <int x, int y, typename T, qualifier Q>
     std::ostream& operator<<(std::ostream& stream, const mat<x, y, T, Q>& m)
     {
-        stream << "mat(" << std::setprecision(1);
+        stream << "mat(" << std::setprecision(3);
         for (int i = 0; i < y; i++)
         {
             for (int j = 0; j < x; j++)
             {
-                stream << std::setw(4) << m[j][i] << " ";
+                stream << std::setw(6) << m[j][i] << " ";
             }
             stream << ((i == y - 1)? ")" : "\n    ");
         }

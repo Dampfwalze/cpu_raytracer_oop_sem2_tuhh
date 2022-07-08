@@ -13,7 +13,7 @@ namespace rt
         double zNear, zFar;
 
     public:
-        Camera(const Transform &transform = Transform(), float FOV = 90, double zNear = 1, double zFar = 2);
+        Camera(const Transform &transform = Transform(), float FOV = glm::radians(80.0), double zNear = 1, double zFar = 2);
         ~Camera();
 
         m::dmat4 getMatrix(double aspect) const;

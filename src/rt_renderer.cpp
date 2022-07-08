@@ -28,16 +28,13 @@ namespace rt
 
         auto invCam = m::inverse(cameraMatrix);
 
+        log(ray, "\n");
         // ray *= m::inverse(cameraMatrix);
 
-        m::ray<double> n_ray;
+        m::dvec4 origin = invCam * m::dvec4(ray.origin, 1);
+        m::dvec4 direction = (invCam * m::dvec4(ray.origin + ray.direction, 1));
 
-        n_ray.origin = invCam * m::dvec4(ray.origin, 1);
-        n_ray.direction = (invCam * m::dvec4(ray.origin + ray.direction, 1)).xyz() - n_ray.origin;
-
-        ray = n_ray;
-
-        log(ray, "\n");
+        ray = m::ray(origin.xyz() / origin.w, direction.xyz() / direction.w - origin.xyz() / origin.w);
 
         ray.normalize();
 
