@@ -21,6 +21,7 @@ namespace rt
         m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(-0.5, 0.5, 0))));
         m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0, 0, 0))));
         m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.6, 1, 0.5))));
+        m_scene.addShape(new Shapes::Plane(Transform(m::dvec3(0, 1, 0))));
         rtstd::formatterstream(std::cout) << m_scene << std::endl;
     }
 

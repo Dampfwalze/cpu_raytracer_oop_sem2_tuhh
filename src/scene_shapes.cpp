@@ -12,6 +12,8 @@ namespace rt
 
     namespace Shapes
     {
+        // Sphere
+
         Sphere::Sphere(double radius, const Transform &transform)
             : radius(radius), SceneShape(transform) {}
         Sphere::~Sphere() {}
@@ -44,6 +46,29 @@ namespace rt
         std::ostream &Sphere::toString(std::ostream &stream) const
         {
             stream << "Sphere { " << transform << ", radius: " << radius << "}";
+            return stream;
+        }
+
+        // Plane
+
+        Plane::Plane(const Transform &transform)
+            : SceneShape(transform) {}
+        Plane::~Plane() {}
+
+        std::optional<Intersection> Plane::intersect(const m::ray<double> &ray) const
+        {
+            double t = -ray.origin.y / ray.direction.y;
+            if (t < 0)
+                return std::nullopt;
+            Intersection i;
+            i.position = ray(t);
+            i.normal = m::dvec3(0, -1, 0);
+            return i;
+        }
+
+        std::ostream &Plane::toString(std::ostream &stream) const
+        {
+            stream << "Plane { " << transform << " }";
             return stream;
         }
     }

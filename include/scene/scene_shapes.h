@@ -49,6 +49,18 @@ namespace rt
 
             CLASS_NAME(Sphere)
         };
+
+        struct Plane : public SceneShape
+        {
+            Plane(const Transform &transform = Transform());
+            virtual ~Plane();
+
+            virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
+
+            virtual std::ostream &toString(std::ostream &stream) const override;
+
+            CLASS_NAME(Plane)
+        };
     } // namespace Shapes
 
 } // namespace rt
