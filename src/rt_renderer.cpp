@@ -18,7 +18,7 @@ namespace rt
 
         auto invCam = m::inverse(cameraMatrix);
 
-        log(ray, "\n");
+        RENDER_LOG(ray, "\n");
         // ray *= m::inverse(cameraMatrix);
 
         m::dvec4 origin = invCam * m::dvec4(ray.origin, 1);
@@ -28,7 +28,7 @@ namespace rt
 
         // ray.normalize();
 
-        log(ray, "\n");
+        RENDER_LOG(ray, "\n");
 
         for (auto &&i : scene.objects)
         {

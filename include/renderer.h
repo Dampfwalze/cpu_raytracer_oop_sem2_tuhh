@@ -4,6 +4,10 @@
 #include <rtmath.h>
 #include <scene/scene.h>
 
+#define RENDER_LOG(...)    \
+    if (logger != nullptr) \
+    log(__VA_ARGS__)
+
 namespace rt
 {
     namespace m = math;
