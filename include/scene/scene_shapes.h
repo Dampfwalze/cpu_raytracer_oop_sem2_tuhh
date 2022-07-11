@@ -18,11 +18,12 @@ namespace rt
     {
     public:
         Transform transform;
+        size_t materialIndex;
 
     private:
     public:
-        SceneShape(const Transform &transform = Transform())
-            : transform(transform) {}
+        SceneShape(const Transform &transform = Transform(), size_t materialIndex = 0)
+            : transform(transform), materialIndex(materialIndex) {}
         virtual ~SceneShape() {}
 
         virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const = 0;
@@ -42,7 +43,7 @@ namespace rt
         {
             double radius;
 
-            Sphere(double radius = 1, const Transform &transform = Transform());
+            Sphere(double radius = 1, const Transform &transform = Transform(), size_t materialIndex = 0);
             virtual ~Sphere();
 
             virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
@@ -56,7 +57,7 @@ namespace rt
 
         struct Plane : public SceneShape
         {
-            Plane(const Transform &transform = Transform());
+            Plane(const Transform &transform = Transform(), size_t materialIndex = 0);
             virtual ~Plane();
 
             virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;

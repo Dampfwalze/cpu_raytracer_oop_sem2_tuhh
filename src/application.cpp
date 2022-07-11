@@ -18,8 +18,11 @@ namespace rt
           },
           m_window(*this)
     {
-        m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.5, 0.5, 0))));
-        m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(-0.5, 0.5, 0))));
+        auto defaultMaterial = m_scene.addMaterial(new Materials::LitMaterial(m::Color<float>(1)));
+        auto redLit = m_scene.addMaterial(new Materials::LitMaterial({1, 0, 0}));
+
+        m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.5, 0.5, 0)), redLit));
+        m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(-0.5, 0.5, 0)), redLit));
         m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0, 0, 0))));
         m_scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.6, 1, 0.5))));
         m_scene.addShape(new Shapes::Plane(Transform(m::dvec3(0, 1, 0))));

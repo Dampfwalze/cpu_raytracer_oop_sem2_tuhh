@@ -3,8 +3,10 @@
 
 #include <scene/scene_shapes.h>
 #include <scene/camera.h>
+#include <material.h>
 
 #include <vector>
+#include <map>
 #include <memory>
 
 namespace rt
@@ -13,9 +15,12 @@ namespace rt
     {
     public:
         using shape_collection_type = std::vector<std::unique_ptr<SceneShape>>;
+        using material_collection_type = std::map<size_t, std::unique_ptr<Material>>;
 
     public:
         shape_collection_type objects;
+
+        material_collection_type materials;
 
         Camera camera;
 
@@ -26,6 +31,9 @@ namespace rt
         ~Scene();
 
         void addShape(SceneShape *shape);
+        size_t addMaterial(Material *material);
+
+        Material *getMaterial(size_t index) const;
 
         friend std::ostream &operator<<(std::ostream &stream, const Scene &shape);
     };

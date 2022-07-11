@@ -62,8 +62,10 @@ namespace rt
 
         if (nearestDepth2 != std::numeric_limits<double>::max())
         {
-            auto l = m::dot(glm::normalize(nearestInter.normal), m::dvec3(0, -1, 0));
-            return m::Color<double>{l};
+            Material *material = scene.getMaterial(nearestObj->materialIndex);
+            if (material == nullptr)
+                return m::Color<double>(255, 0, 255);
+            return material->render(nearestInter.position, nearestInter.normal);
         }
 
         return m::dvec3(coords, 0.0);

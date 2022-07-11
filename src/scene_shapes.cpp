@@ -21,8 +21,8 @@ namespace rt
     {
         // Sphere
 
-        Sphere::Sphere(double radius, const Transform &transform)
-            : radius(radius), SceneShape(transform) {}
+        Sphere::Sphere(double radius, const Transform &transform, size_t materialIndex)
+            : radius(radius), SceneShape(transform, materialIndex) {}
         Sphere::~Sphere() {}
 
         std::optional<Intersection> Sphere::intersect(const m::ray<double> &ray) const
@@ -63,8 +63,8 @@ namespace rt
 
         // Plane
 
-        Plane::Plane(const Transform &transform)
-            : SceneShape(transform) {}
+        Plane::Plane(const Transform &transform, size_t materialIndex)
+            : SceneShape(transform, materialIndex) {}
         Plane::~Plane() {}
 
         std::optional<Intersection> Plane::intersect(const m::ray<double> &ray) const

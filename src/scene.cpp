@@ -22,6 +22,20 @@ namespace rt
         objects.emplace_back(shape);
     }
 
+    size_t Scene::addMaterial(Material *material)
+    {
+        materials[materials.size()] = std::unique_ptr<Material>(material);
+        return materials.size() - 1;
+    }
+
+    Material *Scene::getMaterial(size_t index) const
+    {
+        auto f = materials.find(index);
+        if (f == materials.end())
+            return nullptr;
+        return f->second.get();
+    }
+
     std::ostream &operator<<(std::ostream &stream, const Scene &scene)
     {
         stream << "Scene { Shapes: ";
