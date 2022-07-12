@@ -7,14 +7,12 @@ namespace rt
 {
     namespace m = math;
 
-    class RTRenderer : public Renderer::PixelRenderer
+    class RTRenderer : public Renderer
     {
-    private:
     public:
-        RTRenderer(const Scene &scene);
-        ~RTRenderer();
+        void beginFrame() override;
 
-        m::Pixel<float> renderPixel() const override;
+        void renderPixel(const m::vec2<size_t> &coords) override;
     };
 
 } // namespace rt

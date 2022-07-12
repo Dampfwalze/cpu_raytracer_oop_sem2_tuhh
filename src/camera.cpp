@@ -8,10 +8,12 @@ namespace rt
     {
     }
 
-    m::dmat4 Camera::getMatrix(double aspect) const
+    void Camera::cacheMatrix(double aspect) const
     {
+        transform.cacheMatrix();
         auto pers = m::perspective<double>(FOV, aspect, zNear, zFar);
-        return pers * transform.getMatrix();
+        cached.matrix = pers * transform.cached.matrix;
+        cached.inverseMatrix = m::inverse(cached.matrix);
     }
 
     std::ostream &operator<<(std::ostream &stream, const Camera &camera)

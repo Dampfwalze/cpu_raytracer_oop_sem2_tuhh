@@ -35,6 +35,8 @@ namespace rt
 
         Material *getMaterial(size_t index) const;
 
+        void cacheFrameData(const m::u64vec2 &screenSize) const;
+
         friend std::ostream &operator<<(std::ostream &stream, const Scene &shape);
     };
 

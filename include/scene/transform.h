@@ -13,10 +13,16 @@ namespace rt
         m::dvec3 position;
         m::dquat rotation;
 
+        struct Cached
+        {
+            m::dmat4 matrix;
+            m::dmat4 inverseMatrix;
+        } mutable cached;
+
     public:
         Transform(const m::dvec3 &position = m::dvec3(0), const m::dquat &rotation = m::dquat(1, 0, 0, 0));
 
-        m::dmat4 getMatrix() const;
+        void cacheMatrix() const;
     };
 
     std::ostream &operator<<(std::ostream &stream, const Transform &transform);

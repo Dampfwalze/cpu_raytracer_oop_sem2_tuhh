@@ -2,23 +2,22 @@
 
 namespace rt
 {
-    RTRenderer::RTRenderer(const Scene &scene)
-        : PixelRenderer(scene)
+    void RTRenderer::beginFrame()
     {
+        scene->cacheFrameData(frameBuffer->getSize());
     }
 
-    RTRenderer::~RTRenderer()
+    void RTRenderer::renderPixel(const m::vec2<size_t> &pixelCoords)
     {
-    }
+        auto screenSize = frameBuffer->getSize();
 
-    m::Pixel<float> RTRenderer::renderPixel() const
-    {
         m::dvec2 coords = static_cast<m::dvec2>(pixelCoords) / static_cast<m::dvec2>(screenSize) * 2.0 - m::dvec2(1);
         m::ray<double> ray(m::dvec3(coords, -1), m::dvec3(0, 0, 1));
+        auto &outColor = frameBuffer->at(pixelCoords);
+        outColor = m::dvec3(coords, 0.0);
 
-        auto invCam = m::inverse(cameraMatrix);
+        auto invCam = scene->camera.cached.inverseMatrix;
 
-        RENDER_LOG(ray, "\n");
         // ray *= m::inverse(cameraMatrix);
 
         m::dvec4 origin = invCam * m::dvec4(ray.origin, 1);
@@ -28,16 +27,14 @@ namespace rt
 
         // ray.normalize();
 
-        RENDER_LOG(ray, "\n");
-
         Intersection nearestInter;
         SceneShape *nearestObj;
         double nearestDepth2 = std::numeric_limits<double>::max();
 
-        for (auto &&i : scene.objects)
+        for (auto &&i : scene->objects)
         {
-            m::dmat4 mat = i->transform.getMatrix();
-            m::dmat4 invMat = m::inverse(i->transform.getMatrix());
+            m::dmat4 mat = i->transform.cached.matrix;
+            m::dmat4 invMat = i->transform.cached.inverseMatrix;
 
             m::ray localRay = ray * invMat;
 
@@ -62,12 +59,14 @@ namespace rt
 
         if (nearestDepth2 != std::numeric_limits<double>::max())
         {
-            Material *material = scene.getMaterial(nearestObj->materialIndex);
+            Material *material = scene->getMaterial(nearestObj->materialIndex);
             if (material == nullptr)
-                return m::Color<double>(255, 0, 255);
-            return material->render(nearestInter.position, nearestInter.normal);
+            {
+                outColor = m::Color<double>(255, 0, 255);
+                return;
+            }
+            outColor = material->render(nearestInter.position, nearestInter.normal);
+            return;
         }
-
-        return m::dvec3(coords, 0.0);
     }
 }

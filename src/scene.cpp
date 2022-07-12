@@ -36,6 +36,13 @@ namespace rt
         return f->second.get();
     }
 
+    void Scene::cacheFrameData(const m::u64vec2 &screenSize) const
+    {
+        for (auto &&object : objects)
+            object->transform.cacheMatrix();
+        camera.cacheMatrix(screenSize.x / (double)screenSize.y);
+    }
+
     std::ostream &operator<<(std::ostream &stream, const Scene &scene)
     {
         stream << "Scene { Shapes: ";

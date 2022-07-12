@@ -2,9 +2,9 @@
 #define APPLICATION_HPP
 
 #include <window_thread.h>
-#include <render_dispatcher.h>
 #include <scene/scene.h>
-#include <rt_renderer.h>
+#include <event_stream.h>
+#include <render_thread.h>
 
 #include <map>
 
@@ -43,38 +43,43 @@ namespace rt
             Event(const Events::CloseApplication &event);
         };
 
+    public:
+        std::map<std::string, std::unique_ptr<Renderer>> renderers;
+
+        Scene scene;
+
+        FrameBuffer frameBuffer;
+
+        RenderThread renderThread;
+
     private:
-        std::map<std::string, std::shared_ptr<Renderer>> m_renderers;
-
-        RenderDispatcher m_renderDispatcher;
-
-        Scene m_scene;
         WindowThread m_window;
 
-        std::deque<Event> m_eventQue;
-        std::mutex m_queMutex;
-        std::condition_variable m_queCV;
+        EventStream<Event> m_eventStream;
+
+    public:
+        bool rendering = false;
 
     public:
         Application();
         ~Application();
-
-        RenderDispatcher &getRenderDispatcher();
-        Scene &getScene();
-
-        std::map<std::string, std::shared_ptr<Renderer>> &getRenderers();
 
         void run();
 
         template <class T>
         Application &operator<<(T event)
         {
-            std::lock_guard<std::mutex> lk(m_queMutex);
-            m_eventQue.emplace_back(event);
+            m_eventStream << event;
             return *this;
         }
     };
 
+    template <>
+    inline Application &Application::operator<<(Application::Events::Render event)
+    {
+        renderThread.startRender(scene, frameBuffer);
+        return *this;
+    }
 } // namespace rt
 
 #endif // APPLICATION_HPP

@@ -3,7 +3,6 @@
 #include <window_thread.h>
 
 #include <application.h>
-#include <render_dispatcher.h>
 #include <frame_buffer.h>
 #include <shader.h>
 #include <gl_error.h>
@@ -53,8 +52,6 @@ namespace rt
     {
         Windowing windowing;
         Window window;
-
-        static RenderParams renderParams = m_application.getRenderDispatcher().renderParams;
 
         window.beginDraw();
 
@@ -120,8 +117,7 @@ namespace rt
             // GLCALL(glDrawArrays(GL_TRIANGLES, 0, 6));
 
             // Copy data from framebuffer to OpenGL texture on the GPU
-            auto& frameBuffer = m_application.getRenderDispatcher().getFrameBuffer();
-            copyBuffer(frameBuffer);
+            copyBuffer(m_application.frameBuffer);
 
             window.beginGUI();
 
@@ -132,57 +128,64 @@ namespace rt
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
             ImGui::Begin("Viewport");
             ImGui::PopStyleVar();
-            {
-                int mouseClickedCount = ImGui::GetMouseClickedCount(ImGuiMouseButton_Left);
 
-                auto cursorPos = ImGui::GetCursorScreenPos();
-                auto mousePos = ImGui::GetMousePos();
-                if (mousePos.x >= cursorPos.x && mousePos.y >= cursorPos.y &&
-                    mousePos.x < cursorPos.x + frameBuffer.getWidth() && mousePos.y < cursorPos.y + frameBuffer.getHeight() &&
-                    mouseClickedCount > 0)
+            auto imageSize = m::Vec2<m::u64vec2>(ImGui::GetContentRegionAvail());
+            {
+                auto cursorPos = m::Vec2<m::u64vec2>(ImGui::GetCursorScreenPos());
+
+                ImGui::Image(reinterpret_cast<ImTextureID>((size_t)texture), m::Vec2<ImVec2>(m_application.frameBuffer.getSize()));
+
+                auto &logPixel = m_application.renderThread.renderParams.logPixel;
+                if (ImGui::IsItemHovered() && ImGui::GetMouseClickedCount(ImGuiMouseButton_Left) > 0)
                 {
-                    renderParams.logPixel = { mousePos.x - cursorPos.x, mousePos.y - cursorPos.y };
+                    auto mousePos = m::Vec2<m::u64vec2>(ImGui::GetMousePos());
+                    logPixel = mousePos - cursorPos;
                 }
-                if (renderParams.logPixel.has_value()) {
-                    m::fvec2 pos = renderParams.logPixel.value() + m::uvec2(cursorPos.x, cursorPos.y);
-                    ImGui::GetForegroundDrawList()->AddLine({ pos.x - 10, pos.y }, { pos.x + 10, pos.y }, 0xffffffff);
-                    ImGui::GetForegroundDrawList()->AddLine({ pos.x, pos.y - 10 }, { pos.x, pos.y + 10 }, 0xffffffff);
+                if (logPixel.has_value())
+                {
+                    m::fvec2 pos = logPixel.value() + cursorPos;
+                    ImGui::GetWindowDrawList()->AddLine({pos.x - 10, pos.y}, {pos.x + 10, pos.y}, 0xffffffff);
+                    ImGui::GetWindowDrawList()->AddLine({pos.x, pos.y - 10}, {pos.x, pos.y + 10}, 0xffffffff);
                 }
             }
-            ImGui::Image(reinterpret_cast<ImTextureID>((size_t)texture), ImVec2{(float)m_application.getRenderDispatcher().getFrameBuffer().getWidth(), (float)m_application.getRenderDispatcher().getFrameBuffer().getHeight()});
+
             ImGui::End();
 
             ImGui::Begin("Control");
+            ImGui::BeginDisabled(m_application.renderThread.isRendering());
             if (ImGui::Button("Render"))
             {
-                m_application.getRenderDispatcher().renderParams = renderParams;
+                if (m_application.frameBuffer.getSize() != imageSize)
+                    m_application.frameBuffer.resize(imageSize);
                 m_application << Application::Events::Render();
             }
+            ImGui::EndDisabled();
 
-            static int tileSize = (int)renderParams.tileSize.x;
-            ImGui::SliderInt("Tile size", &tileSize, 0, 128);
-            renderParams.tileSize = {(size_t)tileSize, (size_t)tileSize};
+            auto &tileSize = m_application.renderThread.renderParams.tileSize;
+            size_t min = 1, max = 128;
+            ImGui::SliderScalar("Tile size", ImGuiDataType_U64, &tileSize.x, &min, &max);
+            tileSize.y = tileSize.x;
 
             if (ImGui::TreeNode("Renderers"))
             {
-                for (auto &&i : m_application.getRenderers())
+                for (auto &&i : m_application.renderers)
                 {
-                    if (ImGui::Selectable(i.first.c_str(), m_application.getRenderDispatcher().getRenderer() == i.second))
-                        m_application.getRenderDispatcher().setRenderer(i.second);
+                    if (ImGui::Selectable(i.first.c_str(), m_application.renderThread.getRenderer() == i.second.get()) && !m_application.renderThread.isRendering())
+                        m_application.renderThread.setRenderer(i.second.get());
                 }
 
                 ImGui::TreePop();
             }
 
-            if (m_application.getRenderDispatcher().renderLog != "") {
-                static bool open = true;
-                ImGui::SetNextItemOpen(open);
-                if (open = ImGui::TreeNode("Render log")) {
-                    std::lock_guard<std::mutex> lk(m_application.getRenderDispatcher().logMutex);
-                    ImGui::TextWrapped(m_application.getRenderDispatcher().renderLog.c_str());
-                    ImGui::TreePop();
-                }
-            }
+            //if (m_application.getRenderDispatcher().renderLog != "") {
+            //    static bool open = true;
+            //    ImGui::SetNextItemOpen(open);
+            //    if (open = ImGui::TreeNode("Render log")) {
+            //        std::lock_guard<std::mutex> lk(m_application.getRenderDispatcher().logMutex);
+            //        ImGui::TextWrapped(m_application.getRenderDispatcher().renderLog.c_str());
+            //        ImGui::TreePop();
+            //    }
+            //}
 
             ImGui::End();
 
@@ -190,12 +193,12 @@ namespace rt
 
             if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
             {
-                if (rtImGui::Drag<Transform, double>("Transform", m_application.getScene().camera.transform, 0.01, std::nullopt, std::nullopt, "%.3f"))
+                if (rtImGui::Drag<Transform, double>("Transform", m_application.scene.camera.transform, 0.01, std::nullopt, std::nullopt, "%.3f"))
                     m_application << Application::Events::Render();
             }
             if (ImGui::CollapsingHeader("Objects", ImGuiTreeNodeFlags_DefaultOpen))
             {
-                auto &objects = m_application.getScene().objects;
+                auto &objects = m_application.scene.objects;
                 for (size_t i = 0; i < objects.size(); i++)
                 {
                     ImGui::PushID(i);

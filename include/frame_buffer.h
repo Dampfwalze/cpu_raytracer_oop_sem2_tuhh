@@ -31,6 +31,7 @@ namespace rt
 
         m::Pixel<float> &operator[](size_t index) const;
         m::Pixel<float> &at(size_t x, size_t y) const;
+        m::Pixel<float> &at(m::vec2<size_t> c) const;
     };
 
 } // namespace rt

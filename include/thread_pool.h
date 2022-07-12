@@ -1,194 +1,153 @@
 #ifndef THREAD_POOL_HPP
 #define THREAD_POOL_HPP
 
-#include <iostream>
-#include <sstream>
-#include <optional>
-#include <functional>
-#include <deque>
 #include <vector>
 #include <thread>
-#include <mutex>
-#include <condition_variable>
+#include <functional>
+
+#include <event_stream.h>
 
 namespace rt
 {
-
-    template <typename T>
+    template <typename _Task>
     class ThreadPool
     {
+    public:
+        using task_type = _Task;
+
     private:
-        class TaskPool
+        struct Event
         {
-        private:
-            std::mutex m_tasks_mutex;
-            std::condition_variable m_tasks_cv;
+            bool terminate;
+            union
+            {
+                task_type task;
+            };
 
-            std::deque<T> m_tasks;
+            static constexpr Event Terminate() { return Event(true); }
 
-        public:
-            std::optional<T> get(std::function<bool()> predicate);
-            void submit(T task);
-
-            void notifyAll();
-
-            bool empty() const;
-
-            void clear();
-        };
-
-        class WorkerThread
-        {
-        private:
-            TaskPool &m_taskPool;
-            std::thread m_thread;
-
-            std::mutex m_termination_mutex;
-            bool m_terminate = false;
-
-        public:
-            WorkerThread(TaskPool &m_taskPool);
-            WorkerThread(WorkerThread &&other);
-            ~WorkerThread();
-
-            void setTerminateFlag();
+            Event(const _Task &task);
+            ~Event() {}
 
         private:
-            void run();
+            Event(bool terminate);
         };
 
     private:
-        TaskPool m_taskPool;
-        std::vector<WorkerThread> m_workers;
+        std::vector<std::thread> m_workers;
+        EventStream<Event> m_stream;
+
+        uint64_t m_workingCount = 0;
+
+        std::function<void()> m_emptyCallback;
+
+        mutable std::mutex m_waitMutex;
+        mutable std::condition_variable m_waitCV;
 
     public:
-        ThreadPool(int threadCount);
+        ThreadPool(size_t threadCount);
+
+        ThreadPool(const ThreadPool &) = delete;
+        ThreadPool(ThreadPool &&) = delete;
+
         ~ThreadPool();
 
-        void submit(T task);
+        inline bool isWorking() const { return m_workingCount > 0; }
 
-        bool empty() const;
+        inline void setEmptyCallback(const std::function<void()> &emptyCallback) { m_emptyCallback = emptyCallback; }
 
-        void clear();
+        inline bool isEmpty() const { return m_stream.isEmpty(); }
+
+        inline void clear() { m_stream.clear(); }
+
+        void wait() const;
+
+        ThreadPool &operator<<(const task_type &task);
+
+    private:
+        void run();
     };
 
-    // --- Implementation ---
+    template <typename _Task>
+    ThreadPool<_Task>::Event::Event(const _Task &task)
+        : terminate(false), task(task) {}
 
-    // TaskPool
+    template <typename _Task>
+    ThreadPool<_Task>::Event::Event(bool terminate)
+        : terminate(terminate) {}
 
-    template <typename T>
-    std::optional<T> ThreadPool<T>::TaskPool::get(std::function<bool()> predicate)
-    {
-        while (true)
-        {
-            std::unique_lock<std::mutex> lk(m_tasks_mutex);
-            m_tasks_cv.wait(lk, [this, predicate]
-                            { return m_tasks.size() > 0 || predicate(); });
-
-            if (predicate())
-                return std::nullopt;
-
-            if (m_tasks.size() <= 0)
-                continue;
-
-            T task = std::move(m_tasks[0]);
-            m_tasks.pop_front();
-            return task;
-        }
-    }
-
-    template <typename T>
-    void ThreadPool<T>::TaskPool::submit(T task)
-    {
-        std::lock_guard<std::mutex> lk(m_tasks_mutex);
-        m_tasks.push_back(std::move(task));
-        m_tasks_cv.notify_one();
-    }
-
-    template <typename T>
-    void ThreadPool<T>::TaskPool::notifyAll()
-    {
-        m_tasks_cv.notify_all();
-    }
-
-    template <typename T>
-    bool ThreadPool<T>::TaskPool::empty() const { return m_tasks.empty(); }
-    template <typename T>
-    void ThreadPool<T>::TaskPool::clear()
-    {
-        std::lock_guard<std::mutex> lk(m_tasks_mutex);
-        m_tasks.clear();
-    }
-
-    // WorkerThread
-
-    template <typename T>
-    ThreadPool<T>::WorkerThread::WorkerThread(TaskPool &m_taskPool)
-        : m_taskPool(m_taskPool), m_thread(&ThreadPool::WorkerThread::run, this) {}
-
-    template <typename T>
-    ThreadPool<T>::WorkerThread::WorkerThread(WorkerThread &&other)
-        : m_taskPool(other.m_taskPool), m_thread(std::move(other.m_thread)) {}
-
-    template <typename T>
-    ThreadPool<T>::WorkerThread::~WorkerThread()
-    {
-        m_thread.join();
-    }
-
-    template <typename T>
-    void ThreadPool<T>::WorkerThread::setTerminateFlag()
-    {
-        std::lock_guard<std::mutex> lk(m_termination_mutex);
-        m_terminate = true;
-    }
-
-    template <typename T>
-    void ThreadPool<T>::WorkerThread::run()
-    {
-        while (!m_terminate)
-        {
-            std::optional<T> task = m_taskPool.get([this]
-                                                   { return m_terminate; });
-            if (task.has_value())
-                task.value().run();
-        }
-
-        std::cout << "Terminate Worker Thread" << std::endl;
-    }
-
-    // ThreadPool
-
-    template <typename T>
-    ThreadPool<T>::ThreadPool(int threadCount)
-        : m_workers()
+    template <typename _Task>
+    ThreadPool<_Task>::ThreadPool(size_t threadCount)
+        : m_workingCount(0)
     {
         m_workers.reserve(threadCount);
         for (size_t i = 0; i < threadCount; i++)
-            m_workers.emplace_back(m_taskPool);
+            m_workers.emplace_back(&ThreadPool<_Task>::run, this);
 
         std::cout << "Running with " << threadCount << " threads!" << std::endl;
     }
 
-    template <typename T>
-    ThreadPool<T>::~ThreadPool()
+    template <typename _Task>
+    ThreadPool<_Task>::~ThreadPool()
     {
-        for (auto &&i : m_workers)
-            i.setTerminateFlag();
-        m_taskPool.notifyAll();
+        for (auto &&worker : m_workers)
+            m_stream << Event::Terminate();
+        for (auto &&worker : m_workers)
+            worker.join();
     }
 
-    template <typename T>
-    void ThreadPool<T>::submit(T task)
+    template <typename _Task>
+    void ThreadPool<_Task>::run()
     {
-        m_taskPool.submit(task);
+        bool notFirst = false;
+
+        while (true)
+        {
+            auto lk = m_stream.getLock();
+
+            if (notFirst)
+            {
+                m_workingCount--;
+                if (m_workingCount == 0 && m_stream.isEmpty())
+                {
+                    m_waitCV.notify_all();
+                    if (m_emptyCallback)
+                    {
+                        lk.unlock();
+                        m_emptyCallback();
+                        lk.lock();
+                    }
+                }
+            }
+            notFirst = true;
+
+            Event event = std::move(m_stream.get(lk));
+
+            if (event.terminate)
+                break;
+
+            m_workingCount++;
+            lk.unlock();
+
+            event.task.run();
+        }
     }
 
-    template <typename T>
-    bool ThreadPool<T>::empty() const { return m_taskPool.empty(); }
-    template <typename T>
-    void ThreadPool<T>::clear() { m_taskPool.clear(); }
+    template <typename _Task>
+    void ThreadPool<_Task>::wait() const
+    {
+        if (m_stream.isEmpty())
+            return;
+        std::unique_lock lk(m_waitMutex);
+        m_waitCV.wait(lk);
+    }
 
+    template <typename _Task>
+    ThreadPool<_Task> &ThreadPool<_Task>::operator<<(const task_type &task)
+    {
+        m_stream << task;
+        return *this;
+    }
 } // namespace rt
 
 #endif // THREAD_POOL_HPP

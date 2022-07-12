@@ -6,9 +6,10 @@ namespace rt
     Transform::Transform(const m::dvec3 &position, const m::dquat &rotation)
         : position(position), rotation(rotation) {}
 
-    m::dmat4 Transform::getMatrix() const
+    void Transform::cacheMatrix() const
     {
-        return m::translate(glm::toMat4(rotation), position);
+        cached.matrix = m::translate(glm::toMat4(rotation), position);
+        cached.inverseMatrix = m::inverse(cached.matrix);
     }
 
     std::ostream &operator<<(std::ostream &stream, const Transform &transform)

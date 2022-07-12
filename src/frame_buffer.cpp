@@ -38,4 +38,5 @@ namespace rt
     m::Pixel<float> &FrameBuffer::operator[](size_t index) const { return m_buffer[index]; }
 
     m::Pixel<float> &FrameBuffer::at(size_t x, size_t y) const { return m_buffer[y * m_size.x + x]; }
+    m::Pixel<float> &FrameBuffer::at(m::vec2<size_t> c) const { return m_buffer[c.y * m_size.x + c.x]; }
 }

@@ -169,12 +169,12 @@ namespace rt
             Rect(vec2<T> start, vec2<T> size) : start(start), size(size) {}
             Rect() : start(), size() {}
 
-            inline vec2<T> getEnd() { return start + size; }
+            inline vec2<T> getEnd() const { return start + size; }
 
-            Rect<T> min(T _x, T _y) { return Rect(math::min<T>(start, _x, _y), math::min<T>(getEnd(), _x, _y) - start); }
-            Rect<T> max(T _x, T _y) { return Rect(math::max<T>(start, _x, _y), math::max<T>(getEnd(), _x, _y) - start); }
-            inline Rect<T> min(vec2<T> v) { return min(v.x, v.y); }
-            inline Rect<T> max(vec2<T> v) { return max(v.x, v.y); }
+            Rect<T> min(T _x, T _y) const { return Rect(math::min<T>(start, _x, _y), math::min<T>(getEnd(), _x, _y) - start); }
+            Rect<T> max(T _x, T _y) const { return Rect(math::max<T>(start, _x, _y), math::max<T>(getEnd(), _x, _y) - start); }
+            inline Rect<T> min(vec2<T> v) const { return min(v.x, v.y); }
+            inline Rect<T> max(vec2<T> v) const { return max(v.x, v.y); }
         };
 
         template <typename T>
@@ -184,6 +184,20 @@ namespace rt
             return stream;
         }
 
+        template <typename T, typename D>
+        T Vec1(const D &vec) { return T(vec.x); }
+        template <typename T, typename D>
+        T Vec2(const D &vec) { return T(vec.x, vec.y); }
+        template <typename T, typename D>
+        T Vec3(const D &vec) { return T(vec.x, vec.y, vec.z); }
+        template <typename T, typename D>
+        T Vec4(const D &vec) { return T(vec.x, vec.y, vec.z, vec.w); }
+
+        template <typename T>
+        inline T map(T value, T istart, T istop, T ostart, T ostop)
+        {
+            return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+        }
     } // namespace math
 
 } // namespace rt

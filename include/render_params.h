@@ -9,9 +9,8 @@ namespace rt
 
     struct RenderParams
     {
-        m::u64vec2 outputSize;
         m::u64vec2 tileSize;
-        std::optional<m::uvec2> logPixel;
+        std::optional<m::u64vec2> logPixel;
     };
 
 } // namespace rt

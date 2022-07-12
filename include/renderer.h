@@ -2,11 +2,10 @@
 #define RENDERER_HPP
 
 #include <rtmath.h>
+#include <thread_pool.h>
 #include <scene/scene.h>
-
-#define RENDER_LOG(...)    \
-    if (logger != nullptr) \
-    log(__VA_ARGS__)
+#include <frame_buffer.h>
+#include <render_params.h>
 
 namespace rt
 {
@@ -15,56 +14,55 @@ namespace rt
     class Renderer
     {
     public:
-        class PixelRenderer
+        struct RenderTask
         {
-        public:
-            m::uvec2 pixelCoords;
-            m::uvec2 screenSize;
+            m::Rect<size_t> rect;
 
-            m::dmat4 cameraMatrix;
+            Renderer *owner;
 
-            mutable std::ostream* logger = nullptr;
-
-            const Scene &scene;
-
-        public:
-            PixelRenderer(const Scene &scene);
-            virtual ~PixelRenderer();
-
-            virtual m::Pixel<float> renderPixel() const = 0;
-
-            template<typename T>
-            void log(T val) const
-            {
-                if (logger == nullptr) return;
-                *logger << val;
-            }
-            template<typename T, typename ... Args>
-            void log(T val, Args... vals) const
-            {
-                if (logger == nullptr) return;
-                *logger << val;
-                log(vals...);
-            }
+            void run();
         };
+
+    private:
+    protected:
+        ThreadPool<RenderTask> *threadPool;
+
+        Scene *scene;
+
+        FrameBuffer *frameBuffer;
+
+        RenderParams *renderParams;
 
     public:
         Renderer();
         virtual ~Renderer();
 
-        virtual PixelRenderer *createPixelRenderer(const Scene &scene) const = 0;
-    };
+    protected:
+        virtual void render();
+        virtual void renderTile(const m::Rect<size_t> &tile);
+        virtual void renderPixel(const m::vec2<size_t> &coords);
 
-    template <class T>
-    class RendererWith : public Renderer
-    {
+        virtual void beginFrame();
+        virtual void endFrame();
+
+        friend RenderTask;
+
     public:
-        RendererWith() {}
-        ~RendererWith() {}
-
-        virtual PixelRenderer *createPixelRenderer(const Scene &scene) const override { return new T(scene); }
+        inline void doRender(ThreadPool<RenderTask> *threadPool, Scene *scene, FrameBuffer *frameBuffer, RenderParams *renderParams)
+        {
+            this->threadPool = threadPool;
+            this->scene = scene;
+            this->frameBuffer = frameBuffer;
+            this->renderParams = renderParams;
+            beginFrame();
+            render();
+            endFrame();
+            this->renderParams = nullptr;
+            this->frameBuffer = nullptr;
+            this->scene = nullptr;
+            this->threadPool = nullptr;
+        }
     };
-
 } // namespace rt
 
 #endif // RENDERER_HPP
