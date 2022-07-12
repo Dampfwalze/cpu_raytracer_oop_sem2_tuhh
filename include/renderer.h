@@ -48,20 +48,7 @@ namespace rt
         friend RenderTask;
 
     public:
-        inline void doRender(ThreadPool<RenderTask> *threadPool, Scene *scene, FrameBuffer *frameBuffer, RenderParams *renderParams)
-        {
-            this->threadPool = threadPool;
-            this->scene = scene;
-            this->frameBuffer = frameBuffer;
-            this->renderParams = renderParams;
-            beginFrame();
-            render();
-            endFrame();
-            this->renderParams = nullptr;
-            this->frameBuffer = nullptr;
-            this->scene = nullptr;
-            this->threadPool = nullptr;
-        }
+        void doRender(ThreadPool<RenderTask> *threadPool, Scene *scene, FrameBuffer *frameBuffer, RenderParams *renderParams);
     };
 } // namespace rt
 

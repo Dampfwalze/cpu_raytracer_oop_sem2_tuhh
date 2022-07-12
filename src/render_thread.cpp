@@ -1,6 +1,7 @@
 #include <render_thread.h>
 #include <stream_formatter.h>
 #include <pixel_logger.h>
+#include <profiler.h>
 
 namespace rt
 {
@@ -68,7 +69,11 @@ namespace rt
                 rtstd::formatterstream logger(ss);
                 PixelLogger::logger.setStream(&logger);
 
+                Profiling::profiler.beginFrame();
+
                 m_renderer->doRender(&m_threadPool, event.scene, event.frameBuffer, &m_renderParams);
+
+                Profiling::profiler.endFrame();
 
                 PixelLogger::logger.setStream(nullptr);
                 renderLog = ss.str();

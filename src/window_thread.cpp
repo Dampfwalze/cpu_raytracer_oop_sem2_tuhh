@@ -6,6 +6,7 @@
 #include <frame_buffer.h>
 #include <shader.h>
 #include <gl_error.h>
+#include <profiler.h>
 
 #include <rt_imgui.h>
 
@@ -155,6 +156,15 @@ namespace rt
             ImGui::BeginDisabled(m_application.renderThread.isRendering());
             if (ImGui::Button("Render"))
             {
+                Profiling::profiler.enabled = false;
+                if (m_application.frameBuffer.getSize() != imageSize)
+                    m_application.frameBuffer.resize(imageSize);
+                m_application << Application::Events::Render();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Profile"))
+            {
+                Profiling::profiler.enabled = true;
                 if (m_application.frameBuffer.getSize() != imageSize)
                     m_application.frameBuffer.resize(imageSize);
                 m_application << Application::Events::Render();
@@ -218,6 +228,20 @@ namespace rt
                 }
             }
 
+            ImGui::End();
+
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+            ImGui::Begin("Profiler");
+            {
+                ImGui::PopStyleVar();
+
+                static std::unique_ptr<Profiling::FrameProfile> profile;
+                if (!m_application.renderThread.isRendering() && Profiling::profiler.getProfile() != nullptr)
+                    profile = Profiling::profiler.exchangeProfile();
+
+                if (profile)
+                    rtImGui::drawProfiler("Profiler", *profile, ImGui::GetContentRegionAvail().y);
+            }
             ImGui::End();
 
             window.endGUI();

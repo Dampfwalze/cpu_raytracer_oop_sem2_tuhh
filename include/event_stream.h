@@ -22,7 +22,7 @@ namespace rt
         std::condition_variable m_cv;
 
     public:
-        template <typename _Dur = std::chrono::system_clock::duration>
+        template <typename _Dur = duration>
         EventStream(_Dur waitingTime = duration::zero())
             : waitingTime(std::chrono::duration_cast<duration>(waitingTime)) {}
 

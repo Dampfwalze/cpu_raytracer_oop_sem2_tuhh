@@ -30,6 +30,7 @@ set(SOURCES
     src/camera.cpp
     src/material.cpp
     src/pixel_logger.cpp
+    src/profiler.cpp
 )
 
 FILE(GLOB_RECURSE HEADERS include/*.h)
