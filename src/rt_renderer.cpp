@@ -1,4 +1,5 @@
 #include <rt_renderer.h>
+#include <pixel_logger.h>
 
 namespace rt
 {
@@ -18,6 +19,8 @@ namespace rt
 
         auto invCam = scene->camera.cached.inverseMatrix;
 
+        PIXEL_LOGGER_LOG(ray, "\n");
+
         // ray *= m::inverse(cameraMatrix);
 
         m::dvec4 origin = invCam * m::dvec4(ray.origin, 1);
@@ -26,6 +29,8 @@ namespace rt
         ray = m::ray(origin.xyz() / origin.w, direction.xyz() / direction.w - origin.xyz() / origin.w);
 
         // ray.normalize();
+
+        // PIXEL_LOGGER_LOG(ray, "\n");
 
         Intersection nearestInter;
         SceneShape *nearestObj;

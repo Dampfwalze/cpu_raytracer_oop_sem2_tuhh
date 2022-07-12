@@ -53,6 +53,8 @@ namespace rt
     public:
         RenderParams renderParams;
 
+        std::string renderLog;
+
     public:
         RenderThread(Renderer *renderer = nullptr);
         ~RenderThread();

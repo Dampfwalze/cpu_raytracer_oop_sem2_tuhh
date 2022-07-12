@@ -177,15 +177,21 @@ namespace rt
                 ImGui::TreePop();
             }
 
-            //if (m_application.getRenderDispatcher().renderLog != "") {
-            //    static bool open = true;
-            //    ImGui::SetNextItemOpen(open);
-            //    if (open = ImGui::TreeNode("Render log")) {
-            //        std::lock_guard<std::mutex> lk(m_application.getRenderDispatcher().logMutex);
-            //        ImGui::TextWrapped(m_application.getRenderDispatcher().renderLog.c_str());
-            //        ImGui::TreePop();
-            //    }
-            //}
+            if (m_application.renderThread.renderLog != "")
+            {
+                static bool open = true;
+                ImGui::SetNextItemOpen(open);
+                if (open = ImGui::TreeNode("Render log"))
+                {
+                    auto padding = ImGui::GetStyle().FramePadding;
+                    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, padding);
+                    ImGui::BeginChild("Render_Log", ImVec2(0, 0), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
+                    ImGui::PopStyleVar();
+                    ImGui::TextWrapped(m_application.renderThread.renderLog.c_str());
+                    ImGui::EndChild();
+                    ImGui::TreePop();
+                }
+            }
 
             ImGui::End();
 

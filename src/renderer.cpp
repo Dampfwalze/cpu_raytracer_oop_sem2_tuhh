@@ -1,4 +1,5 @@
 #include <renderer.h>
+#include <pixel_logger.h>
 
 namespace rt
 {
@@ -35,7 +36,10 @@ namespace rt
         for (size_t y = tile.start.y; y < tile.getEnd().y; y++)
             for (size_t x = tile.start.x; x < tile.getEnd().x; x++)
             {
+                if (renderParams->logPixel == m::u64vec2(x, y))
+                    PixelLogger::logger.beginLog();
                 renderPixel(m::u64vec2(x, y));
+                PixelLogger::logger.endLog();
             }
     }
 

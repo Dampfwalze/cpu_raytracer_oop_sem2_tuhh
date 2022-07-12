@@ -1,4 +1,6 @@
 #include <render_thread.h>
+#include <stream_formatter.h>
+#include <pixel_logger.h>
 
 namespace rt
 {
@@ -61,7 +63,16 @@ namespace rt
                 m_renderParams = renderParams;
 
                 m_isRendering = true;
+
+                std::stringstream ss;
+                rtstd::formatterstream logger(ss);
+                PixelLogger::logger.setStream(&logger);
+
                 m_renderer->doRender(&m_threadPool, event.scene, event.frameBuffer, &m_renderParams);
+
+                PixelLogger::logger.setStream(nullptr);
+                renderLog = ss.str();
+
                 m_isRendering = false;
                 break;
             }

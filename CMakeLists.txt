@@ -29,6 +29,7 @@ set(SOURCES
     src/scene_shapes.cpp
     src/camera.cpp
     src/material.cpp
+    src/pixel_logger.cpp
 )
 
 FILE(GLOB_RECURSE HEADERS include/*.h)
