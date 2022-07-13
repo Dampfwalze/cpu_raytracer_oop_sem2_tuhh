@@ -43,6 +43,44 @@ namespace rt
         camera.cacheMatrix(screenSize.x / (double)screenSize.y);
     }
 
+    // Ray is in world space
+    std::optional<Intersection> Scene::castRay(const m::ray<double> &ray) const
+    {
+        Intersection nearestInter;
+        double nearestDist2 = std::numeric_limits<double>::max();
+
+        for (auto &&i : objects)
+        {
+            m::dmat4 mat = i->transform.cached.matrix;
+            m::dmat4 invMat = i->transform.cached.inverseMatrix;
+
+            // Ray is in local object space now
+            m::ray localRay = invMat * ray;
+
+            auto maybeIntersection = i->intersect(localRay);
+
+            if (!maybeIntersection)
+                continue;
+
+            auto &intersection = maybeIntersection.value();
+
+            // Transform intersection details back to world space
+            intersection.position = mat * m::dvec4(intersection.position, 1.0);
+            intersection.normal = mat * m::dvec4(intersection.normal, 0.0);
+
+            double depth2 = m::distance2(ray.origin, intersection.position);
+            if (depth2 < nearestDist2)
+            {
+                nearestDist2 = depth2;
+                nearestInter = intersection;
+            }
+        }
+
+        if (nearestDist2 != std::numeric_limits<double>::max())
+            return nearestInter;
+        return std::nullopt;
+    }
+
     std::ostream &operator<<(std::ostream &stream, const Scene &scene)
     {
         stream << "Scene { Shapes: ";

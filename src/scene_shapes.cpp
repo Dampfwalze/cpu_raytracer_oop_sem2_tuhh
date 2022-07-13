@@ -46,6 +46,7 @@ namespace rt
             Intersection i;
             i.position = ray(t);
             i.normal = i.position;
+            i.object = (SceneShape *)this;
 
             return i;
         }
@@ -75,6 +76,7 @@ namespace rt
             Intersection i;
             i.position = ray(t);
             i.normal = m::dvec3(0, -1, 0);
+            i.object = (SceneShape *)this;
             return i;
         }
 

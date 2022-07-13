@@ -37,6 +37,8 @@ namespace rt
 
         void cacheFrameData(const m::u64vec2 &screenSize) const;
 
+        std::optional<Intersection> castRay(const m::ray<double> &ray) const;
+
         friend std::ostream &operator<<(std::ostream &stream, const Scene &shape);
     };
 

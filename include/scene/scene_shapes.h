@@ -8,10 +8,13 @@
 
 namespace rt
 {
+    class SceneShape;
+
     struct Intersection
     {
         m::dvec3 position;
         m::dvec3 normal;
+        SceneShape *object;
     };
 
     class SceneShape

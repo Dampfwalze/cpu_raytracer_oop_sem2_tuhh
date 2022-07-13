@@ -11,61 +11,33 @@ namespace rt
     void RTRenderer::renderPixel(const m::vec2<size_t> &pixelCoords)
     {
         auto screenSize = frameBuffer->getSize();
+        auto coords = static_cast<m::dvec2>(pixelCoords) / static_cast<m::dvec2>(screenSize) * 2.0 - m::dvec2(1);
 
-        m::dvec2 coords = static_cast<m::dvec2>(pixelCoords) / static_cast<m::dvec2>(screenSize) * 2.0 - m::dvec2(1);
-        m::ray<double> ray(m::dvec3(coords, -1), m::dvec3(0, 0, 1));
         auto &outColor = frameBuffer->at(pixelCoords);
         outColor = m::dvec3(coords, 0.0);
 
         auto invCam = scene->camera.cached.inverseMatrix;
 
+        // Ray is in camera space
+        m::ray<double> ray(m::dvec3(coords, -1), m::dvec3(0, 0, 1));
+
         PIXEL_LOGGER_LOG(ray, "\n");
 
+        // Ray is in world space now
         ray = ray.transformPerspective(invCam);
 
-        // ray.normalize();
+        auto maybeIntersection = scene->castRay(ray);
 
-        // PIXEL_LOGGER_LOG(ray, "\n");
-
-        Intersection nearestInter;
-        SceneShape *nearestObj;
-        double nearestDepth2 = std::numeric_limits<double>::max();
-
-        for (auto &&i : scene->objects)
+        if (maybeIntersection)
         {
-            m::dmat4 mat = i->transform.cached.matrix;
-            m::dmat4 invMat = i->transform.cached.inverseMatrix;
-
-            m::ray localRay = invMat * ray;
-
-            auto intersection = i->intersect(localRay);
-
-            if (!intersection.has_value())
-                continue;
-
-            auto &inter = intersection.value();
-
-            inter.position = mat * m::dvec4(inter.position, 1.0);
-            inter.normal = mat * m::dvec4(inter.normal, 0.0);
-
-            double depth2 = m::distance2(ray.origin, inter.position);
-            if (depth2 < nearestDepth2)
-            {
-                nearestDepth2 = depth2;
-                nearestInter = inter;
-                nearestObj = i.get();
-            }
-        }
-
-        if (nearestDepth2 != std::numeric_limits<double>::max())
-        {
-            Material *material = scene->getMaterial(nearestObj->materialIndex);
+            auto &intersection = maybeIntersection.value();
+            Material *material = scene->getMaterial(intersection.object->materialIndex);
             if (material == nullptr)
             {
-                outColor = m::Color<double>(255, 0, 255);
+                outColor = m::Color<double>(1, 0, 1);
                 return;
             }
-            outColor = material->render(nearestInter.position, nearestInter.normal);
+            outColor = material->render(intersection.position, intersection.normal);
             return;
         }
     }
