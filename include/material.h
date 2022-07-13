@@ -7,6 +7,9 @@ namespace rt
 {
     namespace m = math;
 
+    class Scene;
+    class RTRenderer;
+
     class Material
     {
     private:
@@ -14,7 +17,7 @@ namespace rt
         Material();
         virtual ~Material();
 
-        virtual m::Color<float> render(const m::dvec3 &position, const m::dvec3 &normal) = 0;
+        virtual m::Color<float> render(const m::dvec3 &position, const m::dvec3 &normal, const m::dvec3 hitDirection, const Scene &scene, const RTRenderer &renderer, int recursionDepth) = 0;
     };
 
     namespace Materials
@@ -24,11 +27,20 @@ namespace rt
         public:
             m::Color<float> color;
 
+            float ambient;
+            float diffuse;
+            float specular;
+            float reflection;
+
         public:
-            LitMaterial(const m::Color<float> &color);
+            LitMaterial(const m::Color<float> &color,
+                        float ambient = 0.1f,
+                        float diffuse = 1.0f,
+                        float specular = 1.0f,
+                        float reflection = 0.5f);
             virtual ~LitMaterial();
 
-            virtual m::Color<float> render(const m::dvec3 &position, const m::dvec3 &normal) override;
+            virtual m::Color<float> render(const m::dvec3 &position, const m::dvec3 &normal, const m::dvec3 hitDirection, const Scene &scene, const RTRenderer &renderer, int recursionDepth) override;
         };
 
     } // namespace Materials

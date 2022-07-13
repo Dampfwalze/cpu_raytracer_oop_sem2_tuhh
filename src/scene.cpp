@@ -22,6 +22,11 @@ namespace rt
         objects.emplace_back(shape);
     }
 
+    void Scene::addLight(SceneLight *light)
+    {
+        lights.emplace_back(light);
+    }
+
     size_t Scene::addMaterial(Material *material)
     {
         materials[materials.size()] = std::unique_ptr<Material>(material);
@@ -44,7 +49,7 @@ namespace rt
     }
 
     // Ray is in world space
-    std::optional<Intersection> Scene::castRay(const m::ray<double> &ray) const
+    std::optional<Intersection> Scene::castRay(const m::ray<double> &ray, std::optional<double> maxLength2) const
     {
         Intersection nearestInter;
         double nearestDist2 = std::numeric_limits<double>::max();
@@ -68,10 +73,10 @@ namespace rt
             intersection.position = mat * m::dvec4(intersection.position, 1.0);
             intersection.normal = mat * m::dvec4(intersection.normal, 0.0);
 
-            double depth2 = m::distance2(ray.origin, intersection.position);
-            if (depth2 < nearestDist2)
+            double dist2 = m::distance2(ray.origin, intersection.position);
+            if (dist2 < nearestDist2 && (!maxLength2 || dist2 < *maxLength2))
             {
-                nearestDist2 = depth2;
+                nearestDist2 = dist2;
                 nearestInter = intersection;
             }
         }

@@ -40,7 +40,7 @@ namespace rt
                 return std::nullopt;
 
             double t = (-b - std::sqrt(result)) / (2 * a);
-            if (t < 0)
+            if (t < 0.01)
                 return std::nullopt;
 
             Intersection i;
@@ -71,7 +71,7 @@ namespace rt
         std::optional<Intersection> Plane::intersect(const m::ray<double> &ray) const
         {
             double t = -ray.origin.y / ray.direction.y;
-            if (t < 0)
+            if (t < 0.01)
                 return std::nullopt;
             Intersection i;
             i.position = ray(t);

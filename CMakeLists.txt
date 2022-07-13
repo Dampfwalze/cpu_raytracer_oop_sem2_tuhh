@@ -27,6 +27,7 @@ set(SOURCES
     src/scene.cpp
     src/transform.cpp
     src/scene_shapes.cpp
+    src/scene_lights.cpp
     src/camera.cpp
     src/material.cpp
     src/pixel_logger.cpp
