@@ -8,6 +8,22 @@
     if (PixelLogger::logger.isLogging()) \
     PixelLogger::logger.log(__VA_ARGS__)
 
+#ifdef _DEBUG
+#ifdef __GNUC__
+#define PIXEL_BREAK                      \
+    if (PixelLogger::logger.isLogging()) \
+    asm("int $3")
+#elif defined(_MSC_VER)
+#define PIXEL_BREAK                      \
+    if (PixelLogger::logger.isLogging()) \
+    __debugbreak()
+#else
+#define PIXEL_BREAK
+#endif
+#else
+#define PIXEL_BREAK
+#endif
+
 namespace rt
 {
     class PixelLogger
