@@ -57,22 +57,27 @@ namespace rt
 
             ray(vec3<T> origin = vec3<T>(), vec3<T> direction = vec3<T>()) : origin(origin), direction(direction) {}
 
+            ray<T> transformPerspective(const mat4<T> &matrix) const
+            {
+                auto n_origin = matrix * vec4<T>(origin, 1);
+                auto n_direction = matrix * vec4<T>(direction + origin, 1);
+                ray<T> n;
+                n.origin = n_origin.xyz() / n_origin.w;
+                n.direction = n_direction.xyz() / n_direction.w - n.origin;
+                return n;
+            }
+
+            // Only works with matricies, that are not effecting the w component of a vector.
+            // If you matrix does not fit this restriction, use ray<T>.transformPerspective(mat4<T>) instead.
             ray<T> &operator*=(const mat4<T> &matrix)
             {
-                auto newOrigin = matrix * vec4<T>(origin, 1);
-                direction = (matrix * vec4<T>(direction + origin, 1)) - newOrigin;
-                origin = newOrigin;
-
+                assert(matrix[0].w == 0 && matrix[1].w == 0 && matrix[2].w == 0 && matrix[3].w == 1 && "Given Matrix effects w component, use ray<T>.transformPerspective(mat4<T>) instead!");
+                origin = matrix * vec4<T>(origin, 1);
+                direction = matrix * vec4<T>(direction, 0);
                 return *this;
             }
 
-            ray<T> operator*(const mat4<T> &matrix) const
-            {
-                return ray(matrix * vec4<T>(origin, 1),
-                           matrix * vec4<T>(direction + origin, 1) - (matrix * vec4<T>(origin, 1)));
-            }
-
-            ray<T>& normalize()
+            inline ray<T> &normalize()
             {
                 direction = glm::normalize(direction);
                 return *this;
@@ -83,6 +88,18 @@ namespace rt
                 return origin + direction * scalar;
             }
         };
+
+        // Only works with matricies, that are not effecting the w component of a vector.
+        // If you matrix does not fit this restriction, use ray<T>.transformPerspective(mat4<T>) instead.
+        template <typename T>
+        ray<T> operator*(const mat4<T> &matrix, const ray<T> &ray)
+        {
+            assert(matrix[0].w == 0 && matrix[1].w == 0 && matrix[2].w == 0 && matrix[3].w == 1 && "Given Matrix effects w component, use ray<T>.transformPerspective(mat4<T>) instead!");
+            math::ray<T> n;
+            n.origin = matrix * vec4<T>(ray.origin, 1);
+            n.direction = matrix * vec4<T>(ray.direction, 0);
+            return n;
+        }
 
         template<typename T>
         ray<T> normalize(ray<T> r) { return r.normalize(); }

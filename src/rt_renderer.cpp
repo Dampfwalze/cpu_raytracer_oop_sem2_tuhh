@@ -21,12 +21,7 @@ namespace rt
 
         PIXEL_LOGGER_LOG(ray, "\n");
 
-        // ray *= m::inverse(cameraMatrix);
-
-        m::dvec4 origin = invCam * m::dvec4(ray.origin, 1);
-        m::dvec4 direction = (invCam * m::dvec4(ray.origin + ray.direction, 1));
-
-        ray = m::ray(origin.xyz() / origin.w, direction.xyz() / direction.w - origin.xyz() / origin.w);
+        ray = ray.transformPerspective(invCam);
 
         // ray.normalize();
 
@@ -41,7 +36,7 @@ namespace rt
             m::dmat4 mat = i->transform.cached.matrix;
             m::dmat4 invMat = i->transform.cached.inverseMatrix;
 
-            m::ray localRay = ray * invMat;
+            m::ray localRay = invMat * ray;
 
             auto intersection = i->intersect(localRay);
 
