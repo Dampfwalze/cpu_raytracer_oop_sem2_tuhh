@@ -18,5 +18,18 @@ namespace rt
         {
             return color;
         }
+
+        DirectionalLight::DirectionalLight(m::dvec3 direction, m::Color<float> color)
+            : direction(direction), color(color) {}
+
+        std::optional<m::dvec3> DirectionalLight::getLightDirection(const m::dvec3 &position) const
+        {
+            return direction;
+        }
+
+        m::Color<float> DirectionalLight::getColor(const m::dvec3 &position) const
+        {
+            return color;
+        }
     }
 }

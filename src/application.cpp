@@ -23,7 +23,8 @@ namespace rt
         // scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0, 0, 0))));
         // scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.6, 1, 0.5))));
         scene.addShape(new Shapes::Plane(Transform(m::dvec3(0, 1, 0))));
-        scene.addLight(new Lights::PointLight{m::dvec3()});
+        // scene.addLight(new Lights::PointLight{m::dvec3()});
+        scene.addLight(new Lights::DirectionalLight());
         rtstd::formatterstream(std::cout) << scene << std::endl;
     }
 
