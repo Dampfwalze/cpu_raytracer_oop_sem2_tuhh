@@ -27,6 +27,9 @@ namespace rt
             static constexpr Event Terminate() { return Event(true); }
 
             Event(const _Task &task);
+            Event(_Task &&task);
+            Event(const Event &other);
+            Event(Event &&other);
             ~Event() {}
 
         private:
@@ -63,6 +66,7 @@ namespace rt
         void wait() const;
 
         ThreadPool &operator<<(const task_type &task);
+        ThreadPool &operator<<(task_type &&task);
 
     private:
         void run();
@@ -71,6 +75,18 @@ namespace rt
     template <typename _Task>
     ThreadPool<_Task>::Event::Event(const _Task &task)
         : terminate(false), task(task) {}
+
+    template <typename _Task>
+    ThreadPool<_Task>::Event::Event(_Task &&task)
+        : terminate(false), task(std::move(task)) {}
+
+    template <typename _Task>
+    ThreadPool<_Task>::Event::Event(const Event &other)
+        : terminate(other.terminate), task(other.task) {}
+
+    template <typename _Task>
+    ThreadPool<_Task>::Event::Event(Event &&other)
+        : terminate(other.terminate), task(std::move(other.task)) {}
 
     template <typename _Task>
     ThreadPool<_Task>::Event::Event(bool terminate)
@@ -129,7 +145,7 @@ namespace rt
             m_workingCount++;
             lk.unlock();
 
-            event.task.run();
+            event.task();
         }
     }
 
@@ -146,6 +162,13 @@ namespace rt
     ThreadPool<_Task> &ThreadPool<_Task>::operator<<(const task_type &task)
     {
         m_stream << task;
+        return *this;
+    }
+
+    template <typename _Task>
+    ThreadPool<_Task> &ThreadPool<_Task>::operator<<(task_type &&task)
+    {
+        m_stream << std::move(task);
         return *this;
     }
 } // namespace rt

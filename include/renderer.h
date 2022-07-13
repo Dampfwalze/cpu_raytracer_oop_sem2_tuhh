@@ -6,6 +6,7 @@
 #include <scene/scene.h>
 #include <frame_buffer.h>
 #include <render_params.h>
+#include <future>
 
 namespace rt
 {
@@ -14,18 +15,10 @@ namespace rt
     class Renderer
     {
     public:
-        struct RenderTask
-        {
-            m::Rect<size_t> rect;
+        using task_type = std::packaged_task<void()>;
 
-            Renderer *owner;
-
-            void run();
-        };
-
-    private:
     protected:
-        ThreadPool<RenderTask> *threadPool;
+        ThreadPool<task_type> *threadPool;
 
         Scene *scene;
 
@@ -45,10 +38,8 @@ namespace rt
         virtual void beginFrame();
         virtual void endFrame();
 
-        friend RenderTask;
-
     public:
-        void doRender(ThreadPool<RenderTask> *threadPool, Scene *scene, FrameBuffer *frameBuffer, RenderParams *renderParams);
+        void doRender(ThreadPool<task_type> *threadPool, Scene *scene, FrameBuffer *frameBuffer, RenderParams *renderParams);
     };
 } // namespace rt
 

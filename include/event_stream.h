@@ -58,7 +58,7 @@ namespace rt
             if (m_que.empty())
                 continue;
 
-            event_type event = std::move(m_que[0]);
+            event_type event(std::move(m_que[0]));
             m_que.pop_front();
             return std::move(event);
         }

@@ -42,7 +42,7 @@ namespace rt
     private:
         EventStream<Event> m_eventStream;
 
-        ThreadPool<Renderer::RenderTask> m_threadPool;
+        ThreadPool<Renderer::task_type> m_threadPool;
 
         Renderer *m_renderer;
 

@@ -10,30 +10,31 @@ namespace rt
     void Renderer::render()
     {
         auto size = frameBuffer->getSize();
+
+        std::vector<std::future<void>> futures;
+        futures.reserve((size.x / renderParams->tileSize.x + 1) * (size.y / renderParams->tileSize.y + 1));
+
         for (size_t x = 0; x < size.x; x += renderParams->tileSize.x)
         {
             for (size_t y = 0; y < size.y; y += renderParams->tileSize.y)
             {
-                RenderTask task = {
-                    m::Rect(m::u64vec2(x, y), renderParams->tileSize).min(size),
-                    this,
-                };
-                *threadPool << task;
+                auto rect = m::Rect(m::u64vec2(x, y), renderParams->tileSize).min(size);
+
+                std::packaged_task<void()> task([rect, this]
+                                                {
+                    Profiling::profiler.profileTask("Render Tile");
+                    renderTile(rect);
+                    Profiling::profiler.profileTask("Get"); });
+
+                futures.push_back(task.get_future());
+                *threadPool << std::move(task);
             }
         }
 
-        Profiling::profiler.profileTask("Wait constant");
-        std::this_thread::sleep_for(std::chrono::microseconds(100));
+        Profiling::profiler.profileTask("Waiting for Futures");
 
-        Profiling::profiler.profileTask("Wait for finish");
-        threadPool->wait();
-    }
-
-    void Renderer::RenderTask::run()
-    {
-        Profiling::profiler.profileTask("Render Tile");
-        owner->renderTile(rect);
-        Profiling::profiler.profileTask("Get");
+        for (auto &&f : futures)
+            f.get();
     }
 
     void Renderer::renderTile(const m::Rect<size_t> &tile)
@@ -52,7 +53,7 @@ namespace rt
     void Renderer::beginFrame() {}
     void Renderer::endFrame() {}
 
-    void Renderer::doRender(ThreadPool<RenderTask> *threadPool, Scene *scene, FrameBuffer *frameBuffer, RenderParams *renderParams)
+    void Renderer::doRender(ThreadPool<task_type> *threadPool, Scene *scene, FrameBuffer *frameBuffer, RenderParams *renderParams)
     {
         this->threadPool = threadPool;
         this->scene = scene;
