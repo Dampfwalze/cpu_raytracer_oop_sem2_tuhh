@@ -68,8 +68,8 @@ namespace rt
             {
                 Color lightColor = i_light->getColor(position);
                 auto lightDirection = glm::normalize(i_light->getLightDirection(position).value());
-                result = mixColor(result, diffuse * lightColor * (float)m::dot(normal, lightDirection));
-                result = mixColor(result, specular * lightColor * (float)m::dot(hitDirection, m::reflect(lightDirection, normal)));
+                result = mixColor(result, diffuse * lightColor * glm::max(0.0f, (float)m::dot(normal, lightDirection)));
+                result = mixColor(result, specular * lightColor * glm::max(0.0f, (float)m::dot(hitDirection, m::reflect(lightDirection, normal))));
             }
             PIXEL_LOGGER_LOG(" }");
             return mixColor(result, e_reflection);
