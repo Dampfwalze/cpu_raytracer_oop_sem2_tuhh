@@ -42,7 +42,7 @@ namespace rt
             m::dvec3 normal = glm::normalize(normal_);
             m::dvec3 hitDirection = glm::normalize(hitDirection_);
 
-            Color e_ambiant = color * ambient;
+            Color e_ambiant = Color(ambient);
 
             Color e_reflection(0);
             if (recursionDepth > 0)
@@ -72,7 +72,7 @@ namespace rt
                 result = mixColor(result, specular * lightColor * glm::max(0.0f, (float)m::dot(hitDirection, m::reflect(lightDirection, normal))));
             }
             PIXEL_LOGGER_LOG(" }");
-            return mixColor(result, e_reflection);
+            return mixColor(result, e_reflection) * color;
         }
 
         bool LitMaterial::onInspectorGUI()
