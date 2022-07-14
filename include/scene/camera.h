@@ -25,6 +25,8 @@ namespace rt
 
         virtual std::ostream &toString(std::ostream &stream) const override;
 
+        virtual bool onInspectorGUI() override;
+
         void cacheMatrix(double aspect) const;
     };
 } // namespace rt

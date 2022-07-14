@@ -44,6 +44,8 @@ namespace rt
 
         std::optional<Intersection> castRay(const m::ray<double> &ray, std::optional<double> maxLength2 = std::nullopt) const;
 
+        bool onInspectorGUI();
+
         friend std::ostream &operator<<(std::ostream &stream, const Scene &shape);
     };
 

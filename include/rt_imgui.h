@@ -75,7 +75,7 @@ namespace rtImGui
     inline bool Drag(const char *label, T &value, float v_speed,
                      const std::optional<F> &p_min = std::nullopt,
                      const std::optional<F> &p_max = std::nullopt,
-                     const char *format = nullptr,
+                     const char *format = "%.3f",
                      ImGuiSliderFlags flags = 0)
     {
         F _p_min = p_min.value_or(F());

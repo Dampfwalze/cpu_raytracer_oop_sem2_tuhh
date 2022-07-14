@@ -33,6 +33,8 @@ namespace rt
             virtual std::optional<m::dvec3> getLightDirection(const m::dvec3 &position) const override;
             virtual m::Color<float> getColor(const m::dvec3 &position) const override;
 
+            virtual bool onInspectorGUI() override;
+
             virtual std::ostream &toString(std::ostream &stream) const override;
         };
 
@@ -46,6 +48,8 @@ namespace rt
 
             virtual std::optional<m::dvec3> getLightDirection(const m::dvec3 &position) const override;
             virtual m::Color<float> getColor(const m::dvec3 &position) const override;
+
+            virtual bool onInspectorGUI() override;
 
             virtual std::ostream &toString(std::ostream &stream) const override;
         };

@@ -3,6 +3,7 @@
 #include <scene/scene.h>
 #include <rt_renderer.h>
 #include <pixel_logger.h>
+#include <rt_imgui.h>
 
 namespace rt
 {
@@ -71,6 +72,27 @@ namespace rt
             }
             PIXEL_LOGGER_LOG(" }");
             return mixColor(result, e_reflection);
+        }
+
+        bool LitMaterial::onInspectorGUI()
+        {
+            bool changed = false;
+            changed |= ImGui::ColorEdit3("Color", (float *)&color);
+            changed |= rtImGui::Drag<float, float>("ambient", ambient, 0.01, 0, 1);
+            changed |= rtImGui::Drag<float, float>("diffuse", diffuse, 0.01, 0, 1);
+            changed |= rtImGui::Drag<float, float>("specular", specular, 0.01, 0, 1);
+            changed |= rtImGui::Drag<float, float>("reflection", reflection, 0.01, 0, 1);
+            return changed;
+        }
+
+        std::ostream &LitMaterial::toString(std::ostream &stream) const
+        {
+            return stream << "LitMaterial { name: \"" << name
+                          << "\", color: " << color
+                          << ", ambient: " << ambient
+                          << ", diffuse: " << diffuse
+                          << ", specular: " << specular
+                          << ", reflection: " << reflection << " }";
         }
     }
 }

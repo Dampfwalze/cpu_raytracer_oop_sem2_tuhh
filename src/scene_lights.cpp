@@ -1,4 +1,5 @@
 #include <scene/scene_lights.h>
+#include <rt_imgui.h>
 
 namespace rt
 {
@@ -24,6 +25,12 @@ namespace rt
             return color;
         }
 
+        bool PointLight::onInspectorGUI()
+        {
+            return ImGui::ColorEdit3("Color", (float *)&color) |
+                   rtImGui::Drag("Position", position, 0.01f);
+        }
+
         std::ostream &PointLight::toString(std::ostream &stream) const
         {
             return stream << "PointLight { name: \"" << name << "\", position: " << position << ", color: " << color << " }";
@@ -42,6 +49,12 @@ namespace rt
         m::Color<float> DirectionalLight::getColor(const m::dvec3 &position) const
         {
             return color;
+        }
+
+        bool DirectionalLight::onInspectorGUI()
+        {
+            return ImGui::ColorEdit3("Color", (float *)&color) |
+                   rtImGui::Drag("Direction", direction, 0.01f);
         }
 
         std::ostream &DirectionalLight::toString(std::ostream &stream) const

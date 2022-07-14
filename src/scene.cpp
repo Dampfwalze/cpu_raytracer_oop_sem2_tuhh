@@ -1,6 +1,8 @@
 #include <scene/scene.h>
 
 #include <stream_formatter.h>
+#include <rt_imgui.h>
+
 #include <iomanip>
 
 namespace rt
@@ -84,6 +86,47 @@ namespace rt
         if (nearestDist2 != std::numeric_limits<double>::max())
             return nearestInter;
         return std::nullopt;
+    }
+
+    template <typename _It>
+    bool TreeList(const _It &begin, const _It &end)
+    {
+        bool changed = false;
+        for (_It it = begin; it != end; it++)
+        {
+            ImGui::PushID((void *)it.operator->());
+            if (ImGui::TreeNode((*it)->name.c_str()))
+            {
+                changed |= (*it)->onInspectorGUI();
+                ImGui::TreePop();
+            }
+            ImGui::PopID();
+        }
+        return changed;
+    }
+
+    bool Scene::onInspectorGUI()
+    {
+        bool changed = false;
+        if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+            changed |= camera.onInspectorGUI();
+        if (ImGui::CollapsingHeader("Objects", ImGuiTreeNodeFlags_DefaultOpen))
+            changed |= TreeList(objects.begin(), objects.end());
+        if (ImGui::CollapsingHeader("Lights", ImGuiTreeNodeFlags_DefaultOpen))
+            changed |= TreeList(lights.begin(), lights.end());
+        if (ImGui::CollapsingHeader("Materials", ImGuiTreeNodeFlags_DefaultOpen))
+            for (auto &&[k, m] : materials)
+            {
+                ImGui::PushID((int)k);
+                if (ImGui::TreeNode(m->name.c_str()))
+                {
+                    changed |= m->onInspectorGUI();
+                    ImGui::TreePop();
+                }
+                ImGui::PopID();
+            }
+
+        return changed;
     }
 
     std::ostream &operator<<(std::ostream &stream, const Scene &scene)

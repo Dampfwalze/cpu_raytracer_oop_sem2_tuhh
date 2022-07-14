@@ -197,7 +197,7 @@ namespace rt
                     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, padding);
                     ImGui::BeginChild("Render_Log", ImVec2(0, 0), true, ImGuiWindowFlags_AlwaysUseWindowPadding);
                     ImGui::PopStyleVar();
-                    ImGui::TextWrapped(m_application.renderThread.renderLog.c_str());
+                    ImGui::TextWrapped("%s", m_application.renderThread.renderLog.c_str());
                     ImGui::EndChild();
                     ImGui::TreePop();
                 }
@@ -207,26 +207,8 @@ namespace rt
 
             ImGui::Begin("Scene Inspector");
 
-            if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                if (rtImGui::Drag<Transform, double>("Transform", m_application.scene.camera.transform, 0.01, std::nullopt, std::nullopt, "%.3f"))
-                    m_application << Application::Events::Render();
-            }
-            if (ImGui::CollapsingHeader("Objects", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                auto &objects = m_application.scene.objects;
-                for (size_t i = 0; i < objects.size(); i++)
-                {
-                    ImGui::PushID(i);
-                    if (ImGui::TreeNode(objects[i]->className()))
-                    {
-                        if (objects[i]->onInspectorGUI())
-                            m_application << Application::Events::Render();
-                        ImGui::TreePop();
-                    }
-                    ImGui::PopID();
-                }
-            }
+            if (m_application.scene.onInspectorGUI())
+                m_application << Application::Events::Render();
 
             ImGui::End();
 

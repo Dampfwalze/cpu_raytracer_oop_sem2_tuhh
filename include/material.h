@@ -56,6 +56,8 @@ namespace rt
                                            const RTRenderer &renderer,
                                            int recursionDepth) override;
 
+            virtual bool onInspectorGUI() override;
+
             virtual std::ostream &toString(std::ostream &stream) const override;
         };
 
