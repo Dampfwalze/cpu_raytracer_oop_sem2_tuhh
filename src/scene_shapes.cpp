@@ -6,24 +6,22 @@
 
 namespace rt
 {
+    SceneShape::SceneShape(const std::string_view &name, const Transform &transform, size_t materialIndex)
+        : transform(transform), materialIndex(materialIndex), SceneObject(name) {}
+
     bool SceneShape::onInspectorGUI()
     {
-        return rtImGui::Drag<Transform, double>("Transform", transform, 0.01, std::nullopt, std::nullopt, "%.3f");
-    }
-
-    std::ostream &operator<<(std::ostream &stream, const SceneShape &shape)
-    {
-        shape.toString(stream);
-        return stream;
+        return rtImGui::Drag("Transform", transform, 0.01f);
     }
 
     namespace Shapes
     {
         // Sphere
 
+        Sphere::Sphere(const std::string_view &name, double radius, const Transform &transform, size_t materialIndex)
+            : radius(radius), SceneShape(name, transform, materialIndex) {}
         Sphere::Sphere(double radius, const Transform &transform, size_t materialIndex)
-            : radius(radius), SceneShape(transform, materialIndex) {}
-        Sphere::~Sphere() {}
+            : radius(radius), SceneShape("Sphere", transform, materialIndex) {}
 
         std::optional<Intersection> Sphere::intersect(const m::ray<double> &ray) const
         {
@@ -53,20 +51,21 @@ namespace rt
 
         bool Sphere::onInspectorGUI()
         {
-            return SceneShape::onInspectorGUI() | rtImGui::Drag("Radius", radius, 0.01);
+            return SceneShape::onInspectorGUI() | rtImGui::Drag("Radius", radius, 0.01f);
         }
 
         std::ostream &Sphere::toString(std::ostream &stream) const
         {
-            stream << "Sphere { " << transform << ", radius: " << radius << "}";
+            stream << "Sphere { name: \"" << name << "\", transform: " << transform << ", radius: " << radius << "}";
             return stream;
         }
 
         // Plane
 
+        Plane::Plane(const std::string_view &name, const Transform &transform, size_t materialIndex)
+            : SceneShape(name, transform, materialIndex) {}
         Plane::Plane(const Transform &transform, size_t materialIndex)
-            : SceneShape(transform, materialIndex) {}
-        Plane::~Plane() {}
+            : SceneShape("Plane", transform, materialIndex) {}
 
         std::optional<Intersection> Plane::intersect(const m::ray<double> &ray) const
         {
@@ -82,8 +81,7 @@ namespace rt
 
         std::ostream &Plane::toString(std::ostream &stream) const
         {
-            stream << "Plane { " << transform << " }";
-            return stream;
+            return stream << "Plane { name: \"" << name << "\", transform: " << transform << " }";
         }
     }
 }

@@ -88,10 +88,16 @@ namespace rt
 
     std::ostream &operator<<(std::ostream &stream, const Scene &scene)
     {
-        stream << "Scene { Shapes: ";
+        stream << "Scene { Shapes: { ";
         for (auto &&s : scene.objects)
             stream << *s << ", ";
-        stream << "Camera: " << scene.camera;
+        stream << " }, Lights: { ";
+        for (auto &&l : scene.lights)
+            stream << *l << ", ";
+        stream << " }, Materials: { ";
+        for (auto &&[k, m] : scene.materials)
+            stream << k << ": " << *m << ", ";
+        stream << " }, Camera: " << scene.camera;
         return stream << "}";
     }
 }

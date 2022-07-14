@@ -26,6 +26,7 @@ set(SOURCES
     src/rtmath.cpp
     src/scene.cpp
     src/transform.cpp
+    src/scene_object.cpp
     src/scene_shapes.cpp
     src/scene_lights.cpp
     src/camera.cpp

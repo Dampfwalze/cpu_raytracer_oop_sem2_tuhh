@@ -2,9 +2,7 @@
 #define SCENE_SHAPES_HPP
 
 #include <scene/transform.h>
-
-#define CLASS_NAME(name) \
-    constexpr const char *className() const override { return #name; }
+#include <scene/scene_object.h>
 
 namespace rt
 {
@@ -17,7 +15,7 @@ namespace rt
         SceneShape *object;
     };
 
-    class SceneShape
+    class SceneShape : public SceneObject
     {
     public:
         Transform transform;
@@ -25,20 +23,13 @@ namespace rt
 
     private:
     public:
-        SceneShape(const Transform &transform = Transform(), size_t materialIndex = 0)
-            : transform(transform), materialIndex(materialIndex) {}
-        virtual ~SceneShape() {}
+        SceneShape(const std::string_view &name, const Transform &transform = Transform(), size_t materialIndex = 0);
+        virtual ~SceneShape() = default;
 
         virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const = 0;
 
-        virtual bool onInspectorGUI();
-
-        virtual std::ostream &toString(std::ostream &stream) const = 0;
-
-        virtual constexpr const char *className() const = 0;
+        virtual bool onInspectorGUI() override;
     };
-
-    std::ostream &operator<<(std::ostream &stream, const SceneShape &shape);
 
     namespace Shapes
     {
@@ -46,33 +37,27 @@ namespace rt
         {
             double radius;
 
+            Sphere(const std::string_view &name, double radius = 1, const Transform &transform = Transform(), size_t materialIndex = 0);
             Sphere(double radius = 1, const Transform &transform = Transform(), size_t materialIndex = 0);
-            virtual ~Sphere();
 
             virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
 
             virtual bool onInspectorGUI() override;
 
             virtual std::ostream &toString(std::ostream &stream) const override;
-
-            CLASS_NAME(Sphere)
         };
 
         struct Plane : public SceneShape
         {
+            Plane(const std::string_view &name, const Transform &transform = Transform(), size_t materialIndex = 0);
             Plane(const Transform &transform = Transform(), size_t materialIndex = 0);
-            virtual ~Plane();
 
             virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
 
             virtual std::ostream &toString(std::ostream &stream) const override;
-
-            CLASS_NAME(Plane)
         };
     } // namespace Shapes
 
 } // namespace rt
-
-#undef GET_NAME
 
 #endif // SCENE_SHAPES_HPP

@@ -15,11 +15,11 @@ namespace rt
         renderers.emplace("Raytracing", new RTRenderer());
         renderThread.setRenderer(renderers["Raytracing"].get());
 
-        auto defaultMaterial = scene.addMaterial(new Materials::LitMaterial(m::Color<float>(1)));
-        auto redLit = scene.addMaterial(new Materials::LitMaterial({1, 0, 0}));
+        auto defaultMaterial = scene.addMaterial(new Materials::LitMaterial("Default", m::Color<float>(1)));
+        auto redLit = scene.addMaterial(new Materials::LitMaterial("Spheres", {1, 0, 0}));
 
-        scene.addShape(new Shapes::Sphere(0.3, Transform(m::dvec3(0.5, 0.5, 0)), redLit));
-        scene.addShape(new Shapes::Sphere(0.3, Transform(m::dvec3(-0.5, 0.5, 0)), redLit));
+        scene.addShape(new Shapes::Sphere("Sphere 1", 0.3, Transform(m::dvec3(0.5, 0.5, 0)), redLit));
+        scene.addShape(new Shapes::Sphere("Sphere 2", 0.3, Transform(m::dvec3(-0.5, 0.5, 0)), redLit));
         // scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0, 0, 0))));
         // scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.6, 1, 0.5))));
         scene.addShape(new Shapes::Plane(Transform(m::dvec3(0, 1, 0))));

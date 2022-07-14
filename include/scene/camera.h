@@ -2,10 +2,11 @@
 #define CAMERA_HPP
 
 #include <scene/transform.h>
+#include <scene/scene_object.h>
 
 namespace rt
 {
-    class Camera
+    class Camera : public SceneObject
     {
     public:
         Transform transform;
@@ -19,13 +20,13 @@ namespace rt
         } mutable cached;
 
     public:
+        Camera(const std::string_view &name, const Transform &transform = Transform(), float FOV = glm::radians(80.0), double zNear = 0.01, double zFar = 2);
         Camera(const Transform &transform = Transform(), float FOV = glm::radians(80.0), double zNear = 0.01, double zFar = 2);
-        ~Camera();
+
+        virtual std::ostream &toString(std::ostream &stream) const override;
 
         void cacheMatrix(double aspect) const;
     };
-
-    std::ostream &operator<<(std::ostream &stream, const Camera &camera);
 } // namespace rt
 
 #endif // CAMERA_HPP

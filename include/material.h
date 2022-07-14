@@ -2,6 +2,7 @@
 #define MATERIAL_HPP
 
 #include <rtmath.h>
+#include <scene/scene_object.h>
 
 namespace rt
 {
@@ -10,14 +11,17 @@ namespace rt
     class Scene;
     class RTRenderer;
 
-    class Material
+    class Material : public SceneObject
     {
-    private:
     public:
-        Material();
-        virtual ~Material();
+        Material(const std::string_view &name);
 
-        virtual m::Color<float> render(const m::dvec3 &position, const m::dvec3 &normal, const m::dvec3 hitDirection, const Scene &scene, const RTRenderer &renderer, int recursionDepth) = 0;
+        virtual m::Color<float> render(const m::dvec3 &position,
+                                       const m::dvec3 &normal,
+                                       const m::dvec3 &hitDirection,
+                                       const Scene &scene,
+                                       const RTRenderer &renderer,
+                                       int recursionDepth) = 0;
     };
 
     namespace Materials
@@ -33,14 +37,26 @@ namespace rt
             float reflection;
 
         public:
+            LitMaterial(const std::string_view &name,
+                        const m::Color<float> &color,
+                        float ambient = 0.1f,
+                        float diffuse = 1.0f,
+                        float specular = 1.0f,
+                        float reflection = 0.1f);
             LitMaterial(const m::Color<float> &color,
                         float ambient = 0.1f,
                         float diffuse = 1.0f,
                         float specular = 1.0f,
-                        float reflection = 0.5f);
-            virtual ~LitMaterial();
+                        float reflection = 0.1f);
 
-            virtual m::Color<float> render(const m::dvec3 &position, const m::dvec3 &normal, const m::dvec3 hitDirection, const Scene &scene, const RTRenderer &renderer, int recursionDepth) override;
+            virtual m::Color<float> render(const m::dvec3 &position,
+                                           const m::dvec3 &normal,
+                                           const m::dvec3 &hitDirection,
+                                           const Scene &scene,
+                                           const RTRenderer &renderer,
+                                           int recursionDepth) override;
+
+            virtual std::ostream &toString(std::ostream &stream) const override;
         };
 
     } // namespace Materials

@@ -39,7 +39,7 @@ namespace rt
         }
 
         auto &intersection = maybeIntersection.value();
-        PIXEL_LOGGER_LOG("Intesected: ", intersection.object->className());
+        PIXEL_LOGGER_LOG("Intesected: ", intersection.object->name);
 
         Material *material = scene->getMaterial(intersection.object->materialIndex);
         if (material == nullptr)

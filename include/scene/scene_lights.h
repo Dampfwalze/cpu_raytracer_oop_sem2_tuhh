@@ -3,14 +3,16 @@
 
 #include <optional>
 #include <rtmath.h>
+#include <scene/scene_object.h>
 
 namespace rt
 {
     namespace m = math;
 
-    class SceneLight
+    class SceneLight : public SceneObject
     {
     public:
+        SceneLight(const std::string_view &name);
         virtual ~SceneLight() = default;
 
         virtual std::optional<m::dvec3> getLightDirection(const m::dvec3 &position) const = 0;
@@ -25,10 +27,13 @@ namespace rt
             m::dvec3 position;
             m::Color<float> color;
 
+            PointLight(const std::string_view &name, m::dvec3 position = m::dvec3(0), m::Color<float> color = m::Color<float>(0.9f));
             PointLight(m::dvec3 position = m::dvec3(0), m::Color<float> color = m::Color<float>(0.9f));
 
-            std::optional<m::dvec3> getLightDirection(const m::dvec3 &position) const override;
-            m::Color<float> getColor(const m::dvec3 &position) const override;
+            virtual std::optional<m::dvec3> getLightDirection(const m::dvec3 &position) const override;
+            virtual m::Color<float> getColor(const m::dvec3 &position) const override;
+
+            virtual std::ostream &toString(std::ostream &stream) const override;
         };
 
         struct DirectionalLight : public SceneLight
@@ -36,10 +41,13 @@ namespace rt
             m::dvec3 direction;
             m::Color<float> color;
 
+            DirectionalLight(const std::string_view &name, m::dvec3 direction = m::dvec3(0, -1, 0), m::Color<float> color = m::Color<float>(0.9f));
             DirectionalLight(m::dvec3 direction = m::dvec3(0, -1, 0), m::Color<float> color = m::Color<float>(0.9f));
 
-            std::optional<m::dvec3> getLightDirection(const m::dvec3 &position) const override;
-            m::Color<float> getColor(const m::dvec3 &position) const override;
+            virtual std::optional<m::dvec3> getLightDirection(const m::dvec3 &position) const override;
+            virtual m::Color<float> getColor(const m::dvec3 &position) const override;
+
+            virtual std::ostream &toString(std::ostream &stream) const override;
         };
     } // namespace Lights
 

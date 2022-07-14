@@ -6,19 +6,24 @@
 
 namespace rt
 {
-    Material::Material() {}
-    Material::~Material() {}
+    Material::Material(const std::string_view &name)
+        : SceneObject(name) {}
 
     namespace Materials
     {
+        LitMaterial::LitMaterial(const std::string_view &name,
+                                 const m::Color<float> &color,
+                                 float ambient,
+                                 float diffuse,
+                                 float specular,
+                                 float reflection)
+            : color(color), ambient(ambient), diffuse(diffuse), specular(specular), reflection(reflection), Material(name) {}
         LitMaterial::LitMaterial(const m::Color<float> &color,
                                  float ambient,
                                  float diffuse,
                                  float specular,
                                  float reflection)
-            : color(color), ambient(ambient), diffuse(diffuse), specular(specular), reflection(reflection) {}
-
-        LitMaterial::~LitMaterial() {}
+            : color(color), ambient(ambient), diffuse(diffuse), specular(specular), reflection(reflection), Material("Lit") {}
 
         static inline m::Color<float> mixColor(m::Color<float> c1, m::Color<float> c2)
         {
@@ -28,7 +33,7 @@ namespace rt
                 1 - (1 - c1.b) * (1 - c2.b));
         }
 
-        m::Color<float> LitMaterial::render(const m::dvec3 &position, const m::dvec3 &normal_, const m::dvec3 hitDirection, const Scene &scene, const RTRenderer &renderer, int recursionDepth)
+        m::Color<float> LitMaterial::render(const m::dvec3 &position, const m::dvec3 &normal_, const m::dvec3 &hitDirection, const Scene &scene, const RTRenderer &renderer, int recursionDepth)
         {
             PIXEL_LOGGER_LOG("Material { ");
             using Color = m::Color<float>;
