@@ -34,12 +34,13 @@ namespace rt
                 1 - (1 - c1.b) * (1 - c2.b));
         }
 
-        m::Color<float> LitMaterial::render(const m::dvec3 &position, const m::dvec3 &normal_, const m::dvec3 &hitDirection, const Scene &scene, const RTRenderer &renderer, int recursionDepth)
+        m::Color<float> LitMaterial::render(const m::dvec3 &position, const m::dvec3 &normal_, const m::dvec3 &hitDirection_, const Scene &scene, const RTRenderer &renderer, int recursionDepth)
         {
             PIXEL_LOGGER_LOG("Material { ");
             using Color = m::Color<float>;
 
             m::dvec3 normal = glm::normalize(normal_);
+            m::dvec3 hitDirection = glm::normalize(hitDirection_);
 
             Color e_ambiant = color * ambient;
 
