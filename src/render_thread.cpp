@@ -34,7 +34,7 @@ namespace rt
 
     void RenderThread::startRender(Scene &scene, FrameBuffer &frameBuffer)
     {
-        if (m_isRendering)
+        if (!m_eventStream.isEmpty())
             return;
         m_eventStream << Event(scene, frameBuffer);
     }
