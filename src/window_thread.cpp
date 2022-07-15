@@ -140,11 +140,11 @@ namespace rt
                 if (ImGui::IsItemHovered() && ImGui::GetMouseClickedCount(ImGuiMouseButton_Left) > 0)
                 {
                     auto mousePos = m::Vec2<m::u64vec2>(ImGui::GetMousePos());
-                    logPixel = mousePos - cursorPos;
+                    logPixel = {mousePos.x - cursorPos.x, imageSize.y + cursorPos.y - mousePos.y};
                 }
                 if (logPixel.has_value())
                 {
-                    m::fvec2 pos = logPixel.value() + cursorPos;
+                    m::fvec2 pos = {logPixel->x + cursorPos.x, -logPixel->y + imageSize.y + cursorPos.y};
                     ImGui::GetWindowDrawList()->AddLine({pos.x - 10, pos.y}, {pos.x + 10, pos.y}, 0xffffffff);
                     ImGui::GetWindowDrawList()->AddLine({pos.x, pos.y - 10}, {pos.x, pos.y + 10}, 0xffffffff);
                 }
