@@ -18,6 +18,7 @@ namespace rt
         {
             m::dmat4 matrix;
             m::dmat4 inverseMatrix;
+            m::dmat4 inverseTransposeMatrix;
         } mutable cached;
 
     public:

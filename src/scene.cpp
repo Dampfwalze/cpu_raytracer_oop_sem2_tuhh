@@ -58,11 +58,10 @@ namespace rt
 
         for (auto &&i : objects)
         {
-            m::dmat4 mat = i->transform.cached.matrix;
-            m::dmat4 invMat = i->transform.cached.inverseMatrix;
+            auto &mats = i->transform.cached;
 
             // Ray is in local object space now
-            m::ray localRay = invMat * ray;
+            m::ray localRay = mats.inverseMatrix * ray;
 
             auto maybeIntersection = i->intersect(localRay);
 
@@ -72,8 +71,8 @@ namespace rt
             auto &intersection = maybeIntersection.value();
 
             // Transform intersection details back to world space
-            intersection.position = mat * m::dvec4(intersection.position, 1.0);
-            intersection.normal = mat * m::dvec4(intersection.normal, 0.0);
+            intersection.position = mats.matrix * m::dvec4(intersection.position, 1.0);
+            intersection.normal = mats.inverseTransposeMatrix * m::dvec4(intersection.normal, 0.0);
 
             double dist2 = m::distance2(ray.origin, intersection.position);
             if (dist2 < nearestDist2 && (!maxLength2 || dist2 < *maxLength2))

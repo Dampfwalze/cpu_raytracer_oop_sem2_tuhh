@@ -10,6 +10,7 @@ namespace rt
     {
         cached.matrix = m::scale(m::translate(m::dmat4(1), position) * glm::toMat4(rotation), scale);
         cached.inverseMatrix = m::inverse(cached.matrix);
+        cached.inverseTransposeMatrix = m::transpose(cached.inverseMatrix);
     }
 
     std::ostream &operator<<(std::ostream &stream, const Transform &transform)
