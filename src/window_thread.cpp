@@ -176,6 +176,9 @@ namespace rt
             ImGui::SliderScalar("Tile size", ImGuiDataType_U64, &tileSize.x, &min, &max);
             tileSize.y = tileSize.x;
 
+            if (rtImGui::Drag("Mixing Factor", m_application.renderThread.renderParams.mixingFactor, 0.01))
+                m_application << Application::Events::Render();
+
             if (ImGui::TreeNode("Renderers"))
             {
                 for (auto &&i : m_application.renderers)

@@ -17,7 +17,7 @@ namespace rt
     public:
         using task_type = std::packaged_task<void()>;
 
-    protected:
+    public:
         ThreadPool<task_type> *threadPool;
 
         Scene *scene;

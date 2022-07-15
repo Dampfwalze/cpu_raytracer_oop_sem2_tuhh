@@ -26,12 +26,14 @@ namespace rt
                                  float reflection)
             : color(color), ambient(ambient), diffuse(diffuse), specular(specular), reflection(reflection), Material("Lit") {}
 
-        static inline m::Color<float> mixColor(m::Color<float> c1, m::Color<float> c2)
+        static inline m::Color<float> mixColor(m::Color<float> c1, m::Color<float> c2, float mixingFactor)
         {
+            float j = mixingFactor;
+            float i = 1 / j;
             return m::Color<float>(
-                1 - (1 - c1.r) * (1 - c2.r),
-                1 - (1 - c1.g) * (1 - c2.g),
-                1 - (1 - c1.b) * (1 - c2.b));
+                (1 - (1 - c1.r * i) * (1 - c2.r * i)) * j,
+                (1 - (1 - c1.g * i) * (1 - c2.g * i)) * j,
+                (1 - (1 - c1.b * i) * (1 - c2.b * i)) * j);
         }
 
         m::Color<float> LitMaterial::render(const m::dvec3 &position, const m::dvec3 &normal_, const m::dvec3 &hitDirection_, const Scene &scene, const RTRenderer &renderer, int recursionDepth)
@@ -68,11 +70,11 @@ namespace rt
             {
                 Color lightColor = i_light->getColor(position);
                 auto lightDirection = glm::normalize(i_light->getLightDirection(position).value());
-                result = mixColor(result, diffuse * lightColor * glm::max(0.0f, (float)m::dot(normal, lightDirection)));
-                result = mixColor(result, specular * lightColor * glm::max(0.0f, (float)m::dot(hitDirection, m::reflect(lightDirection, normal))));
+                result = mixColor(result, diffuse * lightColor * glm::max(0.0f, (float)m::dot(normal, lightDirection)), renderer.renderParams->mixingFactor);
+                result = mixColor(result, specular * lightColor * glm::max(0.0f, (float)m::dot(hitDirection, m::reflect(lightDirection, normal))), renderer.renderParams->mixingFactor);
             }
             PIXEL_LOGGER_LOG(" }");
-            return mixColor(result, e_reflection) * color;
+            return mixColor(result, e_reflection, renderer.renderParams->mixingFactor) * color;
         }
 
         bool LitMaterial::onInspectorGUI()

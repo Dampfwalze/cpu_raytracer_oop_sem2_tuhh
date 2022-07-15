@@ -10,6 +10,7 @@ namespace rt
     struct RenderParams
     {
         m::u64vec2 tileSize;
+        float mixingFactor = 1;
         std::optional<m::u64vec2> logPixel;
     };
 
