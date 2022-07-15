@@ -83,5 +83,54 @@ namespace rt
         {
             return stream << "Plane { name: \"" << name << "\", transform: " << transform << " }";
         }
+
+        // Cube
+
+        Cube::Cube(const std::string_view &name, const Transform &transform, size_t materialIndex)
+            : SceneShape(name, transform, materialIndex) {}
+        Cube::Cube(const Transform &transform, size_t materialIndex)
+            : SceneShape("Cube", transform, materialIndex) {}
+
+        template <size_t D>
+        inline bool intersectCubeFace(Intersection *intersection, const m::ray<double> &ray)
+        {
+            const size_t D1 = (D + 1) % 3;
+            const size_t D2 = (D + 2) % 3;
+
+            double s = ray.direction[D] > 0 ? -1 : 1; // What face is nearest?
+            double t = (-ray.origin[D] + s * 0.5) / ray.direction[D];
+            auto p = ray(t);
+
+            if (t <= 0.01)
+                return false;
+
+            if (p[D1] <= 0.5 && p[D1] >= -0.5 && p[D2] <= 0.5 && p[D2] >= -0.5)
+            {
+                intersection->position = p;
+                intersection->normal[D] = s;
+                return true;
+            }
+            return false;
+        }
+
+        std::optional<Intersection> Cube::intersect(const m::ray<double> &ray) const
+        {
+            Intersection intersection;
+            intersection.object = (SceneShape *)this;
+
+            if (intersectCubeFace<0>(&intersection, ray)) // For x
+                return intersection;
+            if (intersectCubeFace<1>(&intersection, ray)) // For y
+                return intersection;
+            if (intersectCubeFace<2>(&intersection, ray)) // For z
+                return intersection;
+
+            return std::nullopt;
+        }
+
+        std::ostream &Cube::toString(std::ostream &stream) const
+        {
+            return stream << "Cube { name: \"" << name << "\", transform: " << transform << " }";
+        }
     }
 }

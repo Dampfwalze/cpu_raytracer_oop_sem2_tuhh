@@ -56,6 +56,16 @@ namespace rt
 
             virtual std::ostream &toString(std::ostream &stream) const override;
         };
+
+        struct Cube : public SceneShape
+        {
+            Cube(const std::string_view &name, const Transform &transform = Transform(), size_t materialIndex = 0);
+            Cube(const Transform &transform = Transform(), size_t materialIndex = 0);
+
+            virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
+
+            virtual std::ostream &toString(std::ostream &stream) const override;
+        };
     } // namespace Shapes
 
 } // namespace rt
