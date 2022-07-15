@@ -29,7 +29,7 @@ namespace rt
     {
         transform.cacheMatrix();
         auto pers = m::perspective<double>(FOV, aspect, zNear, zFar);
-        cached.matrix = pers * transform.cached.matrix;
+        cached.matrix = pers * transform.cached.inverseMatrix;
         cached.inverseMatrix = m::inverse(cached.matrix);
     }
 }

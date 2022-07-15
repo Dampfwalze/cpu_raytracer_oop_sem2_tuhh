@@ -3,18 +3,19 @@
 
 namespace rt
 {
-    Transform::Transform(const m::dvec3 &position, const m::dquat &rotation)
-        : position(position), rotation(rotation) {}
+    Transform::Transform(const m::dvec3 &position, const m::dquat &rotation, const m::dvec3 &scale)
+        : position(position), rotation(rotation), scale(scale) {}
 
     void Transform::cacheMatrix() const
     {
-        cached.matrix = m::translate(glm::toMat4(rotation), position);
+        cached.matrix = m::scale(m::translate(m::dmat4(1), position) * glm::toMat4(rotation), scale);
         cached.inverseMatrix = m::inverse(cached.matrix);
     }
 
     std::ostream &operator<<(std::ostream &stream, const Transform &transform)
     {
-        stream << "Transform { " << std::setw(10) << "position: " << transform.position << ", " << std::setw(10) << "rotation: " << transform.rotation << "}";
-        return stream;
+        return stream << "Transform { position: " << transform.position
+                      << ", rotation: " << transform.rotation
+                      << ", scale: " << transform.scale << " }";
     }
 } // namespace rt

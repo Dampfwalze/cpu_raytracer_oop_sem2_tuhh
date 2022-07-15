@@ -74,7 +74,7 @@ namespace rt
                 return std::nullopt;
             Intersection i;
             i.position = ray(t);
-            i.normal = m::dvec3(0, -1, 0);
+            i.normal = m::dvec3(0, 1, 0);
             i.object = (SceneShape *)this;
             return i;
         }

@@ -134,7 +134,7 @@ namespace rt
             {
                 auto cursorPos = m::Vec2<m::u64vec2>(ImGui::GetCursorScreenPos());
 
-                ImGui::Image(reinterpret_cast<ImTextureID>((size_t)texture), m::Vec2<ImVec2>(m_application.frameBuffer.getSize()));
+                ImGui::Image(reinterpret_cast<ImTextureID>((size_t)texture), m::Vec2<ImVec2>(m_application.frameBuffer.getSize()), ImVec2(0, 1), ImVec2(1, 0));
 
                 auto &logPixel = m_application.renderThread.renderParams.logPixel;
                 if (ImGui::IsItemHovered() && ImGui::GetMouseClickedCount(ImGuiMouseButton_Left) > 0)

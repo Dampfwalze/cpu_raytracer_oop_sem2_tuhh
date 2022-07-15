@@ -96,10 +96,11 @@ namespace rtImGui
     {
         if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen))
         {
-            bool res = Drag("Position", value.position, v_speed, p_min, p_max, format, flags) |
-                       Drag("Rotation", value.rotation, v_speed, p_min, p_max, format, flags);
+            bool changed = Drag("Position", value.position, v_speed, p_min, p_max, format, flags) |
+                           Drag("Rotation", value.rotation, v_speed, p_min, p_max, format, flags) |
+                           Drag("Scale", value.scale, v_speed, p_min, p_max, format, flags);
             ImGui::TreePop();
-            return res;
+            return changed;
         }
         return false;
     }

@@ -12,6 +12,7 @@ namespace rt
     {
         m::dvec3 position;
         m::dquat rotation;
+        m::dvec3 scale;
 
         struct Cached
         {
@@ -20,7 +21,7 @@ namespace rt
         } mutable cached;
 
     public:
-        Transform(const m::dvec3 &position = m::dvec3(0), const m::dquat &rotation = m::dquat(1, 0, 0, 0));
+        Transform(const m::dvec3 &position = m::dvec3(0), const m::dquat &rotation = m::dquat(1, 0, 0, 0), const m::dvec3 &scale = m::dvec3(1));
 
         void cacheMatrix() const;
     };

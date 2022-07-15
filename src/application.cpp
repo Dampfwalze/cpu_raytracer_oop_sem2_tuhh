@@ -8,7 +8,7 @@ namespace rt
 {
     Application::Application()
         : scene{
-              Camera(Transform(m::dvec3(0, -0.8, -2))),
+              Camera(Transform(m::dvec3(0, 1, 2))),
           },
           m_window(*this)
     {
@@ -22,7 +22,7 @@ namespace rt
         scene.addShape(new Shapes::Sphere("Sphere 2", 0.3, Transform(m::dvec3(-0.5, 0.5, 0)), redLit));
         // scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0, 0, 0))));
         // scene.addShape(new Shapes::Sphere(0.1, Transform(m::dvec3(0.6, 1, 0.5))));
-        scene.addShape(new Shapes::Plane(Transform(m::dvec3(0, 1, 0))));
+        scene.addShape(new Shapes::Plane(Transform(m::dvec3(0, 0, 0))));
         // scene.addLight(new Lights::PointLight{m::dvec3()});
         scene.addLight(new Lights::DirectionalLight());
         rtstd::formatterstream(std::cout) << scene << std::endl;
