@@ -3,6 +3,9 @@
 
 #include <scene/transform.h>
 #include <scene/scene_object.h>
+#include <voxel_grid.h>
+
+#include <memory>
 
 namespace rt
 {
@@ -61,6 +64,18 @@ namespace rt
         {
             Cube(const std::string_view &name, const Transform &transform = Transform(), size_t materialIndex = 0);
             Cube(const Transform &transform = Transform(), size_t materialIndex = 0);
+
+            virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
+
+            virtual std::ostream &toString(std::ostream &stream) const override;
+        };
+
+        struct VoxelShape : public SceneShape
+        {
+            std::shared_ptr<VoxelGrid> grid;
+
+            VoxelShape(const std::shared_ptr<VoxelGrid> &grid, const std::string_view &name, const Transform &transform = Transform(), size_t materialIndex = 0);
+            VoxelShape(const std::shared_ptr<VoxelGrid> &grid, const Transform &transform = Transform(), size_t materialIndex = 0);
 
             virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
 
