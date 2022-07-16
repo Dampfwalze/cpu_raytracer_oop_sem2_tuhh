@@ -27,6 +27,7 @@ namespace rt
         void terminate();
 
     private:
+        void cameraController();
         void run();
     };
 

@@ -31,6 +31,79 @@ namespace rt
         m_termination_cv.notify_all();
     }
 
+    inline void calcPitchYaw(const m::dquat &quat, double *pitch, double *yaw)
+    {
+        auto rot = m::rotate(quat, m::dvec3(0, 0, 1));
+        *yaw = m::atan(rot.x / rot.z);
+        if (rot.z == 0)
+            *yaw = (rot.x > 0) ? m::pi<double>() / 2 : -m::pi<double>() / 2;
+        if (rot.z < 0)
+            *yaw += m::pi<double>();
+        *pitch = m::asin(-rot.y);
+    }
+
+    void WindowThread::cameraController()
+    {
+        static double pitch, yaw;
+
+        auto &IO = ImGui::GetIO();
+        auto delta = IO.MouseDelta;
+
+        // if (delta.x == 0 && delta.y == 0)
+        //     return;
+
+        auto &camera = m_application.scene.camera;
+        auto &q = camera.transform.rotation;
+        // auto a = glm::eulerAngles(q);
+
+        if (IO.MouseClicked[ImGuiMouseButton_Right])
+        {
+            calcPitchYaw(q, &pitch, &yaw);
+        }
+
+        pitch = glm::min(m::pi<double>() / 2, glm::max(-m::pi<double>() / 2, pitch - delta.y * 0.0025));
+        yaw -= delta.x * 0.0025;
+
+        q = m::rotate(m::dquat(1, 0, 0, 0), yaw, m::dvec3(0, 1, 0));
+        q = m::rotate(q, pitch, m::dvec3(1, 0, 0));
+
+        if (IO.KeysDown[ImGuiKey_W])
+        {
+            auto d = m::rotate(q, m::dvec3(0, 0, -1));
+            camera.transform.position += d * 0.03;
+        }
+        else if (IO.KeysDown[ImGuiKey_S])
+        {
+            auto d = m::rotate(q, m::dvec3(0, 0, 1));
+            camera.transform.position += d * 0.03;
+        }
+
+        if (IO.KeysDown[ImGuiKey_A])
+        {
+            auto d = m::rotate(q, m::dvec3(-1, 0, 0));
+            camera.transform.position += d * 0.03;
+        }
+        if (IO.KeysDown[ImGuiKey_D])
+        {
+            auto d = m::rotate(q, m::dvec3(1, 0, 0));
+            camera.transform.position += d * 0.03;
+        }
+
+        if (IO.KeysDown[ImGuiKey_Q])
+        {
+            auto d = m::rotate(q, m::dvec3(0, -1, 0));
+            camera.transform.position += d * 0.03;
+        }
+        if (IO.KeysDown[ImGuiKey_E])
+        {
+            auto d = m::rotate(q, m::dvec3(0, 1, 0));
+            camera.transform.position += d * 0.03;
+        }
+
+        m_application
+            << Application::Events::Render();
+    }
+
     static void copyBuffer(const FrameBuffer &buffer)
     {
         if (buffer.getSize() == math::u64vec2(0))
@@ -137,10 +210,15 @@ namespace rt
                 ImGui::Image(reinterpret_cast<ImTextureID>((size_t)texture), m::Vec2<ImVec2>(m_application.frameBuffer.getSize()), ImVec2(0, 1), ImVec2(1, 0));
 
                 auto &logPixel = m_application.renderThread.renderParams.logPixel;
-                if (ImGui::IsItemHovered() && ImGui::GetMouseClickedCount(ImGuiMouseButton_Left) > 0)
+
+                if (ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[ImGuiMouseButton_Left])
                 {
                     auto mousePos = m::Vec2<m::u64vec2>(ImGui::GetMousePos());
                     logPixel = {mousePos.x - cursorPos.x, imageSize.y + cursorPos.y - mousePos.y};
+                }
+                if (ImGui::IsItemHovered() && ImGui::GetIO().MouseDown[ImGuiMouseButton_Right])
+                {
+                    cameraController();
                 }
                 if (logPixel.has_value())
                 {
