@@ -4,7 +4,7 @@
 #include <scene/scene_shapes.h>
 #include <scene/scene_lights.h>
 #include <scene/camera.h>
-#include <material.h>
+#include <scene/material.h>
 
 #include <vector>
 #include <map>

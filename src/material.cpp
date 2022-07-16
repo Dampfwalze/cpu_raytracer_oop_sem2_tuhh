@@ -1,4 +1,4 @@
-#include <material.h>
+#include <scene/material.h>
 
 #include <scene/scene.h>
 #include <rt_renderer.h>
