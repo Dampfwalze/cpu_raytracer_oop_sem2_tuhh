@@ -94,7 +94,7 @@ namespace rt
         template <typename T>
         ray<T> operator*(const mat4<T> &matrix, const ray<T> &ray)
         {
-            assert(matrix[0].w == 0 && matrix[1].w == 0 && matrix[2].w == 0 && matrix[3].w == 1 && "Given Matrix effects w component, use ray<T>.transformPerspective(mat4<T>) instead!");
+            assert(abs(matrix[0].w) < 0.001 && abs(matrix[1].w) < 0.001 && abs(matrix[2].w) < 0.001 && abs(matrix[3].w - 1) < 0.001 && "Given Matrix effects w component, use ray<T>.transformPerspective(mat4<T>) instead!");
             math::ray<T> n;
             n.origin = matrix * vec4<T>(ray.origin, 1);
             n.direction = matrix * vec4<T>(ray.direction, 0);
