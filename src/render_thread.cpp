@@ -11,9 +11,8 @@ namespace rt
     RenderThread::Event::Event(Scene &scene, FrameBuffer &frameBuffer)
         : type(EventType::Render), scene(&scene), frameBuffer(&frameBuffer) {}
 
-    RenderThread::RenderThread(Renderer *renderer)
-        : m_threadPool(std::thread::hardware_concurrency() == 0 ? 1 : std::thread::hardware_concurrency()),
-          m_renderer(renderer),
+    RenderThread::RenderThread(ThreadPool<Renderer::task_type> *threadPool, Renderer *renderer)
+        : m_threadPool(threadPool), m_renderer(renderer),
           renderParams({
               {64, 64},
           }),
@@ -58,9 +57,6 @@ namespace rt
                 assert(m_renderer != nullptr);
                 assert(event.frameBuffer != nullptr);
 
-                if (!m_threadPool.isEmpty())
-                    m_threadPool.clear();
-
                 m_renderParams = renderParams;
 
                 m_isRendering = true;
@@ -71,7 +67,7 @@ namespace rt
 
                 Profiling::profiler.beginFrame();
 
-                m_renderer->doRender(&m_threadPool, event.scene, event.frameBuffer, &m_renderParams);
+                m_renderer->doRender(m_threadPool, event.scene, event.frameBuffer, &m_renderParams);
 
                 Profiling::profiler.endFrame();
 

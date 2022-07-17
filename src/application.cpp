@@ -7,9 +7,11 @@
 namespace rt
 {
     Application::Application()
-        : scene{
+        : threadPool(std::thread::hardware_concurrency() == 0 ? 1 : std::thread::hardware_concurrency()),
+          scene{
               Camera(Transform(m::dvec3(0, 1, 2))),
           },
+          renderThread(&threadPool),
           m_window(*this)
     {
         renderers.emplace("Raytracing", new RTRenderer());

@@ -46,6 +46,8 @@ namespace rt
     public:
         std::map<std::string, std::unique_ptr<Renderer>> renderers;
 
+        ThreadPool<std::packaged_task<void()>> threadPool;
+
         Scene scene;
 
         FrameBuffer frameBuffer;

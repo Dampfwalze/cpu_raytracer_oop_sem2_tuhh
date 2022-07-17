@@ -42,7 +42,7 @@ namespace rt
     private:
         EventStream<Event> m_eventStream;
 
-        ThreadPool<Renderer::task_type> m_threadPool;
+        ThreadPool<Renderer::task_type> *m_threadPool;
 
         Renderer *m_renderer;
 
@@ -56,7 +56,7 @@ namespace rt
         std::string renderLog;
 
     public:
-        RenderThread(Renderer *renderer = nullptr);
+        RenderThread(ThreadPool<Renderer::task_type> *threadPool, Renderer *renderer = nullptr);
         ~RenderThread();
 
         void terminate();
