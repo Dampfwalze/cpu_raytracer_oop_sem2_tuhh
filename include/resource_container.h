@@ -10,6 +10,7 @@
 #include <typeindex>
 #include <future>
 #include <mutex>
+#include <optional>
 
 #include <thread_pool.h>
 
