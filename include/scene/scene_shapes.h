@@ -4,6 +4,7 @@
 #include <scene/transform.h>
 #include <scene/scene_object.h>
 #include <voxel_grid.h>
+#include <resources.h>
 
 #include <memory>
 
@@ -72,10 +73,10 @@ namespace rt
 
         struct VoxelShape : public SceneShape
         {
-            std::shared_ptr<VoxelGrid> grid;
+            ResourceRef<Resources::VoxelGridResource> grid;
 
-            VoxelShape(const std::shared_ptr<VoxelGrid> &grid, const std::string_view &name, const Transform &transform = Transform(), size_t materialIndex = 0);
-            VoxelShape(const std::shared_ptr<VoxelGrid> &grid, const Transform &transform = Transform(), size_t materialIndex = 0);
+            VoxelShape(ResourceRef<Resources::VoxelGridResource> grid, const std::string_view &name, const Transform &transform = Transform(), size_t materialIndex = 0);
+            VoxelShape(ResourceRef<Resources::VoxelGridResource> grid, const Transform &transform = Transform(), size_t materialIndex = 0);
 
             virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
 

@@ -4,14 +4,16 @@
 #include <application.h>
 #include <window.h>
 #include <stdlib.h>
+#include <filesystem>
 
 int main(int argc, char const *argv[])
 {
     std::cout << "Hello Ray Tracing!" << std::endl;
+    std::filesystem::path originPath(std::filesystem::path(argv[0]).parent_path());
 
     try
     {
-        rt::Application application;
+        rt::Application application(originPath);
         application.run();
     }
     catch (const std::exception &e)

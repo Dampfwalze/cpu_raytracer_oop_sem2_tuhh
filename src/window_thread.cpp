@@ -293,6 +293,15 @@ namespace rt
 
             ImGui::End();
 
+            ImGui::Begin("Resources");
+
+            for (auto &&resource : m_application.resources)
+            {
+                ImGui::Text(resource.getPath().filename().string().c_str());
+            }
+
+            ImGui::End();
+
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
             ImGui::Begin("Profiler");
             {

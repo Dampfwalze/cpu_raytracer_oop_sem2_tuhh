@@ -5,6 +5,7 @@
 #include <scene/scene.h>
 #include <event_stream.h>
 #include <render_thread.h>
+#include <resource_container.h>
 
 #include <map>
 
@@ -44,9 +45,13 @@ namespace rt
         };
 
     public:
+        std::filesystem::path originPath;
+
         std::map<std::string, std::unique_ptr<Renderer>> renderers;
 
         ThreadPool<std::packaged_task<void()>> threadPool;
+
+        ResourceContainer resources;
 
         Scene scene;
 
@@ -63,7 +68,7 @@ namespace rt
         bool rendering = false;
 
     public:
-        Application();
+        Application(const std::filesystem::path &originPath);
         ~Application();
 
         void run();

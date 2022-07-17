@@ -142,9 +142,9 @@ namespace rt
             return stream << "Cube { name: \"" << name << "\", transform: " << transform << " }";
         }
 
-        VoxelShape::VoxelShape(const std::shared_ptr<VoxelGrid> &grid, const std::string_view &name, const Transform &transform, size_t materialIndex)
+        VoxelShape::VoxelShape(ResourceRef<Resources::VoxelGridResource> grid, const std::string_view &name, const Transform &transform, size_t materialIndex)
             : grid(grid), SceneShape(name, transform, materialIndex) {}
-        VoxelShape::VoxelShape(const std::shared_ptr<VoxelGrid> &grid, const Transform &transform, size_t materialIndex)
+        VoxelShape::VoxelShape(ResourceRef<Resources::VoxelGridResource> grid, const Transform &transform, size_t materialIndex)
             : grid(grid), SceneShape("Voxel Grid", transform, materialIndex) {}
 
         template <size_t D>
@@ -158,7 +158,11 @@ namespace rt
 
         std::optional<Intersection> VoxelShape::intersect(const m::ray<double> &ray_) const
         {
-            auto size = (m::dvec3)grid->getSize();
+            if (!grid)
+                return std::nullopt;
+            VoxelGrid &grid = this->grid->grid;
+
+            auto size = (m::dvec3)grid.getSize();
             m::ray<double> ray;
 
             auto maybeIntersection = cubeIntersection(ray_);
@@ -209,7 +213,7 @@ namespace rt
                     // PIXEL_LOGGER_LOG("(", pos, ", ", r_x, "), ");
                     if (!(pos.x < size.x && pos.x >= 0 && pos.y < size.y && pos.y >= 0 && pos.z < size.z && pos.z >= 0))
                         break;
-                    if (grid->at(pos).isVoxel)
+                    if (grid.at(pos).isVoxel)
                         return Intersection{
                             (r_x - size / 2.0) / size,
                             m::dvec3(g_x ? 1 : -1, 0, 0),
@@ -224,7 +228,7 @@ namespace rt
                     // PIXEL_LOGGER_LOG("(", pos, ", ", r_y, "), ");
                     if (!(pos.x < size.x && pos.x >= 0 && pos.y < size.y && pos.y >= 0 && pos.z < size.z && pos.z >= 0))
                         break;
-                    if (grid->at(pos).isVoxel)
+                    if (grid.at(pos).isVoxel)
                         return Intersection{
                             (r_y - size / 2.0) / size,
                             m::dvec3(0, g_y ? 1 : -1, 0),
@@ -239,7 +243,7 @@ namespace rt
                     // PIXEL_LOGGER_LOG("(", pos, ", ", r_z, "), ");
                     if (!(pos.x < size.x && pos.x >= 0 && pos.y < size.y && pos.y >= 0 && pos.z < size.z && pos.z >= 0))
                         break;
-                    if (grid->at(pos).isVoxel)
+                    if (grid.at(pos).isVoxel)
                         return Intersection{
                             (r_z - size / 2.0) / size,
                             m::dvec3(0, 0, g_z ? 1 : -1),

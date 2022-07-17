@@ -39,6 +39,13 @@ namespace rt
             std::memcpy(m_grid, other.m_grid, length() * sizeof(Voxel));
         }
 
+        VoxelGrid(VoxelGrid &&other)
+            : VoxelGrid(other.m_size, other.m_grid)
+        {
+            other.m_grid = nullptr;
+            other.m_size = m::u64vec3();
+        }
+
         ~VoxelGrid()
         {
             delete[] m_grid;
