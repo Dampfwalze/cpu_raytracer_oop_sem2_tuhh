@@ -33,6 +33,7 @@ set(SOURCES
     src/material.cpp
     src/pixel_logger.cpp
     src/profiler.cpp
+    src/resource_container.cpp
     src/resource_loaders.cpp
 )
 
