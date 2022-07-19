@@ -2,6 +2,23 @@
 
 namespace rt
 {
+    IOException::Category IOException::Category::instance;
+
+    std::string IOException::Category::message(int code) const
+    {
+        switch (code)
+        {
+        case Type::NotFound:
+            return "File not found";
+        case Type::WrongType:
+            return "Wrong filetype";
+        case Type::FileCorrupt:
+            return "File is corrupt";
+        default: // Will never happen
+            return "";
+        }
+    }
+
     void ResourceContainer::loadTask(ResourceLoader *loader, std::filesystem::path path, const ResourceRef<void> &resource)
     {
         try

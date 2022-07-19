@@ -42,31 +42,29 @@ namespace rt
 
         void VoxelGridLoader::load(ResourceRef<void> resource, const std::filesystem::path &path) const
         {
-            std::cout << "Load voxels: " << path << std::endl;
-
             std::ifstream file(path, std::ios::binary);
             if (!file.is_open())
-                throw std::ios_base::failure("Could not open file: \"" + path.string() + "\"");
+                throw IOException(IOException::Type::NotFound);
 
             char prefix[4];
             file.read(prefix, sizeof(prefix));
 
             if (asInt(prefix) != asInt("VOX "))
-                throw std::ios_base::failure("File is not of type vox!");
+                throw IOException(IOException::Type::WrongType);
 
             uint32_t version = read<uint32_t>(file);
             if (version != 150)
-                throw std::ios_base::failure("File version differs from expected, 150 expected, got: " + version);
+                throw IOException(IOException::Type::WrongType, "File version differs from expected, 150 expected, got: " + version);
 
             Chunck main = readChunk(file);
             if (main.nameAsInt != asInt("MAIN"))
-                throw std::ios_base::failure("File has wrong format!");
+                throw IOException(IOException::Type::FileCorrupt, "File has wrong format!");
 
             Chunck sizeChunk = readChunk(file);
             if (sizeChunk.nameAsInt == asInt("PACK"))
-                throw std::ios_base::failure("Multiple models are not supported!");
+                throw IOException(IOException::Type::WrongType, "Multiple models are not supported!");
             if (sizeChunk.nameAsInt != asInt("SIZE"))
-                throw std::ios_base::failure("File has wrong format!");
+                throw IOException(IOException::Type::FileCorrupt, "File has wrong format!");
 
             m::u64vec3 size(read<uint32_t>(file),
                             read<uint32_t>(file),
@@ -76,7 +74,7 @@ namespace rt
 
             Chunck xyziChunk = readChunk(file);
             if (xyziChunk.nameAsInt != asInt("XYZI"))
-                throw std::ios_base::failure("File has wrong format!");
+                throw IOException(IOException::Type::FileCorrupt, "File has wrong format!");
 
             uint32_t numVoxels = read<uint32_t>(file);
 

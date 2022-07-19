@@ -16,6 +16,35 @@
 
 namespace rt
 {
+    class IOException : public std::system_error
+    {
+    public:
+        enum Type
+        {
+            NotFound,
+            WrongType,
+            FileCorrupt,
+        };
+
+        class Category : public std::error_category
+        {
+        public:
+            static Category instance;
+
+            virtual const char *
+            name() const noexcept override { return "IOException"; }
+
+            virtual std::string message(int code) const override;
+        };
+
+        explicit IOException(Type code, const std::string &str)
+            : std::system_error(code, Category::instance, str) {}
+        explicit IOException(Type code)
+            : std::system_error(code, Category::instance) {}
+
+        // virtual const char *what() const noexcept override;
+    };
+
     template <typename T>
     class ResourceRef;
     class ResourceContainer;
