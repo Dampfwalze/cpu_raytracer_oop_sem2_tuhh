@@ -1,0 +1,27 @@
+#cmakedefine STBI_FAILURE_USERMSG
+
+#cmakedefine STBI_NO_JPEG
+#cmakedefine STBI_NO_PNG
+#cmakedefine STBI_NO_BMP
+#cmakedefine STBI_NO_PSD
+#cmakedefine STBI_NO_TGA
+#cmakedefine STBI_NO_GIF
+#cmakedefine STBI_NO_HDR
+#cmakedefine STBI_NO_PIC
+#cmakedefine STBI_NO_PNM
+
+#cmakedefine STBI_ONLY_JPEG
+#cmakedefine STBI_ONLY_PNG
+#cmakedefine STBI_ONLY_BMP
+#cmakedefine STBI_ONLY_PSD
+#cmakedefine STBI_ONLY_TGA
+#cmakedefine STBI_ONLY_GIF
+#cmakedefine STBI_ONLY_HDR
+#cmakedefine STBI_ONLY_PIC
+#cmakedefine STBI_ONLY_PNM
+
+#cmakedefine STBI_SUPPORT_ZLIB
+
+#cmakedefine STBI_WINDOWS_UTF8
+
+#cmakedefine STBI_MAX_DIMENSIONS @STBI_MAX_DIMENSIONS@
