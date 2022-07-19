@@ -66,6 +66,8 @@ namespace rt
     template <typename T>
     class ResourceRef
     {
+        static_assert(std::is_convertible<T, Resource>::value, "ResourceRef can only reference objects that inherit from rt::Reference");
+
     private:
         std::shared_ptr<_SharedResourceState> m_ptr;
 
@@ -82,10 +84,37 @@ namespace rt
         inline T &operator*() { return *(m_ptr->ptr); };
         inline T &operator*() const { return *(m_ptr->ptr); }
 
-        inline const bool &hasException() const { return m_ptr->state == _SharedResourceState::State::Failed; }
+        inline const bool hasException() const { return m_ptr->state == _SharedResourceState::State::Failed; }
         inline const std::filesystem::path &getPath() const { return m_ptr->path; }
         inline const std::exception_ptr getException() const { return m_ptr->exception; }
         inline const std::type_index getType() const { return m_ptr->type; }
+    };
+
+    template <>
+    class ResourceRef<Resource>
+    {
+    private:
+        std::shared_ptr<_SharedResourceState> m_ptr;
+
+    public:
+        ResourceRef(const std::shared_ptr<_SharedResourceState> &ptr)
+            : m_ptr(ptr) {}
+
+        // template<class T>
+        inline operator Resource *() const { return (*this) ? m_ptr->ptr.get() : nullptr; }
+        inline operator bool() const { return m_ptr->state == _SharedResourceState::State::Loaded && m_ptr->ptr; }
+        inline Resource *operator->() { return (Resource *)m_ptr->ptr.get(); };
+        inline Resource *operator->() const { return (Resource *)m_ptr->ptr.get(); }
+        inline Resource &operator*() { return *(m_ptr->ptr); };
+        inline Resource &operator*() const { return *(m_ptr->ptr); }
+
+        inline const bool hasException() const { return (m_ptr->state == _SharedResourceState::State::Failed); }
+        inline const std::filesystem::path &getPath() const { return m_ptr->path; }
+        inline const std::exception_ptr getException() const { return m_ptr->exception; }
+        inline const std::type_index getType() const { return m_ptr->type; }
+
+        template <class T>
+        inline operator ResourceRef<T>() { return ResourceRef<T>(m_ptr); }
     };
 
     template <>
