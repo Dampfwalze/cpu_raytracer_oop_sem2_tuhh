@@ -82,15 +82,4 @@ namespace rt
 
         return std::move(ResourceRef<void>(m_resources.emplace_back(new _SharedResourceState(_path ? *_path : path, this))));
     }
-
-    template <class Type, class T,
-              std::enable_if_t<std::is_base_of<ResourceLoader, T>::value, bool>,
-              std::enable_if_t<std::is_base_of<Resource, Type>::value, bool>>
-    T *ResourceContainer::add(T *loader)
-    {
-        auto result = m_loaders.emplace(typeid(Type), loader);
-        if (!result.second)
-            delete loader;
-        return result.second ? loader : (T *)nullptr;
-    }
 } // namespace rt

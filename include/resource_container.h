@@ -236,7 +236,7 @@ namespace rt
         template <class Type, class T,
                   std::enable_if_t<std::is_base_of<ResourceLoader, T>::value, bool> = true,
                   std::enable_if_t<std::is_base_of<Resource, Type>::value, bool> = true>
-        T *add(T *loader);
+        inline T *add(T *loader);
 
         inline Iterator begin() { return _Iterator(m_resources.begin()); }
         inline Iterator end() { return _Iterator(m_resources.end()); }
@@ -279,6 +279,18 @@ namespace rt
         ptr->state = _SharedResourceState::State::Loaded;
         ptr->ptr = std::move(resource);
     }
+
+    template <class Type, class T,
+              std::enable_if_t<std::is_base_of<ResourceLoader, T>::value, bool>,
+              std::enable_if_t<std::is_base_of<Resource, Type>::value, bool>>
+    inline T *ResourceContainer::add(T *loader)
+    {
+        auto result = m_loaders.emplace(typeid(Type), loader);
+        if (!result.second)
+            delete loader;
+        return result.second ? loader : (T *)nullptr;
+    }
+
 } // namespace rt
 
 #endif // RESOURCE_CONTAINER_HPP
