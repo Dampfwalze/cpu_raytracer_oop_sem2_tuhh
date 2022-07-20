@@ -104,10 +104,11 @@ namespace rt
             << Application::Events::Render();
     }
 
-    static void copyBuffer(const FrameBuffer &buffer)
+    static void copyBuffer(const FrameBuffer &buffer, GLuint texture)
     {
         if (buffer.getSize() == math::u64vec2(0))
             return;
+        GLCALL(glBindTexture(GL_TEXTURE_2D, texture));
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, (int)buffer.getWidth(), (int)buffer.getHeight(), 0, GL_RGB, GL_FLOAT, &buffer[0]);
     }
 
@@ -139,6 +140,15 @@ namespace rt
         GLuint texture;
         GLCALL(glGenTextures(1, &texture));
         GLCALL(glBindTexture(GL_TEXTURE_2D, texture));
+
+        GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+        GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+        GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
+        GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER));
+
+        GLuint previewTexture;
+        GLCALL(glGenTextures(1, &previewTexture));
+        GLCALL(glBindTexture(GL_TEXTURE_2D, previewTexture));
 
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
@@ -191,7 +201,7 @@ namespace rt
             // GLCALL(glDrawArrays(GL_TRIANGLES, 0, 6));
 
             // Copy data from framebuffer to OpenGL texture on the GPU
-            copyBuffer(m_application.frameBuffer);
+            copyBuffer(m_application.frameBuffer, texture);
 
             window.beginGUI();
 
@@ -297,7 +307,61 @@ namespace rt
 
             for (auto &&resource : m_application.resources)
             {
-                ImGui::Text(resource.getPath().filename().string().c_str());
+                auto name = resource.getPath().filename().string();
+                ImGui::Selectable(name.c_str());
+                if (ImGui::IsItemHovered())
+                {
+                    float maxWidth = ImGui::GetFontSize() * 35.0f;
+                    ImGui::BeginTooltip();
+                    ImGui::PushTextWrapPos(maxWidth);
+                    ImGui::TextUnformatted(resource.getPath().string().c_str());
+                    if (resource && dynamic_cast<Resources::TextureResource *>((Resource *)resource))
+                    {
+                        auto &img = dynamic_cast<Resources::TextureResource &>(*(Resource *)resource);
+                        auto size = img.getSize();
+                        GLenum formatMap[] = {
+                            GL_RED,
+                            0,
+                            GL_RGB,
+                            GL_RGBA,
+                        };
+                        auto col = img[0];
+                        ImGui::Text("HDR: %s", img.isHDR() ? "Yes" : "No");
+                        ImGui::Text("Size: (%u, %u)", size.x, size.y);
+                        GLCALL(glBindTexture(GL_TEXTURE_2D, previewTexture));
+                        GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, (int)size.x, (int)size.y, 0, formatMap[img.getChannels() - 1], img.isHDR() ? GL_FLOAT : GL_UNSIGNED_BYTE, img.get()));
+
+                        m::dvec2 prevSize = size;
+                        if (size.x > (unsigned)maxWidth)
+                        {
+                            prevSize *= maxWidth / (double)size.x;
+                        }
+                        ImGui::Image(reinterpret_cast<ImTextureID>((size_t)previewTexture), m::Vec2<ImVec2>(prevSize));
+                    }
+
+                    ImGui::PopTextWrapPos();
+                    ImGui::EndTooltip();
+                }
+                if (resource.hasException())
+                {
+                    ImGui::SameLine();
+                    ImGui::Text("(!)");
+                    if (ImGui::IsItemHovered())
+                    {
+                        ImGui::BeginTooltip();
+                        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+                        try
+                        {
+                            std::rethrow_exception(resource.getException());
+                        }
+                        catch (const std::exception &e)
+                        {
+                            ImGui::TextUnformatted(e.what());
+                        }
+                        ImGui::PopTextWrapPos();
+                        ImGui::EndTooltip();
+                    }
+                }
             }
 
             ImGui::End();
