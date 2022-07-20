@@ -54,7 +54,7 @@ namespace rtstd
     private:
         void writeIndent()
         {
-            for (size_t i = 0; i < m_indentCount * m_args.indentSize; i++)
+            for (int64_t i = 0; i < m_indentCount * m_args.indentSize; i++)
                 m_outStream << m_args.indent;
         }
 
