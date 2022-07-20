@@ -74,7 +74,16 @@ namespace rt
     {
         std::optional<std::filesystem::path> _path;
         if (!std::filesystem::exists(path))
+        {
             _path = m_appDir / path;
+            if (!std::filesystem::exists(*_path))
+            {
+                auto r = m_resources.emplace_back(new _SharedResourceState(*_path, this));
+                r->state = _SharedResourceState::State::Failed;
+                r->exception = std::make_exception_ptr(IOException(IOException::NotFound));
+                return std::move(ResourceRef<void>(r));
+            }
+        }
 
         for (auto &&resource : m_resources)
             if (std::filesystem::equivalent(resource->path, _path ? *_path : path))
