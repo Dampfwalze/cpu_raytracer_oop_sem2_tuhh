@@ -14,6 +14,11 @@ namespace rt
             virtual void load(ResourceRef<void> resource, const std::filesystem::path &path) const override;
         };
 
+        class TextureLoader : public ResourceLoader
+        {
+        public:
+            virtual void load(ResourceRef<void> resource, const std::filesystem::path &path) const override;
+        };
     } // namespace ResourceLoaders
 } // namespace rt
 

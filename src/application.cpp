@@ -22,6 +22,10 @@ namespace rt
         renderThread.setRenderer(renderers["Raytracing"].get());
 
         resources.add<Resources::VoxelGridResource>(new ResourceLoaders::VoxelGridLoader());
+        resources.add<Resources::TextureResource>(new ResourceLoaders::TextureLoader());
+
+        auto texture = resources += "UV_Test.png";
+        ResourceRef<Resources::TextureResource> tex(texture);
 
         auto voxels = resources += ("castle.vox");
 

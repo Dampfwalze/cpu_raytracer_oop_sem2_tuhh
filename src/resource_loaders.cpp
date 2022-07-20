@@ -3,6 +3,8 @@
 #include <fstream>
 #include <stdexcept>
 
+#include <stb_image.h>
+
 namespace rt
 {
     namespace ResourceLoaders
@@ -85,6 +87,31 @@ namespace rt
             }
 
             resource.submit(std::make_unique<Resources::VoxelGridResource>(std::move(grid)));
+        }
+
+        void TextureLoader::load(ResourceRef<void> resource, const std::filesystem::path &path) const
+        {
+            auto pathStr = std::move(path.string());
+
+            bool isHDR = stbi_is_hdr(pathStr.c_str());
+            if (isHDR)
+            {
+                int w, h, c;
+                auto img = stbi_loadf(pathStr.c_str(), &w, &h, &c, 0);
+                if (img == nullptr)
+                    throw IOException(IOException::Type::FileCorrupt, stbi_failure_reason());
+
+                resource.submit(std::make_unique<Resources::TextureResource>(m::uvec2(w, h), c, img));
+            }
+            else
+            {
+                int w, h, c;
+                auto img = stbi_load(pathStr.c_str(), &w, &h, &c, 0);
+                if (img == nullptr)
+                    throw IOException(IOException::Type::FileCorrupt, stbi_failure_reason());
+
+                resource.submit(std::make_unique<Resources::TextureResource>(m::uvec2(w, h), c, img));
+            }
         }
     }
 }
