@@ -30,6 +30,7 @@ set(SOURCES
     src/scene_object.cpp
     src/scene_shapes.cpp
     src/scene_lights.cpp
+    src/sampler.cpp
     src/camera.cpp
     src/material.cpp
     src/pixel_logger.cpp

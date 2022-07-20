@@ -165,6 +165,9 @@ namespace rt
         friend class ResourceContainer;
     };
 
+    template <class T>
+    std::ostream &operator<<(std::ostream &stream, const ResourceRef<T> &resource);
+
     class ResourceContainer
     {
     private:
@@ -277,6 +280,12 @@ namespace rt
         assert(ptr->type == typeid(T) && "Resource loader returned resource of wrong type");
         ptr->state = _SharedResourceState::State::Loaded;
         ptr->ptr = std::move(resource);
+    }
+
+    template <class T>
+    std::ostream &operator<<(std::ostream &stream, const ResourceRef<T> &resource)
+    {
+        return stream << (resource ? resource.getPath().filename() : "null");
     }
 
     template <class Type, class T,

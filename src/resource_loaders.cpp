@@ -83,7 +83,7 @@ namespace rt
             for (size_t i = 0; i < numVoxels; i++)
             {
                 m::u8vec4 voxel = read<m::u8vec4>(file);
-                grid.at(voxel.xyz()).isVoxel = true;
+                grid.at(voxel.xyz()).colorIndex = voxel.w;
             }
 
             resource.submit(std::make_unique<Resources::VoxelGridResource>(std::move(grid)));

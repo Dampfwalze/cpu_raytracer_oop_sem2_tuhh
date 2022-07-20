@@ -46,7 +46,10 @@ namespace rt
             i.position = ray(t);
             i.normal = i.position;
             i.object = (SceneShape *)this;
-
+            i.sampleInfo = {
+                .type = SampleInfoType::Direction,
+                .asDirection = i.normal,
+            };
             return i;
         }
 
@@ -77,6 +80,10 @@ namespace rt
             i.position = ray(t);
             i.normal = m::dvec3(0, 1, 0);
             i.object = (SceneShape *)this;
+            i.sampleInfo = {
+                .type = SampleInfoType::UV,
+                .asUV = i.position.xz(),
+            };
             return i;
         }
 
@@ -206,21 +213,23 @@ namespace rt
 
             while (true)
             {
-                char dings = 'N';
                 if (r_x.x < r_y.x != (bool)g_x && r_x.x < r_z.x != (bool)g_x)
                 {
                     m::u64vec3 pos(m::round(r_x.x) - g_x, m::floor(r_x.y), m::floor(r_x.z));
                     // PIXEL_LOGGER_LOG("(", pos, ", ", r_x, "), ");
                     if (!(pos.x < size.x && pos.x >= 0 && pos.y < size.y && pos.y >= 0 && pos.z < size.z && pos.z >= 0))
                         break;
-                    if (grid.at(pos).isVoxel)
+                    if (grid.at(pos).colorIndex)
                         return Intersection{
-                            (r_x - size / 2.0) / size,
-                            m::dvec3(g_x ? 1 : -1, 0, 0),
-                            (SceneShape *)this,
+                            .position = (r_x - size / 2.0) / size,
+                            .normal = m::dvec3(g_x ? 1 : -1, 0, 0),
+                            .object = (SceneShape *)this,
+                            .sampleInfo = {
+                                .type = SampleInfoType::Index,
+                                .asIndex = (unsigned)grid.at(pos).colorIndex,
+                            },
                         };
                     r_x += v_x;
-                    dings = 'x';
                 }
                 else if (r_y.y < r_z.y != (bool)g_y)
                 {
@@ -228,14 +237,17 @@ namespace rt
                     // PIXEL_LOGGER_LOG("(", pos, ", ", r_y, "), ");
                     if (!(pos.x < size.x && pos.x >= 0 && pos.y < size.y && pos.y >= 0 && pos.z < size.z && pos.z >= 0))
                         break;
-                    if (grid.at(pos).isVoxel)
+                    if (grid.at(pos).colorIndex)
                         return Intersection{
-                            (r_y - size / 2.0) / size,
-                            m::dvec3(0, g_y ? 1 : -1, 0),
-                            (SceneShape *)this,
+                            .position = (r_y - size / 2.0) / size,
+                            .normal = m::dvec3(0, g_y ? 1 : -1, 0),
+                            .object = (SceneShape *)this,
+                            .sampleInfo = {
+                                .type = SampleInfoType::Index,
+                                .asIndex = (unsigned)grid.at(pos).colorIndex,
+                            },
                         };
                     r_y += v_y;
-                    dings = 'y';
                 }
                 else
                 {
@@ -243,14 +255,17 @@ namespace rt
                     // PIXEL_LOGGER_LOG("(", pos, ", ", r_z, "), ");
                     if (!(pos.x < size.x && pos.x >= 0 && pos.y < size.y && pos.y >= 0 && pos.z < size.z && pos.z >= 0))
                         break;
-                    if (grid.at(pos).isVoxel)
+                    if (grid.at(pos).colorIndex)
                         return Intersection{
-                            (r_z - size / 2.0) / size,
-                            m::dvec3(0, 0, g_z ? 1 : -1),
-                            (SceneShape *)this,
+                            .position = (r_z - size / 2.0) / size,
+                            .normal = m::dvec3(0, 0, g_z ? 1 : -1),
+                            .object = (SceneShape *)this,
+                            .sampleInfo = {
+                                .type = SampleInfoType::Index,
+                                .asIndex = (unsigned)grid.at(pos).colorIndex,
+                            },
                         };
                     r_z += v_z;
-                    dings = 'z';
                 }
             }
 
@@ -261,7 +276,7 @@ namespace rt
 
         std::ostream &VoxelShape::toString(std::ostream &stream) const
         {
-            return stream << "VoxelShape { name: \"" << name << "\", transform: " << transform << " }";
+            return stream << "VoxelShape { name: \"" << name << "\", transform: " << transform << ", voxel grid: " << grid << " }";
         }
     }
 }

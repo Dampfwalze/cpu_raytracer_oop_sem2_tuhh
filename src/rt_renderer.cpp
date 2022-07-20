@@ -48,7 +48,7 @@ namespace rt
             return m::Color<double>(1, 0, 1);
         }
         PIXEL_LOGGER_LOG(", \n");
-        auto result = material->render(intersection.position, intersection.normal, ray.direction, *scene, *this, recursion);
+        auto result = material->render(intersection.position, intersection.normal, ray.direction, intersection.sampleInfo, *scene, *this, recursion);
         PIXEL_LOGGER_LOG(" }\n");
         return result;
     }

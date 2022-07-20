@@ -3,6 +3,7 @@
 
 #include <scene/transform.h>
 #include <scene/scene_object.h>
+#include <scene/sampler.h>
 #include <voxel_grid.h>
 #include <resources.h>
 
@@ -17,6 +18,7 @@ namespace rt
         m::dvec3 position;
         m::dvec3 normal;
         SceneShape *object;
+        SampleInfo sampleInfo;
     };
 
     class SceneShape : public SceneObject

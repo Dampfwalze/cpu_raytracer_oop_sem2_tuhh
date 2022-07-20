@@ -14,7 +14,7 @@ namespace rt
     public:
         struct Voxel
         {
-            bool isVoxel;
+            char colorIndex;
         };
 
     private:

@@ -13,18 +13,19 @@ namespace rt
     namespace Materials
     {
         LitMaterial::LitMaterial(const std::string_view &name,
-                                 const m::Color<float> &color,
+                                 SamplerRef<> color,
                                  float ambient,
                                  float diffuse,
                                  float specular,
                                  float reflection)
-            : color(color), ambient(ambient), diffuse(diffuse), specular(specular), reflection(reflection), Material(name) {}
-        LitMaterial::LitMaterial(const m::Color<float> &color,
+            : color(std::move(color)), ambient(ambient), diffuse(diffuse), specular(specular), reflection(reflection), Material(name) {}
+
+        LitMaterial::LitMaterial(SamplerRef<> color,
                                  float ambient,
                                  float diffuse,
                                  float specular,
                                  float reflection)
-            : color(color), ambient(ambient), diffuse(diffuse), specular(specular), reflection(reflection), Material("Lit") {}
+            : color(std::move(color)), ambient(ambient), diffuse(diffuse), specular(specular), reflection(reflection), Material("Lit") {}
 
         static inline m::Color<float> mixColor(m::Color<float> c1, m::Color<float> c2, float mixingFactor)
         {
@@ -36,7 +37,8 @@ namespace rt
                 (1 - (1 - c1.b * i) * (1 - c2.b * i)) * j);
         }
 
-        m::Color<float> LitMaterial::render(const m::dvec3 &position, const m::dvec3 &normal_, const m::dvec3 &hitDirection_, const Scene &scene, const RTRenderer &renderer, int recursionDepth)
+        m::Color<float> LitMaterial::render(const m::dvec3 &position, const m::dvec3 &normal_, const m::dvec3 &hitDirection_,
+                                            const SampleInfo &sampleInfo, const Scene &scene, const RTRenderer &renderer, int recursionDepth)
         {
             PIXEL_LOGGER_LOG("Material { ");
             using Color = m::Color<float>;
@@ -74,17 +76,22 @@ namespace rt
                 result = mixColor(result, specular * lightColor * glm::max(0.0f, (float)m::dot(hitDirection, m::reflect(lightDirection, normal))), renderer.renderParams->mixingFactor);
             }
             PIXEL_LOGGER_LOG(" }");
-            return mixColor(result, e_reflection, renderer.renderParams->mixingFactor) * color;
+            return mixColor(result, e_reflection, renderer.renderParams->mixingFactor) * color->sample(sampleInfo);
         }
 
         bool LitMaterial::onInspectorGUI()
         {
             bool changed = false;
-            changed |= ImGui::ColorEdit3("Color", (float *)&color);
-            changed |= rtImGui::Drag<float, float>("ambient", ambient, 0.01, 0, 1);
-            changed |= rtImGui::Drag<float, float>("diffuse", diffuse, 0.01, 0, 1);
-            changed |= rtImGui::Drag<float, float>("specular", specular, 0.01, 0, 1);
-            changed |= rtImGui::Drag<float, float>("reflection", reflection, 0.01, 0, 1);
+
+            if (ImGui::TreeNodeEx("Color", ImGuiTreeNodeFlags_FramePadding))
+            {
+                changed |= color.onInspectorGUI();
+                ImGui::TreePop();
+            }
+            changed |= rtImGui::Drag<float, float>("ambient", ambient, 0.01f, 0, 1.0f);
+            changed |= rtImGui::Drag<float, float>("diffuse", diffuse, 0.01f, 0, 1.0f);
+            changed |= rtImGui::Drag<float, float>("specular", specular, 0.01f, 0, 1.0f);
+            changed |= rtImGui::Drag<float, float>("reflection", reflection, 0.01f, 0, 1.0f);
             return changed;
         }
 

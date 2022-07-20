@@ -298,6 +298,8 @@ namespace rt
 
             ImGui::Begin("Scene Inspector");
 
+            ImGui::PushItemWidth(ImGui::GetFontSize() * -8);
+
             if (m_application.scene.onInspectorGUI())
                 m_application << Application::Events::Render();
 

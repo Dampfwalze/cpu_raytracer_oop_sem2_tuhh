@@ -27,12 +27,12 @@ namespace rt
         auto texture = resources += "UV_Test.png";
         ResourceRef<Resources::TextureResource> tex(texture);
 
-        auto voxels = resources += ("castle.vox");
+        auto voxels = resources += "castle.vox";
 
-        auto defaultMaterial = scene.addMaterial(new Materials::LitMaterial("Default", m::Color<float>(1)));
-        auto floorMaterial = scene.addMaterial(new Materials::LitMaterial("Floor", m::Color<float>(241, 196, 132) / 255.0f));
-        auto objectMaterial = scene.addMaterial(new Materials::LitMaterial("Objects", m::Color<float>(208, 255, 255) / 255.0f, 0.1, 1, 1, 0.36));
-        auto voxelMaterial = scene.addMaterial(new Materials::LitMaterial("Voxels", m::Color<float>(181, 255, 164) / 255.0f, 0.1, 1, 1, 0.36));
+        auto defaultMaterial = scene.addMaterial(new Materials::LitMaterial("Default", std::make_unique<Samplers::ColorSampler>(m::Color<float>(1))));
+        auto floorMaterial = scene.addMaterial(new Materials::LitMaterial("Floor", std::make_unique<Samplers::ColorSampler>(m::Color<float>(241, 196, 132) / 255.0f)));
+        auto objectMaterial = scene.addMaterial(new Materials::LitMaterial("Objects", std::make_unique<Samplers::TextureSampler>(texture), 0.1f, 1, 1, 0.36f));
+        auto voxelMaterial = scene.addMaterial(new Materials::LitMaterial("Voxels", std::make_unique<Samplers::ColorSampler>(m::Color<float>(181, 255, 164) / 255.0f), 0.1f, 1, 1, 0.36f));
 
         scene.addShape(new Shapes::Sphere("Sphere 1", 0.3, Transform(m::dvec3(0.5, 0.5, 0)), objectMaterial));
         scene.addShape(new Shapes::Sphere("Sphere 2", 0.3, Transform(m::dvec3(-0.5, 0.5, 0)), objectMaterial));

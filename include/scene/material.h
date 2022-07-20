@@ -3,12 +3,13 @@
 
 #include <rtmath.h>
 #include <scene/scene_object.h>
+#include <scene/sampler.h>
 
 namespace rt
 {
     namespace m = math;
 
-    class Scene;
+    struct Scene;
     class RTRenderer;
 
     class Material : public SceneObject
@@ -19,6 +20,7 @@ namespace rt
         virtual m::Color<float> render(const m::dvec3 &position,
                                        const m::dvec3 &normal,
                                        const m::dvec3 &hitDirection,
+                                       const SampleInfo &sampleInfo,
                                        const Scene &scene,
                                        const RTRenderer &renderer,
                                        int recursionDepth) = 0;
@@ -29,7 +31,7 @@ namespace rt
         class LitMaterial : public Material
         {
         public:
-            m::Color<float> color;
+            SamplerRef<> color;
 
             float ambient;
             float diffuse;
@@ -38,12 +40,12 @@ namespace rt
 
         public:
             LitMaterial(const std::string_view &name,
-                        const m::Color<float> &color,
+                        SamplerRef<> color,
                         float ambient = 0.1f,
                         float diffuse = 1.0f,
                         float specular = 1.0f,
                         float reflection = 0.1f);
-            LitMaterial(const m::Color<float> &color,
+            LitMaterial(SamplerRef<> color,
                         float ambient = 0.1f,
                         float diffuse = 1.0f,
                         float specular = 1.0f,
@@ -52,6 +54,7 @@ namespace rt
             virtual m::Color<float> render(const m::dvec3 &position,
                                            const m::dvec3 &normal,
                                            const m::dvec3 &hitDirection,
+                                           const SampleInfo &sampleInfo,
                                            const Scene &scene,
                                            const RTRenderer &renderer,
                                            int recursionDepth) override;
