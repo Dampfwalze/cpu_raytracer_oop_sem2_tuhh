@@ -256,8 +256,7 @@ namespace rt
     template <class T>
     void ResourceRef<T>::requestLoad()
     {
-        if (m_ptr->state == _SharedResourceState::State::NotLoaded)
-            m_ptr->container->requestLoad(*m_ptr, typeid(T));
+        m_ptr->container->requestLoad(*m_ptr, typeid(T));
     }
 
     template <class T>
