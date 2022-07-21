@@ -68,9 +68,11 @@ namespace rt
             if (sizeChunk.nameAsInt != asInt("SIZE"))
                 throw IOException(IOException::Type::FileCorrupt, "File has wrong format!");
 
-            m::u64vec3 size(read<uint32_t>(file),
-                            read<uint32_t>(file),
-                            read<uint32_t>(file));
+            // Parameter evaluation order is undefined by c++ standart!!!!
+            m::u64vec3 size;
+            size.x = read<uint32_t>(file);
+            size.y = read<uint32_t>(file);
+            size.z = read<uint32_t>(file);
 
             VoxelGrid grid(size);
 
