@@ -261,19 +261,33 @@ namespace rt
 
             if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
             {
+                auto &renderParams = m_application.renderThread.renderParams;
                 bool changed = false;
 
-                auto &tileSize = m_application.renderThread.renderParams.tileSize;
+                auto &tileSize = renderParams.tileSize;
                 size_t min = 1, max = 128;
                 ImGui::SliderScalar("Tile size", ImGuiDataType_U64, &tileSize.x, &min, &max);
                 tileSize.y = tileSize.x;
 
-                changed |= rtImGui::Drag("Mixing Factor", m_application.renderThread.renderParams.mixingFactor, 0.01f);
+                changed |= rtImGui::Drag("Mixing Factor", renderParams.mixingFactor, 0.01f);
 
-                changed |= rtImGui::Drag<int, int>("Recursion Deph", m_application.renderThread.renderParams.recursionDeph, 0.01f, 0);
+                changed |= rtImGui::Drag<int, int>("Recursion Deph", renderParams.recursionDeph, 0.01f, 0);
 
-                changed |= rtImGui::Drag<float, float>("Gamma", m_application.renderThread.renderParams.gamma, 0.01f, 0.0f);
-                changed |= rtImGui::Drag<float, float>("Scale", m_application.renderThread.renderParams.scale, 0.01f, 0.0f);
+                if (ImGui::BeginCombo("Tone mapping algorithm", toneMappingAlgorithmToString(renderParams.toneMappingAlgorithm)))
+                {
+                    for (size_t i = 0; i < RenderParams::ToneMappingAlgorithm_COUNT; i++)
+                    {
+                        if (ImGui::Selectable(toneMappingAlgorithmToString((RenderParams::ToneMappingAlgorithm)i), renderParams.toneMappingAlgorithm == i))
+                        {
+                            renderParams.toneMappingAlgorithm = (RenderParams::ToneMappingAlgorithm)i;
+                            changed = true;
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+                changed |= rtImGui::Drag<float, float>("Exposure", renderParams.exposure, 0.01f, 0.0f);
+                changed |= rtImGui::Drag<float, float>("Gamma", renderParams.gamma, 0.01f, 0.0f);
+                changed |= rtImGui::Drag<float, float>("Scale", renderParams.scale, 0.01f, 0.0f);
 
                 if (changed)
                     m_application << Application::Events::Render();

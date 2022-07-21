@@ -26,8 +26,15 @@ namespace rt
         auto color = castPropagationRay(ray, renderParams->recursionDeph);
 
         // Tone mapping
-        // Reinhard tone mapping
-        color = color / (color + m::Color<float>(1));
+        switch (renderParams->toneMappingAlgorithm)
+        {
+        case RenderParams::Reinhard:
+            color = color / (color + m::Color<float>(1));
+            break;
+        case RenderParams::Exposure:
+            color = m::fvec3(1.0f) - m::exp(-color * renderParams->exposure);
+            break;
+        }
         // gamma correction
         color = m::pow(color * renderParams->scale, m::fvec3(1.0f / renderParams->gamma));
 
