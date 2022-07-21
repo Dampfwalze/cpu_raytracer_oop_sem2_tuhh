@@ -201,6 +201,8 @@ namespace rt
             return stream;
         }
 
+#pragma warning(push)
+#pragma warning(disable : 4244)
         template <typename T, typename D>
         T Vec1(const D &vec) { return T(vec.x); }
         template <typename T, typename D>
@@ -209,6 +211,7 @@ namespace rt
         T Vec3(const D &vec) { return T(vec.x, vec.y, vec.z); }
         template <typename T, typename D>
         T Vec4(const D &vec) { return T(vec.x, vec.y, vec.z, vec.w); }
+#pragma warning(pop)
 
         template <typename T>
         inline T map(T value, T istart, T istop, T ostart, T ostop)

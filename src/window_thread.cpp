@@ -232,7 +232,7 @@ namespace rt
                 }
                 if (logPixel.has_value())
                 {
-                    m::fvec2 pos = {logPixel->x + cursorPos.x, -logPixel->y + imageSize.y + cursorPos.y};
+                    m::fvec2 pos = {logPixel->x + cursorPos.x, imageSize.y + cursorPos.y - logPixel->y};
                     ImGui::GetWindowDrawList()->AddLine({pos.x - 10, pos.y}, {pos.x + 10, pos.y}, 0xffffffff);
                     ImGui::GetWindowDrawList()->AddLine({pos.x, pos.y - 10}, {pos.x, pos.y + 10}, 0xffffffff);
                 }

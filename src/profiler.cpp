@@ -265,8 +265,12 @@ namespace rtImGui
                 for (size_t j = 0; j < thread.second.size(); j++)
                 {
                     const Profiling::Task &task = thread.second[j];
+
+#pragma warning(push)
+#pragma warning(disable : 4244)
                     ImVec2 p1(m::map<double>((task.start - startTime).count(), 0, profileDuration, startX, endX), i * height + viewport.Min.y);
                     ImVec2 p2(m::map<double>((task.end - startTime).count(), 0, profileDuration, startX, endX), (i + 1) * height + viewport.Min.y);
+#pragma warning(pop)
 
                     auto col = colorMap.find(task.Label);
                     if (col == colorMap.end())
