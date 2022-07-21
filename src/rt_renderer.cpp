@@ -34,8 +34,11 @@ namespace rt
         if (!maybeIntersection)
         {
             PIXEL_LOGGER_LOG("No Intersection! }\n");
+            return scene->environmentTexture->sample({
+                .type = SampleInfoType::Direction,
+                .asDirection = ray.direction,
+            });
             return m::Color<float>(0);
-            // return m::Color<float>(115, 185, 255) / 255.0f;
         }
 
         auto &intersection = maybeIntersection.value();

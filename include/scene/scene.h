@@ -28,6 +28,8 @@ namespace rt
 
         Camera camera;
 
+        SamplerRef<> environmentTexture;
+
     public:
         Scene(shape_collection_type &objects, const Camera &camera = Camera());
         Scene(shape_collection_type &&objects = shape_collection_type(), const Camera &camera = Camera());

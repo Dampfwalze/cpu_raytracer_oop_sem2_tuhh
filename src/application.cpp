@@ -27,6 +27,9 @@ namespace rt
         auto texture = resources += "UV_Test.png";
         ResourceRef<Resources::TextureResource> tex(texture);
 
+        auto envTex = resources += "belfast_farmhouse_4k.hdr";
+        scene.environmentTexture = new Samplers::TextureSampler(envTex);
+
         auto voxels = resources += "castle.vox";
 
         auto defaultMaterial = scene.addMaterial(new Materials::LitMaterial("Default", std::make_unique<Samplers::ColorSampler>(m::Color<float>(1))));

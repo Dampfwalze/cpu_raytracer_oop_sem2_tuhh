@@ -124,6 +124,8 @@ namespace rt
                 }
                 ImGui::PopID();
             }
+        if (ImGui::CollapsingHeader("Environment Texture", ImGuiTreeNodeFlags_DefaultOpen))
+            changed |= environmentTexture.onInspectorGUI();
 
         return changed;
     }
@@ -140,6 +142,7 @@ namespace rt
         for (auto &&[k, m] : scene.materials)
             stream << k << ": " << *m << ", ";
         stream << " }, Camera: " << scene.camera;
-        return stream << "}";
+        stream << ", Environment: " << scene.environmentTexture;
+        return stream << " }";
     }
 }
