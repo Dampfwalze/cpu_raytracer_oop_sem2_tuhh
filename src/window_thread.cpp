@@ -270,6 +270,8 @@ namespace rt
 
                 changed |= rtImGui::Drag("Mixing Factor", m_application.renderThread.renderParams.mixingFactor, 0.01f);
 
+                changed |= rtImGui::Drag<int, int>("Recursion Deph", m_application.renderThread.renderParams.recursionDeph, 0.01f, 0);
+
                 changed |= rtImGui::Drag<float, float>("Gamma", m_application.renderThread.renderParams.gamma, 0.01f, 0.0f);
                 changed |= rtImGui::Drag<float, float>("Scale", m_application.renderThread.renderParams.scale, 0.01f, 0.0f);
 

@@ -23,7 +23,7 @@ namespace rt
         // Ray is in world space now
         ray = ray.transformPerspective(invCam);
 
-        auto color = castPropagationRay(ray);
+        auto color = castPropagationRay(ray, renderParams->recursionDeph);
 
         // Tone mapping
         // Reinhard tone mapping

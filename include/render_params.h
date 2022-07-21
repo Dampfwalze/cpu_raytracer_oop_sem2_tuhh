@@ -11,6 +11,9 @@ namespace rt
     {
         m::u64vec2 tileSize;
         float mixingFactor = 1.88f;
+
+        int recursionDeph = 3;
+
         std::optional<m::u64vec2> logPixel;
 
         // Tone mapping
