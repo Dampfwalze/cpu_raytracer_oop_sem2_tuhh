@@ -142,6 +142,8 @@ namespace rt
     {
         bool changed = false;
 
+        changed |= rtImGui::ResourceBox("Texture", texture);
+
         if (ImGui::BeginCombo("Filter Method", filterMethodToString(filterMethod)))
         {
             for (size_t i = 0; i < (size_t)FilterMethod::COUNT; i++)

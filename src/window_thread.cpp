@@ -321,6 +321,16 @@ namespace rt
             {
                 auto name = resource.getPath().filename().string();
                 ImGui::Selectable(name.c_str());
+                if (ImGui::BeginDragDropSource())
+                {
+                    auto payload = resource.getPtr();
+                    ImGui::SetDragDropPayload("Resource", &payload, sizeof(payload));
+
+                    ImGui::Text("%s", name.c_str());
+
+                    ImGui::EndDragDropSource();
+                }
+
                 if (ImGui::IsItemHovered())
                 {
                     float maxWidth = ImGui::GetFontSize() * 35.0f;

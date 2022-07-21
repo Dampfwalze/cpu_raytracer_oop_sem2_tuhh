@@ -31,6 +31,10 @@ namespace rt
         scene.environmentTexture = new Samplers::TextureSampler(envTex);
 
         auto voxels = resources += "castle.vox";
+        resources += "monu1.vox";
+        resources += "monu2.vox";
+        resources += "monu3.vox";
+        resources += "teapot.vox";
 
         auto defaultMaterial = scene.addMaterial(new Materials::LitMaterial("Default", std::make_unique<Samplers::ColorSampler>(m::Color<float>(1))));
         auto floorMaterial = scene.addMaterial(new Materials::LitMaterial("Floor", std::make_unique<Samplers::ColorSampler>(m::Color<float>(241, 196, 132) / 255.0f)));

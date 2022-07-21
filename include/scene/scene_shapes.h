@@ -82,6 +82,8 @@ namespace rt
 
             virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
 
+            virtual bool onInspectorGUI() override;
+
             virtual std::ostream &toString(std::ostream &stream) const override;
         };
     } // namespace Shapes

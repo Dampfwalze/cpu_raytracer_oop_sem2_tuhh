@@ -274,6 +274,16 @@ namespace rt
             return std::nullopt;
         }
 
+        bool VoxelShape::onInspectorGUI()
+        {
+            bool changed = false;
+
+            changed |= SceneShape::onInspectorGUI();
+            changed |= rtImGui::ResourceBox("Voxel Grid", grid);
+
+            return changed;
+        }
+
         std::ostream &VoxelShape::toString(std::ostream &stream) const
         {
             return stream << "VoxelShape { name: \"" << name << "\", transform: " << transform << ", voxel grid: " << grid << " }";

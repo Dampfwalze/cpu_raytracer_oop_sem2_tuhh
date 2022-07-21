@@ -104,10 +104,15 @@ namespace rt
         void requestLoad();
 
     public:
+        ResourceRef() = default;
+
         ResourceRef(const std::shared_ptr<_SharedResourceState> &ptr)
             : m_ptr(ptr) { requestLoad(); }
+        ResourceRef(void *&ptr)
+            : ResourceRef(((_SharedResourceState *)ptr)->shared_from_this()) {}
 
-        inline operator bool() const { return m_ptr->state == _SharedResourceState::State::Loaded && m_ptr->ptr; }
+        inline operator bool() const { return m_ptr && m_ptr->state == _SharedResourceState::State::Loaded && m_ptr->ptr && m_ptr->type == typeid(T); }
+        inline bool resourceAttached() const { return m_ptr.operator bool(); }
         inline T *operator->() { return (T *)m_ptr->ptr.get(); };
         inline T *operator->() const { return (T *)m_ptr->ptr.get(); }
         inline T &operator*() { return *(m_ptr->ptr); };
@@ -128,10 +133,13 @@ namespace rt
     public:
         ResourceRef(const std::shared_ptr<_SharedResourceState> &ptr)
             : m_ptr(ptr) {}
+        ResourceRef(void *&ptr)
+            : ResourceRef(((_SharedResourceState *)ptr)->shared_from_this()) {}
 
         // template<class T>
         inline operator Resource *() const { return (*this) ? m_ptr->ptr.get() : nullptr; }
-        inline operator bool() const { return m_ptr->state == _SharedResourceState::State::Loaded && m_ptr->ptr; }
+        inline operator bool() const { return m_ptr && m_ptr->state == _SharedResourceState::State::Loaded && m_ptr->ptr; }
+        inline bool resourceAttached() const { return m_ptr.operator bool(); }
         inline Resource *operator->() { return (Resource *)m_ptr->ptr.get(); };
         inline Resource *operator->() const { return (Resource *)m_ptr->ptr.get(); }
         inline Resource &operator*() { return *(m_ptr->ptr); };
@@ -141,6 +149,7 @@ namespace rt
         inline const std::filesystem::path &getPath() const { return m_ptr->path; }
         inline const std::exception_ptr getException() const { return m_ptr->exception; }
         inline const std::type_index getType() const { return m_ptr->type; }
+        inline const void *getPtr() const { return m_ptr.get(); }
 
         template <class T>
         inline operator ResourceRef<T>() { return ResourceRef<T>(m_ptr); }

@@ -1,6 +1,7 @@
 #include <imgui.h>
 #include <rtmath.h>
 #include <scene/transform.h>
+#include <resource_container.h>
 
 namespace rtImGui
 {
@@ -113,5 +114,42 @@ namespace rtImGui
                                                     ImGuiSliderFlags flags)
     {
         return Drag<rt::Transform, double>(label, value, v_speed);
+    }
+
+    template <class T>
+    static bool ResourceBox(const char *label, rt::ResourceRef<T> &resource)
+    {
+        bool changed = false;
+
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1);
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0.7f));
+        auto name = resource.resourceAttached() ? resource.getPath().filename().string() : "None";
+        ImGui::Button(name.c_str(), ImVec2(ImGui::CalcItemWidth(), 0));
+        ImGui::PopStyleColor();
+        ImGui::PopStyleVar();
+
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Resource"))
+            {
+                assert(payload->DataSize == sizeof(void *));
+                void *ptr = payload->Data;
+                rt::ResourceRef<rt::Resource> ref(*(void **)ptr);
+                if ((!ref) || ref.getType() == typeid(T))
+                {
+                    resource = ref;
+                    changed = true;
+                }
+            }
+            ImGui::EndDragDropTarget();
+        }
+
+        ImGui::SameLine();
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+        ImGui::SetCursorPosX(ImGui::GetItemRectMax().x + ImGui::GetStyle().ItemInnerSpacing.x);
+        ImGui::Text("%s", label);
+        ImGui::PopStyleVar();
+
+        return changed;
     }
 } // namespace rtImGui
