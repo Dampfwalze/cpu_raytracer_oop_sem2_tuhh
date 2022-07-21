@@ -3,6 +3,7 @@
 
 #include <resource_container.h>
 #include <voxel_grid.h>
+#include <color_palette.h>
 
 namespace rt
 {
@@ -12,13 +13,13 @@ namespace rt
         {
         public:
             VoxelGrid grid;
+            ColorPalette colorPalette;
 
         public:
+            VoxelGridResource(const VoxelGrid &grid, const ColorPalette &colorPalette) : grid(grid), colorPalette(colorPalette) {}
             VoxelGridResource(const VoxelGrid &grid) : grid(grid) {}
+            VoxelGridResource(VoxelGrid &&grid, const ColorPalette &colorPalette) : grid(std::move(grid)), colorPalette(colorPalette) {}
             VoxelGridResource(VoxelGrid &&grid) : grid(std::move(grid)) {}
-
-            inline VoxelGrid *operator->() { return &grid; }
-            inline VoxelGrid &operator*() { return grid; }
         };
 
         class TextureResource : public Resource

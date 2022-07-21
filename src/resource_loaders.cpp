@@ -88,7 +88,23 @@ namespace rt
                 grid.at(voxel.xyz()).colorIndex = voxel.w;
             }
 
-            resource.submit(std::make_unique<Resources::VoxelGridResource>(std::move(grid)));
+            auto res = std::make_unique<Resources::VoxelGridResource>(std::move(grid));
+
+            while (file.gcount() >= 4)
+            {
+                if (read<uint32_t>(file) == asInt("RGBA"))
+                {
+                    read<uint32_t>(file);
+                    read<uint32_t>(file);
+                    for (size_t i = 1; i < 256; i++)
+                    {
+                        res->colorPalette[i] = m::Color<float>(read<m::u8vec4>(file)) / 255.0f;
+                    }
+                    break;
+                }
+            }
+
+            resource.submit(std::move(res));
         }
 
         void TextureLoader::load(ResourceRef<void> resource, const std::filesystem::path &path) const

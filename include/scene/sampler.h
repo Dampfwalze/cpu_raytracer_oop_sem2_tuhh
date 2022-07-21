@@ -119,6 +119,25 @@ namespace rt
 
             virtual std::ostream &toString(std::ostream &stream) const;
         };
+
+        class PaletteSampler : public Sampler
+        {
+        public:
+            ResourceRef<Resources::VoxelGridResource> palette;
+
+        public:
+            PaletteSampler() : Sampler("Palette Sampler") {}
+            PaletteSampler(ResourceRef<Resources::VoxelGridResource> palette)
+                : palette(palette), Sampler("Palette Sampler") {}
+            PaletteSampler(const std::string_view &name, ResourceRef<Resources::VoxelGridResource> palette)
+                : palette(palette), Sampler(name) {}
+
+            virtual m::Color<float> sampleIndex(size_t index) const override { return palette ? palette->colorPalette[index] : invalidColor; }
+
+            virtual bool onInspectorGUI() override;
+
+            virtual std::ostream &toString(std::ostream &stream) const;
+        };
     } // namespace Samplers
 
     template <class T = Sampler>

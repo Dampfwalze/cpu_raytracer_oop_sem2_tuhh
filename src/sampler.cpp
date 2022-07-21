@@ -176,11 +176,24 @@ namespace rt
                       << " }";
     }
 
+    bool Samplers::PaletteSampler::onInspectorGUI()
+    {
+        return rtImGui::ResourceBox("Palette", palette);
+    }
+
+    std::ostream &Samplers::PaletteSampler::toString(std::ostream &stream) const
+    {
+        return stream << "TextureSampler { name: \"" << name
+                      << "\", palette: " << palette
+                      << " }";
+    }
+
     bool SamplerRef<Sampler>::onInspectorGUI()
     {
         static const std::map<std::type_index, const char *> namesMap = {
             {typeid(Samplers::ColorSampler), "Color Sampler"},
             {typeid(Samplers::TextureSampler), "Texture Sampler"},
+            {typeid(Samplers::PaletteSampler), "Palette Sampler"},
         };
 
         auto &currentType = m_ptr ? typeid(*m_ptr) : typeid(void);
@@ -200,6 +213,8 @@ namespace rt
                         m_ptr = std::make_unique<Samplers::ColorSampler>();
                     else if (type == typeid(Samplers::TextureSampler))
                         m_ptr = std::make_unique<Samplers::TextureSampler>();
+                    else if (type == typeid(Samplers::PaletteSampler))
+                        m_ptr = std::make_unique<Samplers::PaletteSampler>();
                 }
             }
             ImGui::EndCombo();
