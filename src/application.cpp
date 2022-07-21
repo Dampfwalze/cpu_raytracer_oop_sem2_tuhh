@@ -13,7 +13,7 @@ namespace rt
           threadPool(std::thread::hardware_concurrency() == 0 ? 1 : std::thread::hardware_concurrency()),
           resources(&threadPool, originPath / "resource"),
           scene{
-              .camera = Camera(Transform(m::dvec3(0, 3.5, 7))),
+              Camera(Transform(m::dvec3(0, 3.5, 7))),
           },
           renderThread(&threadPool),
           m_window(*this)
