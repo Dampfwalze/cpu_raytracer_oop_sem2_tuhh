@@ -23,7 +23,15 @@ namespace rt
         // Ray is in world space now
         ray = ray.transformPerspective(invCam);
 
-        frameBuffer->at(pixelCoords) = castPropagationRay(ray);
+        auto color = castPropagationRay(ray);
+
+        // Tone mapping
+        // Reinhard tone mapping
+        color = color / (color + m::Color<float>(1));
+        // gamma correction
+        color = m::pow(color * renderParams->scale, m::fvec3(1.0f / renderParams->gamma));
+
+        frameBuffer->at(pixelCoords) = color;
     }
 
     m::Color<float> RTRenderer::castPropagationRay(const m::ray<double> &ray, int recursion) const

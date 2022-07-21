@@ -12,6 +12,10 @@ namespace rt
         m::u64vec2 tileSize;
         float mixingFactor = 1.88f;
         std::optional<m::u64vec2> logPixel;
+
+        // Tone mapping
+        float gamma = 2.2f;
+        float scale = 1.0f;
     };
 
 } // namespace rt

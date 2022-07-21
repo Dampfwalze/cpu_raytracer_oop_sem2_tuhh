@@ -259,13 +259,23 @@ namespace rt
             }
             ImGui::EndDisabled();
 
-            auto &tileSize = m_application.renderThread.renderParams.tileSize;
-            size_t min = 1, max = 128;
-            ImGui::SliderScalar("Tile size", ImGuiDataType_U64, &tileSize.x, &min, &max);
-            tileSize.y = tileSize.x;
+            if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                bool changed = false;
 
-            if (rtImGui::Drag("Mixing Factor", m_application.renderThread.renderParams.mixingFactor, 0.01))
-                m_application << Application::Events::Render();
+                auto &tileSize = m_application.renderThread.renderParams.tileSize;
+                size_t min = 1, max = 128;
+                ImGui::SliderScalar("Tile size", ImGuiDataType_U64, &tileSize.x, &min, &max);
+                tileSize.y = tileSize.x;
+
+                changed |= rtImGui::Drag("Mixing Factor", m_application.renderThread.renderParams.mixingFactor, 0.01f);
+
+                changed |= rtImGui::Drag<float, float>("Gamma", m_application.renderThread.renderParams.gamma, 0.01f, 0.0f);
+                changed |= rtImGui::Drag<float, float>("Scale", m_application.renderThread.renderParams.scale, 0.01f, 0.0f);
+
+                if (changed)
+                    m_application << Application::Events::Render();
+            }
 
             if (ImGui::TreeNode("Renderers"))
             {
