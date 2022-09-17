@@ -8,6 +8,7 @@
 #include <resource_container.h>
 
 #include <map>
+#include <variant>
 
 namespace rt
 {
@@ -16,7 +17,6 @@ namespace rt
     public:
         enum class EventType
         {
-            None,
             Render,
             CloseApplication,
         };
@@ -31,18 +31,7 @@ namespace rt
             };
         };
 
-        struct Event
-        {
-            EventType type;
-            union
-            {
-                Events::Render render;
-                Events::CloseApplication closeApplication;
-            };
-
-            Event(const Events::Render &event);
-            Event(const Events::CloseApplication &event);
-        };
+        using Event = std::variant<Events::Render, Events::CloseApplication, Events::LoadScene>;
 
     public:
         std::filesystem::path originPath;

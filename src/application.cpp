@@ -63,7 +63,7 @@ namespace rt
         while (running)
         {
             Event event = m_eventStream.get();
-            switch (event.type)
+            switch ((EventType)event.index())
             {
             case EventType::CloseApplication:
                 running = false;
@@ -71,9 +71,4 @@ namespace rt
             }
         }
     }
-
-    Application::Event::Event(const Events::Render &event)
-        : type(EventType::Render), render(event) {}
-    Application::Event::Event(const Events::CloseApplication &event)
-        : type(EventType::CloseApplication), closeApplication(event) {}
 }
