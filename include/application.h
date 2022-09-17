@@ -42,7 +42,7 @@ namespace rt
 
         ResourceContainer resources;
 
-        Scene scene;
+        std::unique_ptr<Scene> scene;
 
         FrameBuffer frameBuffer;
 
@@ -73,7 +73,7 @@ namespace rt
     template <>
     inline Application &Application::operator<<(Application::Events::Render event)
     {
-        renderThread.startRender(scene, frameBuffer);
+        renderThread.startRender(*scene, frameBuffer);
         return *this;
     }
 } // namespace rt

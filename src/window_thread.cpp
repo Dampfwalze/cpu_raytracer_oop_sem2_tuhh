@@ -52,7 +52,7 @@ namespace rt
         // if (delta.x == 0 && delta.y == 0)
         //     return;
 
-        auto &camera = m_application.scene.camera;
+        auto &camera = m_application.scene->camera;
         auto &q = camera.transform.rotation;
         // auto a = glm::eulerAngles(q);
 
@@ -326,7 +326,7 @@ namespace rt
 
             ImGui::PushItemWidth(ImGui::GetFontSize() * -8);
 
-            if (m_application.scene.onInspectorGUI())
+            if (m_application.scene->onInspectorGUI())
                 m_application << Application::Events::Render();
 
             ImGui::End();
