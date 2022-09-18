@@ -1,10 +1,10 @@
 #include <application.h>
 
 #include <optional>
-#include <stream_formatter.h>
-#include <rt_renderer.h>
-#include <resources.h>
 #include <resource_loaders.h>
+#include <resources.h>
+#include <rt_renderer.h>
+#include <stream_formatter.h>
 
 namespace rt
 {
@@ -25,7 +25,6 @@ namespace rt
         resources.add<Resources::TextureResource>(new ResourceLoaders::TextureLoader());
 
         auto texture = resources += "UV_Test.png";
-        ResourceRef<Resources::TextureResource> tex(texture);
 
         auto envTex = resources += "belfast_farmhouse_4k.hdr";
         scene->environmentTexture = new Samplers::TextureSampler(envTex);

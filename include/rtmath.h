@@ -1,9 +1,9 @@
 #ifndef RTMATH_HPP
 #define RTMATH_HPP
 
-#include <iostream>
 #include <algorithm>
 #include <iomanip>
+#include <iostream>
 
 #define GLM_FORCE_SWIZZLE
 #include <glm/glm.hpp>
@@ -59,8 +59,8 @@ namespace rt
 
             ray<T> transformPerspective(const mat4<T> &matrix) const
             {
-                auto n_origin = matrix * vec4<T>(origin, 1);
-                auto n_direction = matrix * vec4<T>(direction + origin, 1);
+                auto   n_origin = matrix * vec4<T>(origin, 1);
+                auto   n_direction = matrix * vec4<T>(direction + origin, 1);
                 ray<T> n;
                 n.origin = n_origin.xyz() / n_origin.w;
                 n.direction = n_direction.xyz() / n_direction.w - n.origin;
@@ -101,7 +101,7 @@ namespace rt
             return n;
         }
 
-        template<typename T>
+        template <typename T>
         ray<T> normalize(ray<T> r) { return r.normalize(); }
 
         template <typename T>
@@ -188,8 +188,8 @@ namespace rt
 
             inline vec2<T> getEnd() const { return start + size; }
 
-            Rect<T> min(T _x, T _y) const { return Rect(math::min<T>(start, _x, _y), math::min<T>(getEnd(), _x, _y) - start); }
-            Rect<T> max(T _x, T _y) const { return Rect(math::max<T>(start, _x, _y), math::max<T>(getEnd(), _x, _y) - start); }
+            Rect<T>        min(T _x, T _y) const { return Rect(math::min<T>(start, _x, _y), math::min<T>(getEnd(), _x, _y) - start); }
+            Rect<T>        max(T _x, T _y) const { return Rect(math::max<T>(start, _x, _y), math::max<T>(getEnd(), _x, _y) - start); }
             inline Rect<T> min(vec2<T> v) const { return min(v.x, v.y); }
             inline Rect<T> max(vec2<T> v) const { return max(v.x, v.y); }
         };
@@ -204,7 +204,10 @@ namespace rt
 #pragma warning(push)
 #pragma warning(disable : 4244)
         template <typename T, typename D>
-        T Vec1(const D &vec) { return T(vec.x); }
+        T Vec1(const D &vec)
+        {
+            return T(vec.x);
+        }
         template <typename T, typename D>
         T Vec2(const D &vec) { return T(vec.x, vec.y); }
         template <typename T, typename D>
@@ -260,7 +263,7 @@ namespace glm
     }
 
     template <int x, int y, typename T, qualifier Q>
-    std::ostream& operator<<(std::ostream& stream, const mat<x, y, T, Q>& m)
+    std::ostream &operator<<(std::ostream &stream, const mat<x, y, T, Q> &m)
     {
         stream << "mat(" << std::setprecision(3);
         for (int i = 0; i < y; i++)
@@ -269,7 +272,7 @@ namespace glm
             {
                 stream << std::setw(6) << m[j][i] << " ";
             }
-            stream << ((i == y - 1)? ")" : "\n    ");
+            stream << ((i == y - 1) ? ")" : "\n    ");
         }
         return stream << std::setprecision(4);
     }

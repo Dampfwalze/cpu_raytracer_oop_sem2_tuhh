@@ -1,8 +1,8 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include <imgui.h>
 #include <GLFW/glfw3.h>
+#include <imgui.h>
 
 #ifdef _DEBUG
 #define GLFW_CHECK_ERROR(msg) rt::glfwCheckError(__FILE__, __LINE__, __func__, msg)
@@ -27,7 +27,7 @@ namespace rt
     class Window
     {
     private:
-        GLFWwindow *m_window;
+        GLFWwindow   *m_window;
         ImGuiContext *m_imgui_context;
 
     public:

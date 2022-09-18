@@ -1,10 +1,10 @@
-#include <iostream>
 #include <exception>
+#include <iostream>
 
 #include <application.h>
-#include <window.h>
-#include <stdlib.h>
 #include <filesystem>
+#include <stdlib.h>
+#include <window.h>
 
 int main(int argc, char const *argv[])
 {

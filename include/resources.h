@@ -1,9 +1,9 @@
 #ifndef RESOURCES_HPP
 #define RESOURCES_HPP
 
+#include <color_palette.h>
 #include <resource_container.h>
 #include <voxel_grid.h>
-#include <color_palette.h>
 
 namespace rt
 {
@@ -12,7 +12,7 @@ namespace rt
         class VoxelGridResource : public Resource
         {
         public:
-            VoxelGrid grid;
+            VoxelGrid    grid;
             ColorPalette colorPalette;
 
         public:
@@ -26,12 +26,12 @@ namespace rt
         {
         private:
             m::uvec2 m_size;
-            int m_channels;
-            bool m_isHDR;
+            int      m_channels;
+            bool     m_isHDR;
             union
             {
                 unsigned char *asInt;
-                float *asFloat;
+                float         *asFloat;
             } m_texture;
 
         public:
@@ -46,10 +46,10 @@ namespace rt
                     delete[] m_texture.asInt;
             }
 
-            inline bool isHDR() { return m_isHDR; }
-            inline m::uvec2 getSize() { return m_size; }
-            inline void *get() { return m_texture.asInt; }
-            inline int getChannels() { return m_channels; }
+            inline bool            isHDR() { return m_isHDR; }
+            inline m::uvec2        getSize() { return m_size; }
+            inline void           *get() { return m_texture.asInt; }
+            inline int             getChannels() { return m_channels; }
             inline m::Color<float> operator[](size_t index)
             {
                 if (m_isHDR)

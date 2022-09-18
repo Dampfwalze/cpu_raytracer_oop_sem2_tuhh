@@ -4,12 +4,12 @@
 #include <thread>
 
 #include <event_stream.h>
-#include <scene/scene.h>
-#include <thread_pool.h>
-#include <rtmath.h>
-#include <renderer.h>
 #include <frame_buffer.h>
 #include <render_params.h>
+#include <renderer.h>
+#include <rtmath.h>
+#include <scene/scene.h>
+#include <thread_pool.h>
 
 namespace rt
 {
@@ -31,7 +31,7 @@ namespace rt
             {
                 struct
                 {
-                    Scene *scene;
+                    Scene       *scene;
                     FrameBuffer *frameBuffer;
                 };
             };
@@ -65,7 +65,7 @@ namespace rt
 
         inline bool isRendering() const { return m_isRendering; }
 
-        void setRenderer(Renderer *renderer);
+        void             setRenderer(Renderer *renderer);
         inline Renderer *getRenderer() { return m_renderer; };
 
     private:

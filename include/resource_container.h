@@ -1,16 +1,16 @@
 #ifndef RESOURCE_CONTAINER_HPP
 #define RESOURCE_CONTAINER_HPP
 
-#include <string>
-#include <vector>
-#include <map>
-#include <set>
 #include <filesystem>
-#include <memory>
-#include <typeindex>
 #include <future>
+#include <map>
+#include <memory>
 #include <mutex>
 #include <optional>
+#include <set>
+#include <string>
+#include <typeindex>
+#include <vector>
 
 #include <thread_pool.h>
 
@@ -77,12 +77,12 @@ namespace rt
             Failed,
         } state;
 
-        std::filesystem::path path;
-        std::type_index type;
+        std::filesystem::path     path;
+        std::type_index           type;
         std::unique_ptr<Resource> ptr;
-        std::exception_ptr exception;
-        ResourceContainer *container;
-        std::mutex mutex;
+        std::exception_ptr        exception;
+        ResourceContainer        *container;
+        std::mutex                mutex;
         std::set<std::type_index> failedTypes;
 
     private:
@@ -111,17 +111,17 @@ namespace rt
         ResourceRef(void *&ptr)
             : ResourceRef(((_SharedResourceState *)ptr)->shared_from_this()) {}
 
-        inline operator bool() const { return m_ptr && m_ptr->state == _SharedResourceState::State::Loaded && m_ptr->ptr && m_ptr->type == typeid(T); }
+        inline      operator bool() const { return m_ptr && m_ptr->state == _SharedResourceState::State::Loaded && m_ptr->ptr && m_ptr->type == typeid(T); }
         inline bool resourceAttached() const { return m_ptr.operator bool(); }
-        inline T *operator->() { return (T *)m_ptr->ptr.get(); };
-        inline T *operator->() const { return (T *)m_ptr->ptr.get(); }
-        inline T &operator*() { return *(m_ptr->ptr); };
-        inline T &operator*() const { return *(m_ptr->ptr); }
+        inline T   *operator->() { return (T *)m_ptr->ptr.get(); };
+        inline T   *operator->() const { return (T *)m_ptr->ptr.get(); }
+        inline T   &operator*() { return *(m_ptr->ptr); };
+        inline T   &operator*() const { return *(m_ptr->ptr); }
 
-        inline const bool hasException() const { return m_ptr->state == _SharedResourceState::State::Failed; }
+        inline const bool                   hasException() const { return m_ptr->state == _SharedResourceState::State::Failed; }
         inline const std::filesystem::path &getPath() const { return m_ptr->path; }
-        inline const std::exception_ptr getException() const { return m_ptr->exception; }
-        inline const std::type_index getType() const { return m_ptr->type; }
+        inline const std::exception_ptr     getException() const { return m_ptr->exception; }
+        inline const std::type_index        getType() const { return m_ptr->type; }
     };
 
     template <>
@@ -137,19 +137,19 @@ namespace rt
             : ResourceRef(((_SharedResourceState *)ptr)->shared_from_this()) {}
 
         // template<class T>
-        inline operator Resource *() const { return (*this) ? m_ptr->ptr.get() : nullptr; }
-        inline operator bool() const { return m_ptr && m_ptr->state == _SharedResourceState::State::Loaded && m_ptr->ptr; }
-        inline bool resourceAttached() const { return m_ptr.operator bool(); }
+        inline           operator Resource *() const { return (*this) ? m_ptr->ptr.get() : nullptr; }
+        inline           operator bool() const { return m_ptr && m_ptr->state == _SharedResourceState::State::Loaded && m_ptr->ptr; }
+        inline bool      resourceAttached() const { return m_ptr.operator bool(); }
         inline Resource *operator->() { return (Resource *)m_ptr->ptr.get(); };
         inline Resource *operator->() const { return (Resource *)m_ptr->ptr.get(); }
         inline Resource &operator*() { return *(m_ptr->ptr); };
         inline Resource &operator*() const { return *(m_ptr->ptr); }
 
-        inline const bool hasException() const { return (m_ptr->state == _SharedResourceState::State::Failed); }
+        inline const bool                   hasException() const { return (m_ptr->state == _SharedResourceState::State::Failed); }
         inline const std::filesystem::path &getPath() const { return m_ptr->path; }
-        inline const std::exception_ptr getException() const { return m_ptr->exception; }
-        inline const std::type_index getType() const { return m_ptr->type; }
-        inline const void *getPtr() const { return m_ptr.get(); }
+        inline const std::exception_ptr     getException() const { return m_ptr->exception; }
+        inline const std::type_index        getType() const { return m_ptr->type; }
+        inline const void                  *getPtr() const { return m_ptr.get(); }
 
         template <class T>
         inline operator ResourceRef<T>() { return ResourceRef<T>(m_ptr); }
@@ -223,10 +223,10 @@ namespace rt
                 --m_it;
                 return t;
             }
-            inline Resource *operator->() { return (*m_it)->ptr.get(); }
+            inline Resource             *operator->() { return (*m_it)->ptr.get(); }
             inline ResourceRef<Resource> operator*() { return ResourceRef<Resource>(*m_it); }
-            inline bool operator==(const _Iterator &other) const { return m_it == other.m_it; }
-            inline bool operator!=(const _Iterator &other) const { return m_it != other.m_it; }
+            inline bool                  operator==(const _Iterator &other) const { return m_it == other.m_it; }
+            inline bool                  operator!=(const _Iterator &other) const { return m_it != other.m_it; }
         };
 
     public:
@@ -250,8 +250,8 @@ namespace rt
                   std::enable_if_t<std::is_base_of<Resource, Type>::value, bool> = true>
         inline T *add(T *loader);
 
-        inline Iterator begin() { return _Iterator(m_resources.begin()); }
-        inline Iterator end() { return _Iterator(m_resources.end()); }
+        inline Iterator        begin() { return _Iterator(m_resources.begin()); }
+        inline Iterator        end() { return _Iterator(m_resources.end()); }
         inline ReverseIterator rbegin() { return _Iterator(m_resources.rbegin()); }
         inline ReverseIterator rend() { return _Iterator(m_resources.rend()); }
 

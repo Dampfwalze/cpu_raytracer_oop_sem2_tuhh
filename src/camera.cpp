@@ -1,5 +1,5 @@
-#include <scene/camera.h>
 #include <rt_imgui.h>
+#include <scene/camera.h>
 
 namespace rt
 {

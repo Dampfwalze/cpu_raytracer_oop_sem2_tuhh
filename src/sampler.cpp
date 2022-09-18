@@ -1,7 +1,7 @@
-#include <scene/sampler.h>
-#include <rt_imgui.h>
-#include <typeinfo>
 #include <map>
+#include <rt_imgui.h>
+#include <scene/sampler.h>
+#include <typeinfo>
 
 namespace rt
 {
@@ -75,7 +75,7 @@ namespace rt
 
         case FilterMethod::Linear:
         {
-            auto texPos = uv * (m::fvec2)(size - m::uvec2(1));
+            auto     texPos = uv * (m::fvec2)(size - m::uvec2(1));
             m::ivec2 t1 = m::floor(texPos);
             m::ivec2 t2 = m::ceil(texPos);
             m::ivec2 t3(t1.x, t2.y);

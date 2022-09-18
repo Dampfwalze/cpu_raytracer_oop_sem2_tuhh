@@ -34,7 +34,7 @@ namespace rt
     private:
         std::ostream *m_logger = nullptr;
 
-        bool m_logging = false;
+        bool            m_logging = false;
         std::thread::id m_currentThreadId;
 
     public:

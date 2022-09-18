@@ -1,12 +1,12 @@
 #ifndef PROFILER_HPP
 #define PROFILER_HPP
 
-#include <map>
-#include <vector>
-#include <thread>
-#include <memory>
 #include <chrono>
+#include <map>
+#include <memory>
 #include <mutex>
+#include <thread>
+#include <vector>
 
 namespace Profiling
 {
@@ -33,8 +33,8 @@ namespace Profiling
     struct FrameProfile
     {
         std::map<std::thread::id, std::vector<Task>> tasks;
-        time_point start;
-        time_point end;
+        time_point                                   start;
+        time_point                                   end;
     };
 
     std::ostream &operator<<(std::ostream &stream, const FrameProfile &profile);
@@ -42,12 +42,12 @@ namespace Profiling
     class Profiler
     {
         std::unique_ptr<FrameProfile> currentProfile;
-        std::mutex profileMutex;
+        std::mutex                    profileMutex;
 
     public:
         bool enabled = true;
 
-        inline FrameProfile *getProfile() { return currentProfile.get(); }
+        inline FrameProfile          *getProfile() { return currentProfile.get(); }
         std::unique_ptr<FrameProfile> exchangeProfile();
 
         void beginFrame();

@@ -2,8 +2,8 @@
 #define MATERIAL_HPP
 
 #include <rtmath.h>
-#include <scene/scene_object.h>
 #include <scene/sampler.h>
+#include <scene/scene_object.h>
 
 namespace rt
 {
@@ -17,13 +17,13 @@ namespace rt
     public:
         Material(const std::string_view &name);
 
-        virtual m::Color<float> render(const m::dvec3 &position,
-                                       const m::dvec3 &normal,
-                                       const m::dvec3 &hitDirection,
+        virtual m::Color<float> render(const m::dvec3   &position,
+                                       const m::dvec3   &normal,
+                                       const m::dvec3   &hitDirection,
                                        const SampleInfo &sampleInfo,
-                                       const Scene &scene,
+                                       const Scene      &scene,
                                        const RTRenderer &renderer,
-                                       int recursionDepth) = 0;
+                                       int               recursionDepth) = 0;
     };
 
     namespace Materials
@@ -40,24 +40,24 @@ namespace rt
 
         public:
             LitMaterial(const std::string_view &name,
-                        SamplerRef<> color,
-                        float ambient = 0.1f,
-                        float diffuse = 1.0f,
-                        float specular = 1.0f,
-                        float reflection = 0.1f);
+                        SamplerRef<>            color,
+                        float                   ambient = 0.1f,
+                        float                   diffuse = 1.0f,
+                        float                   specular = 1.0f,
+                        float                   reflection = 0.1f);
             LitMaterial(SamplerRef<> color,
-                        float ambient = 0.1f,
-                        float diffuse = 1.0f,
-                        float specular = 1.0f,
-                        float reflection = 0.1f);
+                        float        ambient = 0.1f,
+                        float        diffuse = 1.0f,
+                        float        specular = 1.0f,
+                        float        reflection = 0.1f);
 
-            virtual m::Color<float> render(const m::dvec3 &position,
-                                           const m::dvec3 &normal,
-                                           const m::dvec3 &hitDirection,
+            virtual m::Color<float> render(const m::dvec3   &position,
+                                           const m::dvec3   &normal,
+                                           const m::dvec3   &hitDirection,
                                            const SampleInfo &sampleInfo,
-                                           const Scene &scene,
+                                           const Scene      &scene,
                                            const RTRenderer &renderer,
-                                           int recursionDepth) override;
+                                           int               recursionDepth) override;
 
             virtual bool onInspectorGUI() override;
 

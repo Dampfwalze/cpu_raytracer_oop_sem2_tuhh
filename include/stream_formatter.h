@@ -12,7 +12,7 @@ namespace rtstd
     {
         using char_type = _Elem;
 
-        int indentSize = 4;
+        int       indentSize = 4;
         char_type indent = (char_type)' ';
         char_type openingBracket = (char_type)'{';
         char_type closingBracket = (char_type)'}';
@@ -35,9 +35,9 @@ namespace rtstd
 
         basic_formatterargs<_Elem> m_args;
 
-        int m_indentCount = 0;
+        int  m_indentCount = 0;
         bool m_drainWhitespace = false;
-        int m_deactivateCount = 0;
+        int  m_deactivateCount = 0;
 
         child_type &m_outStream;
 

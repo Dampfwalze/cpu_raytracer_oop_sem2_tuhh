@@ -1,8 +1,8 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <scene/transform.h>
 #include <scene/scene_object.h>
+#include <scene/transform.h>
 
 namespace rt
 {
@@ -10,8 +10,8 @@ namespace rt
     {
     public:
         Transform transform;
-        float FOV;
-        double zNear, zFar;
+        float     FOV;
+        double    zNear, zFar;
 
         struct Cached
         {

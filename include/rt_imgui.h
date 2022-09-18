@@ -1,7 +1,7 @@
 #include <imgui.h>
+#include <resource_container.h>
 #include <rtmath.h>
 #include <scene/transform.h>
-#include <resource_container.h>
 
 namespace rtImGui
 {
@@ -37,9 +37,9 @@ namespace rtImGui
     struct _drag_detail
     {
         static bool Drag(const char *label, T &value, float v_speed,
-                         const void *p_min,
-                         const void *p_max,
-                         const char *format,
+                         const void      *p_min,
+                         const void      *p_max,
+                         const char      *format,
                          ImGuiSliderFlags flags)
         {
             return ImGui::DragScalar(label, imGuiTypeFrom<T>(), &value, v_speed, p_min, p_max, format, flags);
@@ -50,9 +50,9 @@ namespace rtImGui
     struct _drag_detail<m::vec<D, T>>
     {
         static bool Drag(const char *label, m::vec<D, T> &value, float v_speed,
-                         const void *p_min,
-                         const void *p_max,
-                         const char *format,
+                         const void      *p_min,
+                         const void      *p_max,
+                         const char      *format,
                          ImGuiSliderFlags flags)
         {
             return ImGui::DragScalarN(label, imGuiTypeFrom<T>(), &value, D, v_speed, p_min, p_max, format, flags);
@@ -63,9 +63,9 @@ namespace rtImGui
     struct _drag_detail<m::qua<T>>
     {
         static bool Drag(const char *label, m::qua<T> &value, float v_speed,
-                         const void *p_min,
-                         const void *p_max,
-                         const char *format,
+                         const void      *p_min,
+                         const void      *p_max,
+                         const char      *format,
                          ImGuiSliderFlags flags)
         {
             return ImGui::DragScalarN(label, imGuiTypeFrom<T>(), &value, 4, v_speed, p_min, p_max, format, flags);
@@ -76,8 +76,8 @@ namespace rtImGui
     inline bool Drag(const char *label, T &value, float v_speed,
                      const std::optional<F> &p_min = std::nullopt,
                      const std::optional<F> &p_max = std::nullopt,
-                     const char *format = "%.3f",
-                     ImGuiSliderFlags flags = 0)
+                     const char             *format = "%.3f",
+                     ImGuiSliderFlags        flags = 0)
     {
         F _p_min = p_min.value_or(F());
         F _p_max = p_max.value_or(F());
@@ -92,8 +92,8 @@ namespace rtImGui
     inline bool Drag<rt::Transform, double>(const char *label, rt::Transform &value, float v_speed,
                                             const std::optional<double> &p_min,
                                             const std::optional<double> &p_max,
-                                            const char *format,
-                                            ImGuiSliderFlags flags)
+                                            const char                  *format,
+                                            ImGuiSliderFlags             flags)
     {
         if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -110,8 +110,8 @@ namespace rtImGui
     inline bool Drag<rt::Transform, std::nullptr_t>(const char *label, rt::Transform &value, float v_speed,
                                                     const std::optional<std::nullptr_t> &p_min,
                                                     const std::optional<std::nullptr_t> &p_max,
-                                                    const char *format,
-                                                    ImGuiSliderFlags flags)
+                                                    const char                          *format,
+                                                    ImGuiSliderFlags                     flags)
     {
         return Drag<rt::Transform, double>(label, value, v_speed);
     }
@@ -133,7 +133,7 @@ namespace rtImGui
             if (const ImGuiPayload *payload = ImGui::AcceptDragDropPayload("Resource"))
             {
                 assert(payload->DataSize == sizeof(void *));
-                void *ptr = payload->Data;
+                void                         *ptr = payload->Data;
                 rt::ResourceRef<rt::Resource> ref(*(void **)ptr);
                 if ((!ref) || ref.getType() == typeid(T))
                 {

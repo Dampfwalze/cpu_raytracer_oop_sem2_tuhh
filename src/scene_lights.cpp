@@ -1,5 +1,5 @@
-#include <scene/scene_lights.h>
 #include <rt_imgui.h>
+#include <scene/scene_lights.h>
 
 namespace rt
 {

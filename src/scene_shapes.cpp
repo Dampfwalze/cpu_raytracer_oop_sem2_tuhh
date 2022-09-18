@@ -2,8 +2,8 @@
 
 #include <stream_formatter.h>
 
-#include <rt_imgui.h>
 #include <pixel_logger.h>
+#include <rt_imgui.h>
 
 namespace rt
 {
@@ -107,7 +107,7 @@ namespace rt
 
             double s = ray.direction[D] > 0 == R ? -1 : 1; // What face is nearest?
             double t = (-ray.origin[D] + s * 0.5) / ray.direction[D];
-            auto p = ray(t);
+            auto   p = ray(t);
 
             if (t <= 0.01)
                 return false;
@@ -169,7 +169,7 @@ namespace rt
                 return std::nullopt;
             VoxelGrid &grid = this->grid->grid;
 
-            auto size = (m::dvec3)grid.getSize();
+            auto           size = (m::dvec3)grid.getSize();
             m::ray<double> ray;
 
             auto maybeIntersection = cubeIntersection(ray_);

@@ -1,12 +1,12 @@
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
 
-#include <rtmath.h>
-#include <thread_pool.h>
-#include <scene/scene.h>
 #include <frame_buffer.h>
-#include <render_params.h>
 #include <future>
+#include <render_params.h>
+#include <rtmath.h>
+#include <scene/scene.h>
+#include <thread_pool.h>
 
 namespace rt
 {

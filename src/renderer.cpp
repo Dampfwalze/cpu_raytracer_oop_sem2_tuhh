@@ -1,6 +1,6 @@
-#include <renderer.h>
 #include <pixel_logger.h>
 #include <profiler.h>
+#include <renderer.h>
 
 namespace rt
 {

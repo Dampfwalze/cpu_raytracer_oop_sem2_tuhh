@@ -4,14 +4,14 @@
 
 #include <application.h>
 #include <frame_buffer.h>
-#include <shader.h>
 #include <gl_error.h>
 #include <profiler.h>
+#include <shader.h>
 
 #include <rt_imgui.h>
 
-#include <iostream>
 #include <array>
+#include <iostream>
 
 namespace rt
 {
@@ -47,7 +47,7 @@ namespace rt
         static double pitch, yaw;
 
         auto &IO = ImGui::GetIO();
-        auto delta = IO.MouseDelta;
+        auto  delta = IO.MouseDelta;
 
         // if (delta.x == 0 && delta.y == 0)
         //     return;
@@ -112,13 +112,13 @@ namespace rt
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, (int)buffer.getWidth(), (int)buffer.getHeight(), 0, GL_RGB, GL_FLOAT, &buffer[0]);
     }
 
-    void APIENTRY errorCallback(GLenum source,
-                                GLenum type,
-                                GLuint id,
-                                GLenum severity,
-                                GLsizei length,
+    void APIENTRY errorCallback(GLenum        source,
+                                GLenum        type,
+                                GLuint        id,
+                                GLenum        severity,
+                                GLsizei       length,
                                 const GLchar *message,
-                                const void *userParam)
+                                const void   *userParam)
     {
         std::cout << "OpenGL Error: " << message << std::endl;
     }
@@ -126,7 +126,7 @@ namespace rt
     void WindowThread::run()
     {
         Windowing windowing;
-        Window window;
+        Window    window;
 
         window.beginDraw();
 
@@ -262,9 +262,9 @@ namespace rt
             if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
             {
                 auto &renderParams = m_application.renderThread.renderParams;
-                bool changed = false;
+                bool  changed = false;
 
-                auto &tileSize = renderParams.tileSize;
+                auto  &tileSize = renderParams.tileSize;
                 size_t min = 1, max = 128;
                 ImGui::SliderScalar("Tile size", ImGuiDataType_U64, &tileSize.x, &min, &max);
                 tileSize.y = tileSize.x;
@@ -355,8 +355,8 @@ namespace rt
                     ImGui::TextUnformatted(resource.getPath().string().c_str());
                     if (resource && dynamic_cast<Resources::TextureResource *>((Resource *)resource))
                     {
-                        auto &img = dynamic_cast<Resources::TextureResource &>(*(Resource *)resource);
-                        auto size = img.getSize();
+                        auto  &img = dynamic_cast<Resources::TextureResource &>(*(Resource *)resource);
+                        auto   size = img.getSize();
                         GLenum formatMap[] = {
                             GL_RED,
                             0,

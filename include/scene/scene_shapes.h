@@ -1,11 +1,11 @@
 #ifndef SCENE_SHAPES_HPP
 #define SCENE_SHAPES_HPP
 
-#include <scene/transform.h>
-#include <scene/scene_object.h>
-#include <scene/sampler.h>
-#include <voxel_grid.h>
 #include <resources.h>
+#include <scene/sampler.h>
+#include <scene/scene_object.h>
+#include <scene/transform.h>
+#include <voxel_grid.h>
 
 #include <memory>
 
@@ -15,17 +15,17 @@ namespace rt
 
     struct Intersection
     {
-        m::dvec3 position;
-        m::dvec3 normal;
+        m::dvec3    position;
+        m::dvec3    normal;
         SceneShape *object;
-        SampleInfo sampleInfo;
+        SampleInfo  sampleInfo;
     };
 
     class SceneShape : public SceneObject
     {
     public:
         Transform transform;
-        size_t materialIndex;
+        size_t    materialIndex;
 
     private:
     public:

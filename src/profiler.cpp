@@ -156,10 +156,10 @@ namespace rtImGui
         {
             ImGui::PopStyleVar();
 
-            ImGuiWindow *window = ImGui::GetCurrentWindow();
-            ImDrawList *drawList = window->DrawList;
+            ImGuiWindow  *window = ImGui::GetCurrentWindow();
+            ImDrawList   *drawList = window->DrawList;
             ImGuiStorage *storage = window->DC.StateStorage;
-            ImGuiIO IO = ImGui::GetIO();
+            ImGuiIO       IO = ImGui::GetIO();
 
             ImGuiID zoom_id = window->GetID("Zoom");
             ImGuiID pressed_id = window->GetID("Pressed");
@@ -257,9 +257,9 @@ namespace rtImGui
             std::map<const char *, size_t> colorMap;
 
             float height = viewport.GetHeight() / profile.tasks.size();
-            auto startTime = profile.start;
-            auto profileDuration = (profile.end - profile.start).count();
-            int i = 0;
+            auto  startTime = profile.start;
+            auto  profileDuration = (profile.end - profile.start).count();
+            int   i = 0;
             for (auto &&thread : profile.tasks)
             {
                 for (size_t j = 0; j < thread.second.size(); j++)

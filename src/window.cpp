@@ -1,13 +1,13 @@
+#include <glad/glad.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <glad/glad.h>
 #include <window.h>
 
-#include <iostream>
-#include <stdexcept>
-#include <sstream>
 #include <algorithm>
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
 #include <string>
 
 namespace rt
@@ -25,7 +25,7 @@ namespace rt
     void glfwCheckError(const char *fileName, size_t line, const char *function, const char *message)
     {
         const char *description;
-        int value = glfwGetError(&description);
+        int         value = glfwGetError(&description);
         if (value != GLFW_NO_ERROR)
         {
 #ifdef _DEBUG

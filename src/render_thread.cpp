@@ -1,7 +1,7 @@
-#include <render_thread.h>
-#include <stream_formatter.h>
 #include <pixel_logger.h>
 #include <profiler.h>
+#include <render_thread.h>
+#include <stream_formatter.h>
 
 namespace rt
 {
@@ -61,7 +61,7 @@ namespace rt
 
                 m_isRendering = true;
 
-                std::stringstream ss;
+                std::stringstream      ss;
                 rtstd::formatterstream logger(ss);
                 PixelLogger::logger.setStream(&logger);
 

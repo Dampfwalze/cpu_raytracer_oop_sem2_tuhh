@@ -1,5 +1,5 @@
-#include <rt_renderer.h>
 #include <pixel_logger.h>
+#include <rt_renderer.h>
 
 namespace rt
 {

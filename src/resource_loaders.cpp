@@ -21,7 +21,7 @@ namespace rt
         {
             union
             {
-                char name[4];
+                char     name[4];
                 uint32_t nameAsInt;
             };
             uint32_t contentSize;
@@ -114,7 +114,7 @@ namespace rt
             bool isHDR = stbi_is_hdr(pathStr.c_str());
             if (isHDR)
             {
-                int w, h, c;
+                int  w, h, c;
                 auto img = stbi_loadf(pathStr.c_str(), &w, &h, &c, 0);
                 if (img == nullptr)
                     throw IOException(IOException::Type::FileCorrupt, stbi_failure_reason());
@@ -123,7 +123,7 @@ namespace rt
             }
             else
             {
-                int w, h, c;
+                int  w, h, c;
                 auto img = stbi_load(pathStr.c_str(), &w, &h, &c, 0);
                 if (img == nullptr)
                     throw IOException(IOException::Type::FileCorrupt, stbi_failure_reason());

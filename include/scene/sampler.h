@@ -1,9 +1,9 @@
 #ifndef SAMPLER_HPP
 #define SAMPLER_HPP
 
-#include <rtmath.h>
 #include <memory>
 #include <resources.h>
+#include <rtmath.h>
 #include <scene/scene_object.h>
 
 namespace rt
@@ -25,7 +25,7 @@ namespace rt
         {
             m::fvec2 asUV;
             m::fvec3 asDirection;
-            size_t asIndex;
+            size_t   asIndex;
         };
     };
 
@@ -90,18 +90,18 @@ namespace rt
         public:
             TextureSampler() : Sampler("Texture Sampler") {}
             TextureSampler(const ResourceRef<Resources::TextureResource> &texture,
-                           FilterMethod filterMethod,
-                           WrapMethod wrapMethod = WrapMethod::Repeat)
+                           FilterMethod                                   filterMethod,
+                           WrapMethod                                     wrapMethod = WrapMethod::Repeat)
                 : texture(texture), filterMethod(filterMethod), wrapMethod(wrapMethod), Sampler("Texture Sampler") {}
             TextureSampler(const ResourceRef<Resources::TextureResource> &texture,
-                           WrapMethod wrapMethod)
+                           WrapMethod                                     wrapMethod)
                 : texture(texture), wrapMethod(wrapMethod), Sampler("Texture Sampler") {}
             TextureSampler(const ResourceRef<Resources::TextureResource> &texture)
                 : texture(texture), Sampler("Texture Sampler") {}
 
             TextureSampler(const std::string_view &name, const ResourceRef<Resources::TextureResource> &texture,
                            FilterMethod filterMethod,
-                           WrapMethod wrapMethod = WrapMethod::Repeat)
+                           WrapMethod   wrapMethod = WrapMethod::Repeat)
                 : texture(texture), filterMethod(filterMethod), wrapMethod(wrapMethod), Sampler(name) {}
             TextureSampler(const std::string_view &name, const ResourceRef<Resources::TextureResource> &texture,
                            WrapMethod wrapMethod)
@@ -157,10 +157,10 @@ namespace rt
         SamplerRef(std::unique_ptr<F> &&ptr)
             : m_ptr(static_cast<T *>(ptr.release())) {}
 
-        inline operator bool() const { return m_ptr.operator bool(); }
-        inline T *operator->() { return m_ptr.get(); }
+        inline          operator bool() const { return m_ptr.operator bool(); }
+        inline T       *operator->() { return m_ptr.get(); }
         inline const T *operator->() const { return m_ptr.get(); }
-        inline T &operator*() { return *m_ptr; }
+        inline T       &operator*() { return *m_ptr; }
         inline const T &operator*() const { return *m_ptr; }
 
         inline bool onInspectorGUI() { return m_ptr->onInspectorGUI(); }
@@ -182,10 +182,10 @@ namespace rt
         SamplerRef(std::unique_ptr<F> &&ptr)
             : m_ptr(static_cast<Sampler *>(ptr.release())) {}
 
-        inline operator bool() const { return m_ptr.operator bool(); }
-        inline Sampler *operator->() { return m_ptr.get(); }
+        inline                operator bool() const { return m_ptr.operator bool(); }
+        inline Sampler       *operator->() { return m_ptr.get(); }
         inline const Sampler *operator->() const { return m_ptr.get(); }
-        inline Sampler &operator*() { return *m_ptr; }
+        inline Sampler       &operator*() { return *m_ptr; }
         inline const Sampler &operator*() const { return *m_ptr; }
 
         bool onInspectorGUI();

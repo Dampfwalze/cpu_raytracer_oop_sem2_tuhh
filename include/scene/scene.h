@@ -1,14 +1,14 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
-#include <scene/scene_shapes.h>
-#include <scene/scene_lights.h>
 #include <scene/camera.h>
 #include <scene/material.h>
+#include <scene/scene_lights.h>
+#include <scene/scene_shapes.h>
 
-#include <vector>
 #include <map>
 #include <memory>
+#include <vector>
 
 namespace rt
 {
@@ -36,8 +36,8 @@ namespace rt
         Scene(const Camera &camera);
         ~Scene();
 
-        void addShape(SceneShape *shape);
-        void addLight(SceneLight *light);
+        void   addShape(SceneShape *shape);
+        void   addLight(SceneLight *light);
         size_t addMaterial(Material *material);
 
         Material *getMaterial(size_t index) const;

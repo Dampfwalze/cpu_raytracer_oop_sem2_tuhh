@@ -1,9 +1,9 @@
 #ifndef EVENT_STREAM_HPP
 #define EVENT_STREAM_HPP
 
+#include <condition_variable>
 #include <deque>
 #include <mutex>
-#include <condition_variable>
 
 namespace rt
 {
@@ -17,8 +17,8 @@ namespace rt
         duration waitingTime;
 
     private:
-        std::deque<event_type> m_que;
-        std::mutex m_mutex;
+        std::deque<event_type>  m_que;
+        std::mutex              m_mutex;
         std::condition_variable m_cv;
 
     public:

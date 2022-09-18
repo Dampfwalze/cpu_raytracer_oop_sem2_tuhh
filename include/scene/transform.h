@@ -1,8 +1,8 @@
 #ifndef TRANSFORM_HPP
 #define TRANSFORM_HPP
 
-#include <rtmath.h>
 #include <optional>
+#include <rtmath.h>
 
 namespace rt
 {

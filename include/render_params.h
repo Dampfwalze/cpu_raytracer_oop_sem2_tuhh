@@ -10,7 +10,7 @@ namespace rt
     struct RenderParams
     {
         m::u64vec2 tileSize;
-        float mixingFactor = 1.88f;
+        float      mixingFactor = 1.88f;
 
         int recursionDeph = 3;
 

@@ -1,7 +1,7 @@
 #include <scene/scene.h>
 
-#include <stream_formatter.h>
 #include <rt_imgui.h>
+#include <stream_formatter.h>
 
 #include <iomanip>
 
@@ -54,7 +54,7 @@ namespace rt
     std::optional<Intersection> Scene::castRay(const m::ray<double> &ray, std::optional<double> maxLength2) const
     {
         Intersection nearestInter;
-        double nearestDist2 = std::numeric_limits<double>::max();
+        double       nearestDist2 = std::numeric_limits<double>::max();
 
         for (auto &&i : objects)
         {

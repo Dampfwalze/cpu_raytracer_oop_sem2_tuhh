@@ -1,11 +1,11 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
-#include <window_thread.h>
-#include <scene/scene.h>
 #include <event_stream.h>
 #include <render_thread.h>
 #include <resource_container.h>
+#include <scene/scene.h>
+#include <window_thread.h>
 
 #include <map>
 #include <variant>
