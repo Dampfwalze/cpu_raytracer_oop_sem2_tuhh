@@ -10,6 +10,9 @@
     - [GLFW](https://www.glfw.org/)
     - [Glad](https://glad.dav1d.de/)
     - [Dear ImGui](https://github.com/ocornut/imgui)
+    - [STB Image](https://github.com/nothings/stb)
+    - [GLM](https://glm.g-truc.net/0.9.9/index.html)
+    - [yaml-cpp](https://github.com/jbeder/yaml-cpp)
 
 ## How to run
 
