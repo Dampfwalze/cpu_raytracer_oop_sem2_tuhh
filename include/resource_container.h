@@ -144,6 +144,10 @@ namespace rt
         inline Resource *operator->() const { return (Resource *)m_ptr->ptr.get(); }
         inline Resource &operator*() { return *(m_ptr->ptr); };
         inline Resource &operator*() const { return *(m_ptr->ptr); }
+        inline bool      operator<(const ResourceRef<Resource> &other) const { return m_ptr < other.m_ptr; }
+        inline bool      operator>(const Resource *other) const { return m_ptr->ptr.get() > other; }
+        inline bool      operator==(const ResourceRef<Resource> &other) const { return m_ptr == other.m_ptr; }
+        inline bool      operator!=(const ResourceRef<Resource> &other) const { return m_ptr != other.m_ptr; }
 
         inline const bool                   hasException() const { return (m_ptr->state == _SharedResourceState::State::Failed); }
         inline const std::filesystem::path &getPath() const { return m_ptr->path; }

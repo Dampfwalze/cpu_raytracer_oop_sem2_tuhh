@@ -207,6 +207,30 @@ namespace rt
 
             window.renderDockSpace();
 
+            if (ImGui::BeginMainMenuBar())
+            {
+                if (ImGui::BeginMenu("File"))
+                {
+                    if (ImGui::MenuItem("New"))
+                    {
+                    }
+                    if (ImGui::MenuItem("Open" /*, "Ctrl+O"*/))
+                    {
+                        std::cout << "Open" << std::endl;
+                    }
+                    if (ImGui::MenuItem("Save" /*, "Ctrl+S"*/))
+                    {
+                        std::cout << "Save" << std::endl;
+                        m_application << Application::Events::SaveScene{"scenes/example2.yaml"};
+                    }
+                    if (ImGui::MenuItem("Save As.."))
+                    {
+                    }
+                    ImGui::EndMenu();
+                }
+                ImGui::EndMainMenuBar();
+            }
+
             ImGui::ShowDemoWindow(nullptr);
 
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));

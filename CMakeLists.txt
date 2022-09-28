@@ -38,6 +38,7 @@ set(SOURCES
     src/profiler.cpp
     src/resource_container.cpp
     src/resource_loaders.cpp
+    src/scene_serializer.cpp
 )
 
 FILE(GLOB_RECURSE HEADERS include/*.h)

@@ -4,6 +4,7 @@
 #include <resource_loaders.h>
 #include <resources.h>
 #include <rt_renderer.h>
+#include <scene/scene_serializer.h>
 #include <stream_formatter.h>
 
 namespace rt
@@ -66,6 +67,18 @@ namespace rt
             {
             case EventType::CloseApplication:
                 running = false;
+                break;
+            case EventType::SaveScene:
+                try
+                {
+                    SceneSerializer serializer;
+                    serializer.serialize(*scene, std::cout);
+                }
+                catch (const std::exception &e)
+                {
+                    std::cerr << e.what() << '\n';
+                }
+
                 break;
             }
         }
