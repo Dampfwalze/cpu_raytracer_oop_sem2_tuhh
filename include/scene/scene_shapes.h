@@ -78,7 +78,7 @@ namespace rt
             ResourceRef<Resources::VoxelGridResource> grid;
 
             VoxelShape(ResourceRef<Resources::VoxelGridResource> grid, const std::string_view &name, const Transform &transform = Transform(), size_t materialIndex = 0);
-            VoxelShape(ResourceRef<Resources::VoxelGridResource> grid, const Transform &transform = Transform(), size_t materialIndex = 0);
+            VoxelShape(ResourceRef<Resources::VoxelGridResource> grid = {}, const Transform &transform = Transform(), size_t materialIndex = 0);
 
             virtual std::optional<Intersection> intersect(const m::ray<double> &ray) const override;
 

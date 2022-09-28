@@ -76,7 +76,8 @@ namespace rt
                 result = mixColor(result, specular * lightColor * glm::max(0.0f, (float)m::dot(hitDirection, m::reflect(lightDirection, normal))), renderer.renderParams->mixingFactor);
             }
             PIXEL_LOGGER_LOG(" }");
-            return mixColor(result, e_reflection, renderer.renderParams->mixingFactor) * color->sample(sampleInfo);
+            auto sampled = color ? color->sample(sampleInfo) : Color(1.0, 0.0, 1.0);
+            return mixColor(result, e_reflection, renderer.renderParams->mixingFactor) * sampled;
         }
 
         bool LitMaterial::onInspectorGUI()

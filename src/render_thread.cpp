@@ -38,6 +38,13 @@ namespace rt
         m_eventStream << Event(scene, frameBuffer);
     }
 
+    void RenderThread::waitUntilFinished()
+    {
+        std::unique_lock<std::mutex> lock(m_renderFinished_mutex);
+        m_renderFinished_cv.wait(lock, [this]
+                                 { return !m_isRendering; });
+    }
+
     void RenderThread::setRenderer(Renderer *renderer)
     {
         assert(!isRendering());
@@ -75,6 +82,7 @@ namespace rt
                 renderLog = ss.str();
 
                 m_isRendering = false;
+                m_renderFinished_cv.notify_all();
                 break;
             }
         }

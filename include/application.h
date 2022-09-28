@@ -19,6 +19,7 @@ namespace rt
         {
             Render,
             CloseApplication,
+            LoadScene,
             SaveScene,
         };
 
@@ -30,13 +31,17 @@ namespace rt
             struct CloseApplication
             {
             };
+            struct LoadScene
+            {
+                std::filesystem::path path;
+            };
             struct SaveScene
             {
                 std::filesystem::path path;
             };
         };
 
-        using Event = std::variant<Events::Render, Events::CloseApplication, Events::SaveScene>;
+        using Event = std::variant<Events::Render, Events::CloseApplication, Events::LoadScene, Events::SaveScene>;
 
     public:
         std::filesystem::path originPath;

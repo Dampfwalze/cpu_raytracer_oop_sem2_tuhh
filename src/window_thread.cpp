@@ -217,6 +217,7 @@ namespace rt
                     if (ImGui::MenuItem("Open" /*, "Ctrl+O"*/))
                     {
                         std::cout << "Open" << std::endl;
+                        m_application << Application::Events::LoadScene{"scenes/example1.yaml"};
                     }
                     if (ImGui::MenuItem("Save" /*, "Ctrl+S"*/))
                     {

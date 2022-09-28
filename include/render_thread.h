@@ -50,6 +50,9 @@ namespace rt
 
         RenderParams m_renderParams;
 
+        std::mutex              m_renderFinished_mutex;
+        std::condition_variable m_renderFinished_cv;
+
     public:
         RenderParams renderParams;
 
@@ -64,6 +67,7 @@ namespace rt
         void startRender(Scene &scene, FrameBuffer &frameBuffer);
 
         inline bool isRendering() const { return m_isRendering; }
+        void        waitUntilFinished();
 
         void             setRenderer(Renderer *renderer);
         inline Renderer *getRenderer() { return m_renderer; };

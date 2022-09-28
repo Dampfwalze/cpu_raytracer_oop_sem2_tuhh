@@ -4,6 +4,7 @@
 #include <resource_loaders.h>
 #include <resources.h>
 #include <rt_renderer.h>
+#include <scene/scene_deserializer.h>
 #include <scene/scene_serializer.h>
 #include <stream_formatter.h>
 
@@ -67,6 +68,26 @@ namespace rt
             {
             case EventType::CloseApplication:
                 running = false;
+                break;
+            case EventType::LoadScene:
+                try
+                {
+                    SceneDeserializer deserializer(&resources, originPath / "resource");
+
+                    auto scene = deserializer.deserializeFile(std::get<Events::LoadScene>(event).path);
+
+                    rtstd::formatterstream(std::cout) << *scene << std::endl;
+
+                    renderThread.waitUntilFinished();
+                    this->scene = std::unique_ptr<Scene>(scene);
+
+                    *this << Events::Render();
+                }
+                catch (const std::exception &e)
+                {
+                    std::cerr << e.what() << '\n';
+                }
+
                 break;
             case EventType::SaveScene:
                 try
