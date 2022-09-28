@@ -16,6 +16,8 @@
 
 ## How to run
 
+> **_NOTE:_**  If you want to run the GUI on Wsl, you need to install a X-Server like described [here](https://collaborating.tuhh.de/cpf5546/oop-sose22/-/blob/master/exercises/sX/vcxsrv.md)
+
 ### In the terminal
 
 1. Generate the project using CMake
@@ -50,11 +52,12 @@ When using MSVC, the binarys are in a subfolder according to the specified confi
 ### With VS Code
 
 1. Open the source directory in VS Code
+    (This can be done from the terminal using `code .` in CMD, PowerShell or bash, for example when using Wsl)
 2. Install necessary extensions:
     - CMake Tools
     - C/C++
 3. Select a generator in the bottom bar
-4. Press `F5` to run
+4. Press `F5` to debug or `Ctrl+F5` to run. Alternatively, you can use the `Run` and `Debug` buttons in the bottom bar, provided by the cmake tools extension
 
 ### With Visual Studio
 
