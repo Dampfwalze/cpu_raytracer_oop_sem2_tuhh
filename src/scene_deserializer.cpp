@@ -79,16 +79,29 @@ namespace rt
         return index;
     }
 
+    YAML::Node _getAlias(const YAML::Node &node, const char *arg)
+    {
+        return node[arg];
+    }
+    template <typename... Args>
+    YAML::Node _getAlias(const YAML::Node &node, const char *arg, Args... args)
+    {
+        auto n = node[arg];
+        if (n)
+            return n;
+        return _getAlias(node, args...);
+    }
+
     Scene &SceneDeserializer::deserialize(Scene &scene, const YAML::Node &node)
     {
         assertNode(node, "Scene node not found");
         assertNode(node.IsMap(), "Scene node must be a map");
 
-        deserialize(scene.materials, node["materials"]);
-        deserialize(scene.objects, node["shapes"]);
-        deserialize(scene.lights, node["lights"]);
-        deserialize(scene.camera, node["camera"]);
-        deserialize(scene.environmentTexture, node["environment"]);
+        deserialize(scene.materials, _getAlias(node, "materials", "material", "mat", "mats", "m"));
+        deserialize(scene.objects, _getAlias(node, "shapes", "shape", "objects", "object", "objs", "obj", "s"));
+        deserialize(scene.lights, _getAlias(node, "lights", "light", "l"));
+        deserialize(scene.camera, _getAlias(node, "camera", "cam", "c"));
+        deserialize(scene.environmentTexture, _getAlias(node, "environment_tex", "environment", "env_tex", "env", "e"));
 
         return scene;
     }
