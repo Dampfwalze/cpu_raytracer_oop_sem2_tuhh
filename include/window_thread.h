@@ -29,6 +29,10 @@ namespace rt
     private:
         void cameraController();
         void run();
+
+        void save();
+        void saveAs();
+        void open();
     };
 
 } // namespace rt

@@ -6,6 +6,7 @@
 
 #include <yaml-cpp/yaml.h>
 
+#include <filesystem>
 #include <iostream>
 
 namespace rt
@@ -24,7 +25,7 @@ namespace rt
         SceneSerializer() = default;
         ~SceneSerializer() = default;
 
-        void        serialize(const Scene &scene, const std::string_view &path);
+        void        serialize(const Scene &scene, const std::filesystem::path &path);
         std::string serialize(const Scene &scene);
         void        serialize(const Scene &scene, std::ostream &stream);
         void        serialize(const Scene &scene, YAML::Emitter &emitter);

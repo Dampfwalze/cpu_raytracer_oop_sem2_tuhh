@@ -8,9 +8,9 @@ namespace rt
 {
     thread_local SceneSerializerData *_data;
 
-    void SceneSerializer::serialize(const Scene &scene, const std::string_view &path)
+    void SceneSerializer::serialize(const Scene &scene, const std::filesystem::path &path)
     {
-        std::ofstream file(path.data());
+        std::ofstream file(path);
         if (!file.is_open())
         {
             throw std::runtime_error("Failed to open file for writing");

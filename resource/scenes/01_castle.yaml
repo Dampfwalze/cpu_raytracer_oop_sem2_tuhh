@@ -1,0 +1,54 @@
+scene:
+  camera:
+    transform:
+      position: [-4.9037866592407227, 7.870999813079834, 8.4922456741333008]
+      rotation: [-0.2082257866859436, -0.23572231829166412, -0.051784701645374298, 0.94783717393875122]
+      # scale: [1, 1, 1]
+    fov: 61
+    # near: 0.01
+    # far: 2
+  shapes:
+    - !plane
+      name: Floor Plane
+      # transform:
+      #   position: [0, 0, 0]
+      #   rotation: [0, 0, 0, 1]
+      #   scale: [1, 1, 1]
+      material: 0
+    - !voxel
+      name: Castle
+      transform:
+        position: [0, 3.5, 0]
+        rotation: [0, 0.70710676908493042, 0.70710676908493042, 0]
+        scale: [7, 7, 7]
+      material: 1
+      voxel_grid: resource_0
+  lights:
+    - !directional
+      direction: [0.23999999463558197, 1, 0.68999999761581421]
+      intensity: 0.699999988
+      color: 0xfff8d0
+  materials:
+    0: !lit
+      name: Floor
+      color: !color
+        # name: Color Sampler
+        color: 0x1a0007
+      ambient: 0.100000001
+      diffuse: 1
+      specular: 1
+      reflection: 0.100000001
+    1: !lit
+      name: Castle
+      color: !palette
+        # name: Palette Sampler
+        palette: resource_0
+      ambient: 0.0199999996
+      diffuse: 1
+      specular: 1
+      reflection: 0.430000007
+  environment: !color
+    # name: Color Sampler
+    color: 0x0
+resources:
+  resource_0: castle.vox

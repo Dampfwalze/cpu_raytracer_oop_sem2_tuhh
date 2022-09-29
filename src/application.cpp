@@ -93,7 +93,7 @@ namespace rt
                 try
                 {
                     SceneSerializer serializer;
-                    serializer.serialize(*scene, std::cout);
+                    serializer.serialize(*scene, std::get<Events::SaveScene>(event).path);
                 }
                 catch (const std::exception &e)
                 {

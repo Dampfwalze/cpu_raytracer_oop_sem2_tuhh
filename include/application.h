@@ -8,6 +8,7 @@
 #include <window_thread.h>
 
 #include <map>
+#include <optional>
 #include <variant>
 
 namespace rt
@@ -57,6 +58,8 @@ namespace rt
         FrameBuffer frameBuffer;
 
         RenderThread renderThread;
+
+        std::optional<std::filesystem::path> savePath;
 
     private:
         WindowThread m_window;

@@ -13,6 +13,8 @@
 #include <array>
 #include <iostream>
 
+#include <file_dialog.h>
+
 namespace rt
 {
     WindowThread::WindowThread(Application &application)
@@ -102,6 +104,48 @@ namespace rt
 
         m_application
             << Application::Events::Render();
+    }
+
+    void WindowThread::save()
+    {
+        if (m_application.savePath)
+            m_application << Application::Events::SaveScene(*m_application.savePath);
+        else
+            saveAs();
+    }
+
+    void WindowThread::saveAs()
+    {
+        try
+        {
+            auto path = FileDialog::saveDialog("yaml");
+            if (path)
+            {
+                m_application.savePath = *path;
+                m_application << Application::Events::SaveScene{*path};
+            }
+        }
+        catch (std::exception &e)
+        {
+            std::cout << e.what() << std::endl;
+        }
+    }
+
+    void WindowThread::open()
+    {
+        try
+        {
+            auto path = FileDialog::fileDialog("yaml");
+            if (path)
+            {
+                m_application.savePath = *path;
+                m_application << Application::Events::LoadScene{*path};
+            }
+        }
+        catch (std::exception &e)
+        {
+            std::cout << e.what() << std::endl;
+        }
     }
 
     static void copyBuffer(const FrameBuffer &buffer, GLuint texture)
@@ -213,19 +257,19 @@ namespace rt
                 {
                     if (ImGui::MenuItem("New"))
                     {
+                        // TODO: implement
                     }
                     if (ImGui::MenuItem("Open" /*, "Ctrl+O"*/))
                     {
-                        std::cout << "Open" << std::endl;
-                        m_application << Application::Events::LoadScene{"scenes/example1.yaml"};
+                        open();
                     }
                     if (ImGui::MenuItem("Save" /*, "Ctrl+S"*/))
                     {
-                        std::cout << "Save" << std::endl;
-                        m_application << Application::Events::SaveScene{"scenes/example2.yaml"};
+                        save();
                     }
                     if (ImGui::MenuItem("Save As.."))
                     {
+                        saveAs();
                     }
                     ImGui::EndMenu();
                 }

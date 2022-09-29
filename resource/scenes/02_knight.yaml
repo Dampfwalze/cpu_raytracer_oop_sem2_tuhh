@@ -1,0 +1,54 @@
+scene:
+  camera:
+    transform:
+      position: [-3.1660478115081787, 4.4989418983459473, -5.2922325134277344]
+      rotation: [0.047978788614273071, 0.94588959217071533, 0.16480384767055511, -0.27537363767623901]
+      # scale: [1, 1, 1]
+    fov: 61
+    # near: 0.01
+    # far: 2
+  shapes:
+    - !plane
+      name: Floor Plane
+      # transform:
+      #   position: [0, 0, 0]
+      #   rotation: [0, 0, 0, 1]
+      #   scale: [1, 1, 1]
+      material: 0
+    - !voxel
+      name: Knight Voxel
+      transform:
+        position: [0, 3.5, 0]
+        rotation: [0, 0.70710676908493042, 0.70710676908493042, 0]
+        scale: [7, 7, 7]
+      material: 1
+      voxel_grid: resource_0
+  lights:
+    - !directional
+      direction: [-0.64999997615814209, 0.23000000417232513, -0.80000001192092896]
+      intensity: 1.01999998
+      color: 0xfff8d0
+  materials:
+    0: !lit
+      name: Floor
+      color: !color
+        # name: Color Sampler
+        color: 0x1a0007
+      ambient: 0.100000001
+      diffuse: 1
+      specular: 1
+      reflection: 0.100000001
+    1: !lit
+      name: Knight
+      color: !palette
+        # name: Palette Sampler
+        palette: resource_0
+      ambient: 0
+      diffuse: 1
+      specular: 0.639999986
+      reflection: 0
+  environment: !color
+    # name: Color Sampler
+    color: 0x0
+resources:
+  resource_0: chr_knight.vox
