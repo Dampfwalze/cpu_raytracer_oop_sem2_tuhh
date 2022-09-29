@@ -87,6 +87,7 @@ namespace rt
     YAML::Emitter &operator<<(YAML::Emitter &emitter, const Shapes::Plane &plane)
     {
         return emitter << YAML::BeginMap
+                       << YAML::Key << "name" << YAML::Value << plane.name
                        << YAML::Key << "transform" << YAML::Value << plane.transform
                        << YAML::Key << "material" << YAML::Value << plane.materialIndex
                        << YAML::EndMap;
@@ -95,6 +96,7 @@ namespace rt
     YAML::Emitter &operator<<(YAML::Emitter &emitter, const Shapes::Sphere &sphere)
     {
         return emitter << YAML::BeginMap
+                       << YAML::Key << "name" << YAML::Value << sphere.name
                        << YAML::Key << "transform" << YAML::Value << sphere.transform
                        << YAML::Key << "radius" << YAML::Value << sphere.radius
                        << YAML::Key << "material" << YAML::Value << sphere.materialIndex
@@ -104,6 +106,7 @@ namespace rt
     YAML::Emitter &operator<<(YAML::Emitter &emitter, const Shapes::Cube &cube)
     {
         return emitter << YAML::BeginMap
+                       << YAML::Key << "name" << YAML::Value << cube.name
                        << YAML::Key << "transform" << YAML::Value << cube.transform
                        << YAML::Key << "material" << YAML::Value << cube.materialIndex
                        << YAML::EndMap;
@@ -112,6 +115,7 @@ namespace rt
     YAML::Emitter &operator<<(YAML::Emitter &emitter, const Shapes::VoxelShape &voxel)
     {
         return emitter << YAML::BeginMap
+                       << YAML::Key << "name" << YAML::Value << voxel.name
                        << YAML::Key << "transform" << YAML::Value << voxel.transform
                        << YAML::Key << "material" << YAML::Value << voxel.materialIndex
                        << YAML::Key << "voxel_grid" << YAML::Value << voxel.grid
@@ -259,7 +263,7 @@ namespace rt
     {
         return emitter << YAML::BeginMap
                        << YAML::Key << "transform" << YAML::Value << camera.transform
-                       << YAML::Key << "fov" << YAML::Value << camera.FOV
+                       << YAML::Key << "fov" << YAML::Value << glm::degrees(camera.FOV)
                        << YAML::Key << "near" << YAML::Value << camera.zNear
                        << YAML::Key << "far" << YAML::Value << camera.zFar
                        << YAML::EndMap;

@@ -152,7 +152,7 @@ namespace rt
             deserialize(camera.transform, node["transform"]);
 
             if (auto fovNode = node["fov"])
-                camera.FOV = fovNode.as<float>();
+                camera.FOV = glm::radians(fovNode.as<float>());
 
             if (auto nearNode = node["near"])
                 camera.zNear = nearNode.as<double>();
