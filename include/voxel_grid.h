@@ -14,7 +14,7 @@ namespace rt
     public:
         struct Voxel
         {
-            char colorIndex;
+            unsigned char colorIndex;
         };
 
     private:
