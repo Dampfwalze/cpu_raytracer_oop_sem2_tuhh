@@ -132,7 +132,7 @@ namespace rt
             PaletteSampler(const std::string_view &name, ResourceRef<Resources::VoxelGridResource> palette)
                 : palette(palette), Sampler(name) {}
 
-            virtual m::Color<float> sampleIndex(size_t index) const override { return palette ? palette->colorPalette[index] : invalidColor; }
+            virtual m::Color<float> sampleIndex(size_t index) const override { return palette ? palette->colorPalette[(unsigned)index] : invalidColor; }
 
             virtual bool onInspectorGUI() override;
 

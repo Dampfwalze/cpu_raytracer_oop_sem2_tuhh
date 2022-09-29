@@ -126,7 +126,7 @@ namespace rt
         ImGui::NewFrame();
 
         ImGuiIO &io = ImGui::GetIO();
-        io.DisplaySize = ImVec2(getWidth(), getHeight());
+        io.DisplaySize = ImVec2((float)getWidth(), (float)getHeight());
     }
 
     void Window::endGUI()

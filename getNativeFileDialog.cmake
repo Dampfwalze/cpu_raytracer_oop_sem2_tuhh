@@ -24,4 +24,8 @@ endif()
 
 add_library(nfd OBJECT ${nfd_SOURCE_FILES})
 
+if(MSVC)
+    target_compile_definitions(nfd PRIVATE _CRT_SECURE_NO_WARNINGS)
+endif()
+
 target_include_directories(nfd PUBLIC "${nfd_SOURCE_DIR}/src/include")

@@ -9,7 +9,7 @@ namespace rt
 {
     namespace m = math;
 
-    struct Scene;
+    class Scene;
     class RTRenderer;
 
     class Material : public SceneObject

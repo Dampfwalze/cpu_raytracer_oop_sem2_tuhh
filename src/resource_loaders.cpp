@@ -96,9 +96,9 @@ namespace rt
                 {
                     read<uint32_t>(file);
                     read<uint32_t>(file);
-                    for (size_t i = 1; i < 256; i++)
+                    for (unsigned i = 1; i < 256; i++)
                     {
-                        res->colorPalette[i] = m::Color<float>(read<m::u8vec4>(file)) / 255.0f;
+                        res->colorPalette[(unsigned char)i] = m::Color<float>(read<m::u8vec4>(file)) / 255.0f;
                     }
                     break;
                 }

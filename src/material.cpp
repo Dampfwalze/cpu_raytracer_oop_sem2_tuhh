@@ -89,10 +89,10 @@ namespace rt
                 changed |= color.onInspectorGUI();
                 ImGui::TreePop();
             }
-            changed |= rtImGui::Drag<float, float>("ambient", ambient, 0.01f, 0, 1.0f);
-            changed |= rtImGui::Drag<float, float>("diffuse", diffuse, 0.01f, 0, 1.0f);
-            changed |= rtImGui::Drag<float, float>("specular", specular, 0.01f, 0, 1.0f);
-            changed |= rtImGui::Drag<float, float>("reflection", reflection, 0.01f, 0, 1.0f);
+            changed |= rtImGui::Drag<float, float>("ambient", ambient, 0.01f, .0f, 1.0f);
+            changed |= rtImGui::Drag<float, float>("diffuse", diffuse, 0.01f, .0f, 1.0f);
+            changed |= rtImGui::Drag<float, float>("specular", specular, 0.01f, .0f, 1.0f);
+            changed |= rtImGui::Drag<float, float>("reflection", reflection, 0.01f, .0f, 1.0f);
             return changed;
         }
 
