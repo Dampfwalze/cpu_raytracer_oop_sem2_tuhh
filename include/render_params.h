@@ -2,6 +2,7 @@
 #define RENDER_PARAMS_HPP
 
 #include <rtmath.h>
+#include <optional>
 
 namespace rt
 {
