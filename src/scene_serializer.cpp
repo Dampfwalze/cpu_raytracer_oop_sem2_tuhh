@@ -284,7 +284,7 @@ namespace rt
     YAML::Emitter &operator<<(YAML::Emitter &emitter, const m::dquat &quat)
     {
         return emitter << YAML::Flow << YAML::BeginSeq
-                       << quat.w << quat.x << quat.y << quat.z
+                       << quat.x << quat.y << quat.z << quat.w
                        << YAML::EndSeq;
     }
 
