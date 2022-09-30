@@ -13,6 +13,7 @@ include(getYAML-cpp.cmake)
 include(getNativeFileDialog.cmake)
 add_subdirectory(deps/glad)
 add_subdirectory(deps/stb)
+add_subdirectory(deps/tclap)
 
 set(SOURCES
 
@@ -52,7 +53,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE $<$<CONFIG:Debug>:_DEBU
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE include)
 
-target_link_libraries(${CMAKE_PROJECT_NAME} glfw glad imgui glm stb_image yaml-cpp nfd)
+target_link_libraries(${CMAKE_PROJECT_NAME} glfw glad imgui glm stb_image yaml-cpp nfd tclap)
 
 target_precompile_headers(${CMAKE_PROJECT_NAME} PUBLIC include/rtmath.h)
 
