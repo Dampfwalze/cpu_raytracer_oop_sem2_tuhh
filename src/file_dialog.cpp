@@ -52,7 +52,7 @@ namespace rt
             }
         }
 
-        std::optional<std::filesystem::path> saveDialog(const std::string_view &filterList, const std::string_view &defaultPath)
+        std::optional<std::filesystem::path> saveDialog(const std::string_view &filterList, const std::string_view &defaultExt, const std::string_view &defaultPath)
         {
             nfdchar_t  *outPath = nullptr;
             nfdresult_t result = NFD_SaveDialog(filterList.data(), defaultPath.data(), &outPath);
@@ -62,6 +62,8 @@ namespace rt
             {
                 auto path = std::filesystem::path(outPath);
                 delete outPath;
+                if (!path.has_extension())
+                    path.replace_extension(defaultExt);
                 return path;
             }
             case NFD_CANCEL:

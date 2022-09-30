@@ -118,7 +118,7 @@ namespace rt
     {
         try
         {
-            auto path = FileDialog::saveDialog("yaml");
+            auto path = FileDialog::saveDialog("yaml", "yaml");
             if (path)
             {
                 m_application.savePath = *path;
@@ -310,23 +310,55 @@ namespace rt
             ImGui::End();
 
             ImGui::Begin("Control");
-            ImGui::BeginDisabled(m_application.renderThread.isRendering());
-            if (ImGui::Button("Render"))
+            if (ImGui::CollapsingHeader("Control", ImGuiTreeNodeFlags_DefaultOpen))
             {
-                Profiling::profiler.enabled = false;
-                if (m_application.frameBuffer.getSize() != imageSize)
-                    m_application.frameBuffer.resize(imageSize);
-                m_application << Application::Events::Render();
+                ImGui::BeginDisabled(m_application.renderThread.isRendering());
+                if (ImGui::Button("Render"))
+                {
+                    Profiling::profiler.enabled = false;
+                    if (m_application.frameBuffer.getSize() != imageSize)
+                        m_application.frameBuffer.resize(imageSize);
+                    m_application << Application::Events::Render();
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Profile"))
+                {
+                    Profiling::profiler.enabled = true;
+                    if (m_application.frameBuffer.getSize() != imageSize)
+                        m_application.frameBuffer.resize(imageSize);
+                    m_application << Application::Events::Render();
+                }
+                ImGui::EndDisabled();
+
+                // Output section
+
+                ImGui::LabelText("##", "Output");
+
+                // Size
+                rtImGui::Drag<m::u64vec2, size_t>("Size", m_application.outputSize, 1, 1, std::nullopt, "%d");
+
+                // File browser
+                auto buffer = m_application.outputPath ? m_application.outputPath->string() : "";
+                ImGui::InputText("##", buffer.data(), buffer.size(), ImGuiInputTextFlags_ReadOnly);
+                ImGui::SameLine();
+                if (ImGui::Button("Browse"))
+                {
+                    auto path = FileDialog::saveDialog("png,jpg,bmp", "jpg");
+                    if (path.has_value())
+                    {
+                        std::cout << "Selected file: " << *path << std::endl;
+                        m_application.outputPath = *path;
+                    }
+                }
+
+                // Render button
+                ImGui::BeginDisabled(!m_application.outputPath || m_application.renderThread.isRendering());
+                if (ImGui::Button("Render output") && m_application.outputPath)
+                {
+                    m_application << Application::Events::RenderOutput(*m_application.outputPath, m_application.outputSize);
+                }
+                ImGui::EndDisabled();
             }
-            ImGui::SameLine();
-            if (ImGui::Button("Profile"))
-            {
-                Profiling::profiler.enabled = true;
-                if (m_application.frameBuffer.getSize() != imageSize)
-                    m_application.frameBuffer.resize(imageSize);
-                m_application << Application::Events::Render();
-            }
-            ImGui::EndDisabled();
 
             if (ImGui::CollapsingHeader("Parameters", ImGuiTreeNodeFlags_DefaultOpen))
             {

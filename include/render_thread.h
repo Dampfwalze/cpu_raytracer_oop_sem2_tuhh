@@ -68,6 +68,7 @@ namespace rt
 
         inline bool isRendering() const { return m_isRendering; }
         void        waitUntilFinished();
+        void        waitUntilStarted();
 
         void             setRenderer(Renderer *renderer);
         inline Renderer *getRenderer() { return m_renderer; };

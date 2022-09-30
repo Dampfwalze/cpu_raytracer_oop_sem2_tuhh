@@ -8,9 +8,14 @@
 #include <scene/scene_serializer.h>
 #include <stream_formatter.h>
 
+#include <stb_image_write.h>
+
 namespace rt
 {
-    Application::Application(const std::filesystem::path &originPath)
+    Application::Application(const std::filesystem::path &originPath, bool useGui,
+                             std::optional<std::filesystem::path> sceneFile,
+                             std::optional<std::filesystem::path> outputPath,
+                             m::u64vec2                           outputSize)
         : originPath(originPath),
           threadPool(std::thread::hardware_concurrency() == 0 ? 1 : std::thread::hardware_concurrency()),
           resources(&threadPool, originPath / "resource"),
@@ -18,6 +23,9 @@ namespace rt
               Camera(Transform(m::dvec3(0, 3.5, 7))) //
               )),
           renderThread(&threadPool),
+          savePath(sceneFile),
+          outputSize(outputSize),
+          outputPath(outputPath),
           m_window(*this)
     {
         renderers.emplace("Raytracing", new RTRenderer());
@@ -26,7 +34,14 @@ namespace rt
         resources.add<Resources::VoxelGridResource>(new ResourceLoaders::VoxelGridLoader());
         resources.add<Resources::TextureResource>(new ResourceLoaders::TextureLoader());
 
-        loadDefaultScene();
+        if (sceneFile)
+        {
+            loadScene(*sceneFile);
+        }
+        else
+        {
+            loadDefaultScene();
+        }
     }
 
     Application::~Application()
@@ -41,6 +56,26 @@ namespace rt
             Event event = m_eventStream.get();
             switch ((EventType)event.index())
             {
+            case EventType::RenderOutput:
+            {
+                auto &e = std::get<Events::RenderOutput>(event);
+
+                renderThread.waitUntilFinished();
+
+                FrameBuffer frameBuffer(e.size.x, e.size.y);
+
+                renderThread.startRender(*scene, frameBuffer);
+                renderThread.waitUntilStarted();
+                renderThread.waitUntilFinished();
+
+                std::vector<m::u8vec3> data(e.size.x * e.size.y);
+                for (size_t y = 0; y < e.size.y; y++)
+                    for (size_t x = 0; x < e.size.x; x++)
+                        data[y * e.size.x + x] = frameBuffer.at(x, e.size.y - y - 1) * 255.0f;
+
+                stbi_write_jpg(e.path.string().c_str(), frameBuffer.getWidth(), frameBuffer.getHeight(), 3, data.data(), 100);
+            }
+            break;
             case EventType::CloseApplication:
                 running = false;
                 break;

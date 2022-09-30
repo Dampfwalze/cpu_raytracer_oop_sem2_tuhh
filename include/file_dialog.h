@@ -11,7 +11,7 @@ namespace rt
     {
         std::optional<std::filesystem::path> fileDialog(const std::string_view &filterList = "", const std::string_view &defaultPath = "");
         std::optional<std::filesystem::path> folderDialog(const std::string_view &defaultPath = "");
-        std::optional<std::filesystem::path> saveDialog(const std::string_view &filterList = "", const std::string_view &defaultPath = "");
+        std::optional<std::filesystem::path> saveDialog(const std::string_view &filterList = "", const std::string_view &defaultExt = "", const std::string_view &defaultPath = "");
     } // namespace FileDialog
 } // namespace rt
 

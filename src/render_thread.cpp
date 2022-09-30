@@ -45,6 +45,13 @@ namespace rt
                                  { return !m_isRendering; });
     }
 
+    void RenderThread::waitUntilStarted()
+    {
+        std::unique_lock<std::mutex> lock(m_renderFinished_mutex);
+        m_renderFinished_cv.wait(lock, [this]
+                                 { return m_isRendering; });
+    }
+
     void RenderThread::setRenderer(Renderer *renderer)
     {
         assert(!isRendering());
@@ -67,6 +74,7 @@ namespace rt
                 m_renderParams = renderParams;
 
                 m_isRendering = true;
+                m_renderFinished_cv.notify_all();
 
                 std::stringstream      ss;
                 rtstd::formatterstream logger(ss);
