@@ -75,6 +75,9 @@ namespace rt
 
         void run();
 
+        void loadScene(const std::filesystem::path &path);
+        void loadDefaultScene();
+
         template <class T>
         Application &operator<<(T event)
         {
