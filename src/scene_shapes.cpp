@@ -116,6 +116,8 @@ namespace rt
             {
                 intersection->position = p;
                 intersection->normal[D] = s;
+                intersection->sampleInfo.type = SampleInfoType::UV;
+                intersection->sampleInfo.asUV = {p[D1] - 0.5, p[D2] - 0.5};
                 return true;
             }
             return false;
