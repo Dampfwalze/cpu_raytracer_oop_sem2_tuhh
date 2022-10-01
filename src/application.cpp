@@ -27,8 +27,10 @@ namespace rt
           outputSize(outputSize),
           outputPath(outputPath),
           useGui(useGui),
-          m_window(useGui ? std::make_optional<WindowThread>(*this) : std::nullopt)
+          m_window(std::nullopt)
     {
+        if (useGui)
+            m_window.emplace(*this);
         renderers.emplace("Raytracing", new RTRenderer());
         renderThread.setRenderer(renderers["Raytracing"].get());
 
