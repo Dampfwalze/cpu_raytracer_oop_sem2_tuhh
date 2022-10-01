@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
+option(BUILD_DOC "Build documentation" ON)
+
 project(Ray_Tracer LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -64,3 +66,20 @@ install(DIRECTORY resource DESTINATION .)
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/resource" $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/resource
 )
+
+# documentation
+if(BUILD_DOC)
+    find_package(Doxygen)
+
+    if(DOXYGEN_FOUND)
+        configure_file("${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile.in" "Doxyfile" @ONLY)
+
+        add_custom_target(doc_doxygen ALL
+            COMMAND "${DOXYGEN_EXECUTABLE}" "Doxyfile"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+            COMMENT "Generating API documentation with Doxygen"
+            VERBATIM)
+    else(DOXYGEN_FOUND)
+        message("Doxygen needs to be installed to generate the doxygen documentation (https://doxygen.nl/download.html)")
+    endif()
+endif()

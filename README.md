@@ -4,8 +4,9 @@
 ## Dependencies
 
 - [CMake](https://cmake.org/)
-- GCC or MSVC or every other C/C++ generator supported by CMake
-- OpenGL 3.3
+- GCC or MSVC
+- [Doxygen](https://www.doxygen.nl/index.html) (Optional)
+- OpenGL 3.3 (Only when running with GUI)
 - C/C++ libs (self contained)
     - [GLFW](https://www.glfw.org/)
     - [Glad](https://glad.dav1d.de/)
