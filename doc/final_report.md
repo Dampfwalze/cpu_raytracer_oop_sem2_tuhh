@@ -19,7 +19,7 @@ There are a number of command line arguments you can specify. You can use `--hel
 - `--width` and `--height` to specify the resolution of the output image 
 - `--nogui` to run the application without a GUI
 
-Every path can be specified absolute or relative, to the current working directory or relative, to the directory of the executable. Thats because, there are many resources and examples shipped with this application.
+Every path can be specified absolute or relative to the current working directory, or relative to `<executable dir>/resource`. Thats because, there are many resources and examples shipped with this application.
 
 ### GUI
 
