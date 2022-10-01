@@ -193,6 +193,8 @@ namespace rt
 
         std::filesystem::path m_appDir;
 
+        std::vector<std::future<void>> m_loadingFutures;
+
     private:
         template <class T>
         class _Iterator
@@ -258,6 +260,8 @@ namespace rt
         inline Iterator        end() { return _Iterator(m_resources.end()); }
         inline ReverseIterator rbegin() { return _Iterator(m_resources.rbegin()); }
         inline ReverseIterator rend() { return _Iterator(m_resources.rend()); }
+
+        void waitForFinishLoading();
 
     private:
         void requestLoad(_SharedResourceState &state, std::type_index type);

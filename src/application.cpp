@@ -26,7 +26,8 @@ namespace rt
           savePath(sceneFile),
           outputSize(outputSize),
           outputPath(outputPath),
-          m_window(*this)
+          useGui(useGui),
+          m_window(useGui ? std::make_optional<WindowThread>(*this) : std::nullopt)
     {
         renderers.emplace("Raytracing", new RTRenderer());
         renderThread.setRenderer(renderers["Raytracing"].get());
@@ -50,6 +51,14 @@ namespace rt
 
     void Application::run()
     {
+        if (!useGui)
+        {
+            if (!outputPath)
+                throw std::runtime_error("No output path specified");
+            resources.waitForFinishLoading();
+            renderOutput(*outputPath, outputSize);
+            return;
+        }
         bool running = true;
         while (running)
         {
@@ -59,21 +68,7 @@ namespace rt
             case EventType::RenderOutput:
             {
                 auto &e = std::get<Events::RenderOutput>(event);
-
-                renderThread.waitUntilFinished();
-
-                FrameBuffer frameBuffer(e.size.x, e.size.y);
-
-                renderThread.startRender(*scene, frameBuffer);
-                renderThread.waitUntilStarted();
-                renderThread.waitUntilFinished();
-
-                std::vector<m::u8vec3> data(e.size.x * e.size.y);
-                for (size_t y = 0; y < e.size.y; y++)
-                    for (size_t x = 0; x < e.size.x; x++)
-                        data[y * e.size.x + x] = frameBuffer.at(x, e.size.y - y - 1) * 255.0f;
-
-                stbi_write_jpg(e.path.string().c_str(), frameBuffer.getWidth(), frameBuffer.getHeight(), 3, data.data(), 100);
+                renderOutput(e.path, e.size);
             }
             break;
             case EventType::CloseApplication:
@@ -106,6 +101,25 @@ namespace rt
                 break;
             }
         }
+    }
+
+    void Application::renderOutput(const std::filesystem::path &path, m::u64vec2 size)
+    {
+
+        renderThread.waitUntilFinished();
+
+        FrameBuffer frameBuffer(size.x, size.y);
+
+        renderThread.startRender(*scene, frameBuffer);
+        renderThread.waitUntilStarted();
+        renderThread.waitUntilFinished();
+
+        std::vector<m::u8vec3> data(size.x * size.y);
+        for (size_t y = 0; y < size.y; y++)
+            for (size_t x = 0; x < size.x; x++)
+                data[y * size.x + x] = frameBuffer.at(x, size.y - y - 1) * 255.0f;
+
+        stbi_write_jpg(path.string().c_str(), frameBuffer.getWidth(), frameBuffer.getHeight(), 3, data.data(), 100);
     }
 
     void Application::loadScene(const std::filesystem::path &path)

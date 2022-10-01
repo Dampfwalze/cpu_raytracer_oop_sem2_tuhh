@@ -19,6 +19,16 @@ namespace rt
         }
     }
 
+    void ResourceContainer::waitForFinishLoading()
+    {
+        for (int i = m_loadingFutures.size() - 1; i >= 0; i--)
+        {
+            if (m_loadingFutures[i].valid())
+                m_loadingFutures[i].wait();
+            m_loadingFutures.erase(m_loadingFutures.begin() + i);
+        }
+    }
+
     void ResourceContainer::loadTask(ResourceLoader *loader, std::filesystem::path path, const ResourceRef<void> &resource)
     {
         try
@@ -67,6 +77,7 @@ namespace rt
 
         auto task = std::packaged_task<void()>([loader, path, resource, this]
                                                { loadTask(loader, path, resource); });
+        m_loadingFutures.push_back(task.get_future());
         *m_threadPool << std::move(task);
     }
 

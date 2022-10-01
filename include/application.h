@@ -70,8 +70,10 @@ namespace rt
         m::u64vec2                           outputSize = {1920, 1080};
         std::optional<std::filesystem::path> outputPath;
 
+        bool useGui = true;
+
     private:
-        WindowThread m_window;
+        std::optional<WindowThread> m_window;
 
         EventStream<Event> m_eventStream;
 
@@ -88,16 +90,19 @@ namespace rt
 
         void run();
 
-        void loadScene(const std::filesystem::path &path);
-        void saveScene(const std::filesystem::path &path);
-        void loadDefaultScene();
-
         template <class T>
         Application &operator<<(T event)
         {
             m_eventStream << event;
             return *this;
         }
+
+    private:
+        void renderOutput(const std::filesystem::path &path, m::u64vec2 size);
+
+        void loadScene(const std::filesystem::path &path);
+        void saveScene(const std::filesystem::path &path);
+        void loadDefaultScene();
     };
 
     template <>
