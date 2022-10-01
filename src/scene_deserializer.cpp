@@ -129,7 +129,7 @@ namespace rt
         if (node)
         {
             assertNode(node.IsMap(), "Materials node must be a map");
-            materials.clear();
+            this->materials.clear();
             for (const auto &material : node)
             {
                 auto id = this->materials.size();
