@@ -10,6 +10,8 @@
 
 namespace rt
 {
+    namespace m = math;
+
     class Application;
 
     class WindowThread : public std::thread
@@ -30,6 +32,8 @@ namespace rt
     private:
         void cameraController();
         void run();
+
+        void render(m::u64vec2 size);
 
         void save();
         void saveAs();

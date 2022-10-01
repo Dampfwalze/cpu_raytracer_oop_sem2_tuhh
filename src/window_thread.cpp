@@ -106,6 +106,13 @@ namespace rt
             << Application::Events::Render();
     }
 
+    void WindowThread::render(m::u64vec2 size)
+    {
+        if (m_application.frameBuffer.getSize() != size && !m_application.renderThread.isRendering())
+            m_application.frameBuffer.resize(size);
+        m_application << Application::Events::Render();
+    }
+
     void WindowThread::save()
     {
         if (m_application.savePath)
@@ -219,6 +226,8 @@ namespace rt
 
         // Shader shader = Shader::fromFile("resource/shader/shader.vert", "resource/shader/shader.frag");
 
+        size_t frame = 0;
+
         while (true)
         {
             if (window.shouldClose())
@@ -316,17 +325,13 @@ namespace rt
                 if (ImGui::Button("Render"))
                 {
                     Profiling::profiler.enabled = false;
-                    if (m_application.frameBuffer.getSize() != imageSize)
-                        m_application.frameBuffer.resize(imageSize);
-                    m_application << Application::Events::Render();
+                    render(imageSize);
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Profile"))
                 {
                     Profiling::profiler.enabled = true;
-                    if (m_application.frameBuffer.getSize() != imageSize)
-                        m_application.frameBuffer.resize(imageSize);
-                    m_application << Application::Events::Render();
+                    render(imageSize);
                 }
                 ImGui::EndDisabled();
 
@@ -391,7 +396,7 @@ namespace rt
                 changed |= rtImGui::Drag<float, float>("Scale", renderParams.scale, 0.01f, 0.0f);
 
                 if (changed)
-                    m_application << Application::Events::Render();
+                    render(imageSize);
             }
 
             if (ImGui::TreeNode("Renderers"))
@@ -428,7 +433,7 @@ namespace rt
             ImGui::PushItemWidth(ImGui::GetFontSize() * -8);
 
             if (m_application.scene->onInspectorGUI())
-                m_application << Application::Events::Render();
+                render(imageSize);
 
             ImGui::End();
 
@@ -518,6 +523,20 @@ namespace rt
                     rtImGui::drawProfiler("Profiler", *profile, ImGui::GetContentRegionAvail().y);
             }
             ImGui::End();
+
+            if (frame == 2)
+            {
+                render(imageSize);
+            }
+            if (frame < 3)
+            {
+                frame++;
+            }
+            else if (m_application.frameBuffer.getSize() != imageSize && !m_application.renderThread.isRendering())
+            {
+                m_application.frameBuffer.resize(imageSize);
+                m_application << Application::Events::Render();
+            }
 
             window.endGUI();
 
