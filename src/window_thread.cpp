@@ -340,7 +340,9 @@ namespace rt
                 ImGui::LabelText("##", "Output");
 
                 // Size
-                rtImGui::Drag<m::u64vec2, size_t>("Size", m_application.outputSize, 1, 1, std::nullopt, "%d");
+                m::uvec2 __size = m_application.outputSize;
+                rtImGui::Drag<m::uvec2, size_t>("Size", __size, 1, 1, std::nullopt, "%d");
+                m_application.outputSize = __size;
 
                 // File browser
                 auto buffer = m_application.outputPath ? m_application.outputPath->string() : "";
