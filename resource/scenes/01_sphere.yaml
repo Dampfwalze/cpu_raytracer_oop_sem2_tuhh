@@ -1,0 +1,36 @@
+scene:
+  camera:
+    transform:
+      position: [0, 0, 2.5]
+      # rotation: [0, 0, 0, 1]
+      # scale: [1, 1, 1]
+    fov: 60
+    # near: 0.01
+    # far: 2
+  shapes:
+    - !sphere
+      name: Sphere
+      # transform:
+      #   position: [0, 0, 0]
+      #   rotation: [0, 0, 0, 1]
+      #   scale: [1, 1, 1]
+      material: 0
+  lights:
+    - !directional
+      direction: [0.24, 1, 0.450]
+      intensity: 0.7
+      color: 0xfff8d0
+  materials:
+    0: !lit
+      name: Sphere
+      color: !color
+        # name: Color Sampler
+        color: 0x00fff7
+      ambient: 0
+      diffuse: 1
+      specular: 1
+      reflection: 0.1
+   
+  environment: !color
+    # name: Color Sampler
+    color: 0x0

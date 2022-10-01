@@ -1,0 +1,67 @@
+scene:
+  camera:
+    transform:
+      position: [0.82, 2.694, 5.99]
+      rotation: [-0.079, 0.012, 0.001, 0.997]
+      scale: [1, 1, 1]
+    fov: 80
+    near: 0.01
+    far: 2
+  shapes:
+    - !plane
+      name: Plane
+      transform:
+        # position: [0, 0, 0]
+        # rotation: [0, 0, 0, 1]
+        scale: [10, 10, 10]
+      material: floor
+    - !sphere
+      name: Sphere
+      transform:
+        position: [-0.5, 1.1, -0.2]
+        # rotation: [0, 0, 0, 1]
+        # scale: [1, 1, 1]
+      radius: 1
+      material: box
+    - !cube
+      name: Cube
+      transform:
+        position: [2.15, 0.75, 0.33]
+        rotation: [0, 0.94658236719451683, 0, 0.32246212508824196]
+        scale: [1.5, 1.5, 1.5]
+      material: box
+  lights:
+    - !directional
+      direction: [0.663, 0.608, -0.438]
+      intensity: 0.5
+      color: 0xfff8d0
+  materials:
+    floor: !lit
+      name: Floor
+      color: !texture
+        # name: Texture Sampler
+        texture: resource_0
+        filter: linear
+        wrap: repeat
+      ambient: 0.03
+      diffuse: 1
+      specular: 1
+      reflection: 0
+    box: !lit
+      name: Box
+      color: !texture
+        # name: Texture Sampler
+        texture: resource_1
+        filter: linear
+        wrap: repeat
+      ambient: 0.1
+      diffuse: 1
+      specular: 1
+      reflection: 0
+
+  environment: !color
+    # name: Color Sampler
+    color: 0x0
+resources:
+  resource_0: UV_Test.png
+  resource_1: box.jpg

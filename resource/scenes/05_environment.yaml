@@ -1,0 +1,36 @@
+scene:
+  camera:
+    transform:
+      position: [0, 0, 2.5]
+      # rotation: [0, 0, 0, 1]
+      # scale: [1, 1, 1]
+    fov: 60
+    # near: 0.01
+    # far: 2
+  shapes:
+    - !sphere
+      name: Sphere
+      # transform:
+      #   position: [0, 0, 0]
+      #   rotation: [0, 0, 0, 1]
+      #   scale: [1, 1, 1]
+      material: 0
+  materials:
+    0: !lit
+      name: Sphere
+      color: !color
+        # name: Color Sampler
+        color: 0x00fff7
+      ambient: 0
+      diffuse: 1
+      specular: 1
+      reflection: 1
+   
+  environment: !texture
+    # name: Texture Sampler
+    texture: environment
+    filter: linear
+    wrap: repeat
+
+resources:
+  environment: belfast_farmhouse_4k.hdr
