@@ -121,7 +121,7 @@ namespace rt
             for (size_t x = 0; x < size.x; x++)
                 data[y * size.x + x] = frameBuffer.at(x, size.y - y - 1) * 255.0f;
 
-        stbi_write_jpg(path.string().c_str(), frameBuffer.getWidth(), frameBuffer.getHeight(), 3, data.data(), 100);
+        stbi_write_jpg(path.string().c_str(), (int)frameBuffer.getWidth(), (int)frameBuffer.getHeight(), 3, data.data(), 100);
     }
 
     void Application::loadScene(const std::filesystem::path &path)
@@ -154,9 +154,9 @@ namespace rt
         auto voxels = resources += "chr_knight.vox";
 
         auto defaultMaterial = scene->addMaterial(new Materials::LitMaterial("Default", std::make_unique<Samplers::ColorSampler>(m::Color<float>(1))));
-        auto floorMaterial = scene->addMaterial(new Materials::LitMaterial("Floor", std::make_unique<Samplers::ColorSampler>(m::Color<float>(241, 196, 132) / 255.0f), 0.03, 1, 1, 0.01));
+        auto floorMaterial = scene->addMaterial(new Materials::LitMaterial("Floor", std::make_unique<Samplers::ColorSampler>(m::Color<float>(241, 196, 132) / 255.0f), 0.03f, 1, 1, 0.01f));
         auto boxMaterial = scene->addMaterial(new Materials::LitMaterial("Box", std::make_unique<Samplers::TextureSampler>(texture), 0.1f, 1, 1, 0.36f));
-        auto sphereMaterial = scene->addMaterial(new Materials::LitMaterial("Sphere", std::make_unique<Samplers::ColorSampler>(), 0.0f, 0.2, 0.6, 1));
+        auto sphereMaterial = scene->addMaterial(new Materials::LitMaterial("Sphere", std::make_unique<Samplers::ColorSampler>(), 0.0f, 0.2f, 0.6f, 1.0f));
         auto voxelMaterial = scene->addMaterial(new Materials::LitMaterial("Voxels", std::make_unique<Samplers::PaletteSampler>(voxels), 0.1f, 1, 1, 0.36f));
 
         scene->addShape(new Shapes::Plane(Transform(), floorMaterial));
