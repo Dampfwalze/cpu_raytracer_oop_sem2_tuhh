@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-option(BUILD_DOC "Build documentation" ON)
+option(BUILD_DOC "Build documentation" OFF)
 
 project(Ray_Tracer LANGUAGES CXX C)
 
