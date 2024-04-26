@@ -534,7 +534,8 @@ namespace rt
             {
                 frame++;
             }
-            else if (m_application.frameBuffer.getSize() != imageSize && !m_application.renderThread.isRendering())
+            else if (m_application.frameBuffer.getSize() != imageSize && !m_application.renderThread.isRendering() //
+                     && imageSize.x * imageSize.y > 0 && imageSize.x * imageSize.y < std::numeric_limits<int>::max() / 2)
             {
                 m_application.frameBuffer.resize(imageSize);
                 m_application << Application::Events::Render();
