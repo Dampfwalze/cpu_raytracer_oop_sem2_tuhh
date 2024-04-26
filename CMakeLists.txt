@@ -66,6 +66,9 @@ install(DIRECTORY resource DESTINATION .)
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/resource" $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>/resource
 )
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/imgui.ini" $<TARGET_FILE_DIR:${CMAKE_PROJECT_NAME}>
+)
 
 # documentation
 if(BUILD_DOC)
