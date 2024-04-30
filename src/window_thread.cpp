@@ -155,6 +155,18 @@ namespace rt
         }
     }
 
+    void WindowThread::newScene()
+    {
+        try
+        {
+            m_application << Application::Events::LoadScene{std::nullopt};
+        }
+        catch (std::exception &e)
+        {
+            std::cout << e.what() << std::endl;
+        }
+    }
+
     static void copyBuffer(const FrameBuffer &buffer, GLuint texture)
     {
         if (buffer.getSize() == math::u64vec2(0))
@@ -266,7 +278,7 @@ namespace rt
                 {
                     if (ImGui::MenuItem("New"))
                     {
-                        // TODO: implement
+                        newScene();
                     }
                     if (ImGui::MenuItem("Open" /*, "Ctrl+O"*/))
                     {

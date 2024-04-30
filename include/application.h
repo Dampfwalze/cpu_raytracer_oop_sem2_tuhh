@@ -40,7 +40,7 @@ namespace rt
             };
             struct LoadScene
             {
-                std::filesystem::path path;
+                std::optional<std::filesystem::path> path;
             };
             struct SaveScene
             {

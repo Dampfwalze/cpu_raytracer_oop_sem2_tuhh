@@ -79,7 +79,15 @@ namespace rt
             case EventType::LoadScene:
                 try
                 {
-                    loadScene(std::get<Events::LoadScene>(event).path);
+                    auto path = std::get<Events::LoadScene>(event).path;
+                    if (path)
+                    {
+                        loadScene(*path);
+                    }
+                    else
+                    {
+                        loadDefaultScene();
+                    }
 
                     *this << Events::Render();
                 }
@@ -136,7 +144,7 @@ namespace rt
 
     void Application::loadDefaultScene()
     {
-        scene = std::make_unique<Scene>(
+        auto scene = std::make_unique<Scene>(
             Camera(Transform(m::dvec3(0.820, 2.694, 5.989), {0.997, -0.079, 0.012, 0.001})) //
         );
 
@@ -164,5 +172,8 @@ namespace rt
         scene->addShape(new Shapes::Cube(Transform(m::dvec3(2.15, 0.75, 0.33), m::dquat(0.32246212508824196, 0, 0.9465823671945168, 0), m::dvec3(1.5)), boxMaterial));
 
         scene->addLight(new Lights::DirectionalLight(m::dvec3(0.663, 0.608, -0.438), m::Color<float>(255, 248, 208) / 255.0f, 0.5f));
+
+        renderThread.waitUntilFinished();
+        this->scene = std::move(scene);
     }
 }

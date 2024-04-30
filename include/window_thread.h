@@ -38,6 +38,7 @@ namespace rt
         void save();
         void saveAs();
         void open();
+        void newScene();
     };
 
 } // namespace rt
