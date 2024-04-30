@@ -1,6 +1,6 @@
 # Class Diagramm
 
-- `Ref<T>` is a synonym for the concept of a reference to an object, that is not owned by the current party
+- `Ref<T>` is a synonym for the concept of a reference to an object, that is not owned by the current entity.
 
 ## Application
 
@@ -8,7 +8,7 @@
 classDiagram
     class EventStream~EventType~
     class ThreadPool~TaskType~
-    
+
     Application --> "1" FrameBuffer
 
     Application --> "1" WindowThread
@@ -21,7 +21,7 @@ classDiagram
     RenderThread ..> ThreadPool
 
     ThreadPool --> "1" EventStream
-    
+
     RenderThread --> "1" EventStream
     Application --> "1" EventStream
 
@@ -110,7 +110,7 @@ classDiagram
         override void render()
         vec3 castPropagationRay(Ray ray, int recursion)
         Optional~vec3~ castLightRay(vec3 position, SceneLight light)
-    
+
     }
 
 ```
@@ -292,7 +292,7 @@ classDiagram
     class Camera {
         Transform transform
         float     FOV
-        double    zNear 
+        double    zNear
         double    zFar
     }
 

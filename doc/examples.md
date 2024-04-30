@@ -2,7 +2,6 @@
 
 ## Example 1: Sphere
 
-
 [file](../resource/scenes/01_sphere.yaml)
 ![01_sphere.jpg](img/01_sphere.jpg)
 
