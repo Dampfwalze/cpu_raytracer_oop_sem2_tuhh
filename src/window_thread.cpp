@@ -349,7 +349,7 @@ namespace rt
 
                 // Output section
 
-                ImGui::LabelText("##", "Output");
+                ImGui::SeparatorText("Output");
 
                 // Size
                 m::uvec2 __size = m_application.outputSize;
@@ -389,9 +389,11 @@ namespace rt
                 ImGui::SliderScalar("Tile size", ImGuiDataType_U64, &tileSize.x, &min, &max);
                 tileSize.y = tileSize.x;
 
-                changed |= rtImGui::Drag("Mixing Factor", renderParams.mixingFactor, 0.01f);
+                changed |= rtImGui::Drag("Mixing factor", renderParams.mixingFactor, 0.01f);
 
-                changed |= rtImGui::Drag<int, int>("Recursion Deph", renderParams.recursionDeph, 0.01f, 0);
+                changed |= ImGui::InputScalar("Recursion depth", ImGuiDataType_U32, &renderParams.recursionDepth, &((const int &)1));
+
+                ImGui::SeparatorText("Tone mapping");
 
                 if (ImGui::BeginCombo("Tone mapping algorithm", toneMappingAlgorithmToString(renderParams.toneMappingAlgorithm)))
                 {
