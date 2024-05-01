@@ -16,7 +16,7 @@ namespace rtstd
         char_type indent = (char_type)' ';
         char_type openingBracket = (char_type)'{';
         char_type closingBracket = (char_type)'}';
-        char_type seperator = (char_type)',';
+        char_type separator = (char_type)',';
         char_type deactivator = (char_type)'(';
         char_type activator = (char_type)')';
         char_type lineBreak = (char_type)'\n';
@@ -127,7 +127,7 @@ namespace rtstd
                 m_outStream << ch;
                 return ch;
             }
-            else if (ch == m_args.seperator)
+            else if (ch == m_args.separator)
             {
                 m_outStream << ch;
                 breakLine();

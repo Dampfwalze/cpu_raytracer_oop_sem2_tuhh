@@ -218,7 +218,7 @@ namespace rt
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER));
         GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER));
 
-        // std::array<float, 3> vertecies[] = {
+        // std::array<float, 3> vertices[] = {
         //     {1.0, 1.0, 0.0},
         //     {1.0, -1.0, 0.0},
         //     {-1.0, -1.0, 0.0},
@@ -231,7 +231,7 @@ namespace rt
         // GLCALL(glGenBuffers(1, &quadBuffer));
 
         // GLCALL(glBindBuffer(GL_ARRAY_BUFFER, quadBuffer));
-        // GLCALL(glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), vertecies, GL_STATIC_DRAW));
+        // GLCALL(glBufferData(GL_ARRAY_BUFFER, 6 * 3 * sizeof(float), vertices, GL_STATIC_DRAW));
 
         // GLCALL(glEnableVertexAttribArray(0));
         // GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr));

@@ -67,7 +67,7 @@ namespace rt
                 return n;
             }
 
-            // Only works with matricies, that are not effecting the w component of a vector.
+            // Only works with matrices, that are not effecting the w component of a vector.
             // If you matrix does not fit this restriction, use ray<T>.transformPerspective(mat4<T>) instead.
             ray<T> &operator*=(const mat4<T> &matrix)
             {
@@ -89,7 +89,7 @@ namespace rt
             }
         };
 
-        // Only works with matricies, that are not effecting the w component of a vector.
+        // Only works with matrices, that are not effecting the w component of a vector.
         // If you matrix does not fit this restriction, use ray<T>.transformPerspective(mat4<T>) instead.
         template <typename T>
         ray<T> operator*(const mat4<T> &matrix, const ray<T> &ray)

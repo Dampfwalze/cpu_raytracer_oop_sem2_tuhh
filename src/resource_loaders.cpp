@@ -17,7 +17,7 @@ namespace rt
             return buf;
         }
 
-        struct Chunck
+        struct Chunk
         {
             union
             {
@@ -33,9 +33,9 @@ namespace rt
             return *(int32_t *)str;
         }
 
-        inline Chunck readChunk(std::ifstream &stream)
+        inline Chunk readChunk(std::ifstream &stream)
         {
-            Chunck chunk;
+            Chunk chunk;
             stream.read(chunk.name, sizeof(chunk.name));
             stream.read((char *)&chunk.contentSize, sizeof(chunk.contentSize));
             stream.read((char *)&chunk.childrenSize, sizeof(chunk.childrenSize));
@@ -58,11 +58,11 @@ namespace rt
             if (version != 150)
                 throw IOException(IOException::Type::WrongType, "File version differs from expected, 150 expected, got: " + version);
 
-            Chunck main = readChunk(file);
+            Chunk main = readChunk(file);
             if (main.nameAsInt != asInt("MAIN"))
                 throw IOException(IOException::Type::FileCorrupt, "File has wrong format!");
 
-            Chunck sizeChunk = readChunk(file);
+            Chunk sizeChunk = readChunk(file);
             if (sizeChunk.nameAsInt == asInt("PACK"))
                 throw IOException(IOException::Type::WrongType, "Multiple models are not supported!");
             if (sizeChunk.nameAsInt != asInt("SIZE"))
@@ -76,7 +76,7 @@ namespace rt
 
             VoxelGrid grid(size);
 
-            Chunck xyziChunk = readChunk(file);
+            Chunk xyziChunk = readChunk(file);
             if (xyziChunk.nameAsInt != asInt("XYZI"))
                 throw IOException(IOException::Type::FileCorrupt, "File has wrong format!");
 

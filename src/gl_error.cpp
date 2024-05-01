@@ -8,7 +8,7 @@ namespace rt
     {
         while (GLenum error = glGetError())
         {
-            std::cout << "Error: Uncought OpenGL error (" << error << ")\n"
+            std::cout << "Error: Uncaught OpenGL error (" << error << ")\n"
                       << file << ":" << line << "\n\tat: " << statement << "\n\tat: " << function << "\n";
         }
     }

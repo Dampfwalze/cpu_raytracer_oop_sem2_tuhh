@@ -23,7 +23,7 @@ namespace rt
         // Ray is in world space now
         ray = ray.transformPerspective(invCam);
 
-        auto color = castPropagationRay(ray, renderParams->recursionDeph);
+        auto color = castPropagationRay(ray, renderParams->recursionDepth);
 
         // Tone mapping
         switch (renderParams->toneMappingAlgorithm)
@@ -57,7 +57,7 @@ namespace rt
         }
 
         auto &intersection = maybeIntersection.value();
-        PIXEL_LOGGER_LOG("Intesected: ", intersection.object->name);
+        PIXEL_LOGGER_LOG("Intersected: ", intersection.object->name);
 
         Material *material = scene->getMaterial(intersection.object->materialIndex);
         if (material == nullptr)

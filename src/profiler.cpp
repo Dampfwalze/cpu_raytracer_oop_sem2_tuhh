@@ -126,10 +126,10 @@ namespace rtImGui
 
         auto darkened = col;
 
-        const float drarkenFact = 0.8f;
-        darkened.Value.x *= drarkenFact;
-        darkened.Value.y *= drarkenFact;
-        darkened.Value.z *= drarkenFact;
+        const float darkenFact = 0.8f;
+        darkened.Value.x *= darkenFact;
+        darkened.Value.y *= darkenFact;
+        darkened.Value.z *= darkenFact;
 
         drawList->AddRectFilled(rect.Min, rect.Max, col, 2);
         drawList->AddRect(rect.Min, rect.Max, darkened, 2);

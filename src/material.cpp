@@ -46,7 +46,7 @@ namespace rt
             m::dvec3 normal = glm::normalize(normal_);
             m::dvec3 hitDirection = glm::normalize(hitDirection_);
 
-            Color e_ambiant = Color(ambient);
+            Color e_ambient = Color(ambient);
 
             Color e_reflection(0);
             if (recursionDepth > 0)
@@ -67,7 +67,7 @@ namespace rt
                     i_Lights.push_back(light.get());
             }
 
-            Color result = e_ambiant;
+            Color result = e_ambient;
             for (auto &&i_light : i_Lights)
             {
                 Color lightColor = i_light->getColor(position);
