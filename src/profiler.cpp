@@ -233,7 +233,7 @@ namespace rtImGui
             }
 
             ImGui::InvisibleButton("Label", size);
-            ImGui::SetItemUsingMouseWheel();
+            ImGui::SetItemKeyOwner(ImGuiKey_MouseWheelY);
 
             float startX = viewport.Min.x - scroll;
             float endX = startX + size.x;

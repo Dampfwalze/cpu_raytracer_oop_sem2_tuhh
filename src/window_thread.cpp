@@ -69,34 +69,34 @@ namespace rt
         q = m::rotate(m::dquat(1, 0, 0, 0), yaw, m::dvec3(0, 1, 0));
         q = m::rotate(q, pitch, m::dvec3(1, 0, 0));
 
-        if (IO.KeysDown[ImGuiKey_W])
+        if (ImGui::IsKeyDown(ImGuiKey_W))
         {
             auto d = m::rotate(q, m::dvec3(0, 0, -1));
             camera.transform.position += d * 0.03;
         }
-        else if (IO.KeysDown[ImGuiKey_S])
+        else if (ImGui::IsKeyDown(ImGuiKey_S))
         {
             auto d = m::rotate(q, m::dvec3(0, 0, 1));
             camera.transform.position += d * 0.03;
         }
 
-        if (IO.KeysDown[ImGuiKey_A])
+        if (ImGui::IsKeyDown(ImGuiKey_A))
         {
             auto d = m::rotate(q, m::dvec3(-1, 0, 0));
             camera.transform.position += d * 0.03;
         }
-        if (IO.KeysDown[ImGuiKey_D])
+        if (ImGui::IsKeyDown(ImGuiKey_D))
         {
             auto d = m::rotate(q, m::dvec3(1, 0, 0));
             camera.transform.position += d * 0.03;
         }
 
-        if (IO.KeysDown[ImGuiKey_Q])
+        if (ImGui::IsKeyDown(ImGuiKey_Q))
         {
             auto d = m::rotate(q, m::dvec3(0, -1, 0));
             camera.transform.position += d * 0.03;
         }
-        if (IO.KeysDown[ImGuiKey_E])
+        if (ImGui::IsKeyDown(ImGuiKey_E))
         {
             auto d = m::rotate(q, m::dvec3(0, 1, 0));
             camera.transform.position += d * 0.03;
